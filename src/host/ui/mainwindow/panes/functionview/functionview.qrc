@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/functionview">
+        <file>functions.json</file>
+    </qresource>
+</RCC>

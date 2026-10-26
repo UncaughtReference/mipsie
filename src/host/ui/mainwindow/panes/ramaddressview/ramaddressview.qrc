@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/ramaddressview">
+        <file>ram_addresses.json</file>
+    </qresource>
+</RCC>

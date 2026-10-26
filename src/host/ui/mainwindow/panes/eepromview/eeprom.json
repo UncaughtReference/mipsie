@@ -1,0 +1,141 @@
+{
+    "source":  "https://hack64.net/wiki/doku.php?id=super_mario_64:eeprom_map",
+    "archive":  "https://web.archive.org/web/20260309092154/https://hack64.net/wiki/doku.php?id=super_mario_64:eeprom_map",
+    "entries":  [
+                    {
+                        "section":  "Top Level Structure",
+                        "range":  "0x000 - 0x037",
+                        "description":  "File A data"
+                    },
+                    {
+                        "section":  "Top Level Structure",
+                        "range":  "0x038 - 0x06F",
+                        "description":  "File A data (Copy)"
+                    },
+                    {
+                        "section":  "Top Level Structure",
+                        "range":  "0x070 - 0x0A7",
+                        "description":  "File B data"
+                    },
+                    {
+                        "section":  "Top Level Structure",
+                        "range":  "0x0A8 - 0x0DF",
+                        "description":  "File B data (Copy)"
+                    },
+                    {
+                        "section":  "Top Level Structure",
+                        "range":  "0x0E0 - 0x117",
+                        "description":  "File C data"
+                    },
+                    {
+                        "section":  "Top Level Structure",
+                        "range":  "0x118 - 0x14F",
+                        "description":  "File C data (Copy)"
+                    },
+                    {
+                        "section":  "Top Level Structure",
+                        "range":  "0x150 - 0x187",
+                        "description":  "File D data"
+                    },
+                    {
+                        "section":  "Top Level Structure",
+                        "range":  "0x188 - 0x1BF",
+                        "description":  "File D data (Copy)"
+                    },
+                    {
+                        "section":  "Top Level Structure",
+                        "range":  "0x1C0 - 0x1DF",
+                        "description":  "Main Menu data"
+                    },
+                    {
+                        "section":  "Top Level Structure",
+                        "range":  "0x1E0 - 0x1FF",
+                        "description":  "Main Menu data (Copy)"
+                    },
+                    {
+                        "section":  "Save File Data",
+                        "range":  "0x00",
+                        "description":  "Hat blown off Course"
+                    },
+                    {
+                        "section":  "Save File Data",
+                        "range":  "0x01",
+                        "description":  "Hat blown off Area"
+                    },
+                    {
+                        "section":  "Save File Data",
+                        "range":  "0x02",
+                        "description":  "Hat blown off X Position"
+                    },
+                    {
+                        "section":  "Save File Data",
+                        "range":  "0x04",
+                        "description":  "Hat blown off Y Position"
+                    },
+                    {
+                        "section":  "Save File Data",
+                        "range":  "0x06",
+                        "description":  "Hat blown off Z Position"
+                    },
+                    {
+                        "section":  "Save File Data",
+                        "range":  "0x08",
+                        "description":  "Secret stars in castle (toads, Mips)"
+                    },
+                    {
+                        "section":  "Save File Data",
+                        "range":  "0x09",
+                        "description":  "Bit 1: Cap stolen by snowman Bit 2: Cap stolen by bird Bit 3: Cap stolen by monkey Bit 5: 3rd floor (50 star) door"
+                    },
+                    {
+                        "section":  "Save File Data",
+                        "range":  "0x0A",
+                        "description":  "Bit 1: Unknown. Seems to be set when opening the DDR/BitFS room? Bit 2: Water level outside the castle Bit 3: Princess secret slide door Bit 4: Whomp\u0027s Fortress door Bit 5: Cool, Cool Mountain door Bit 6: Jolly Roger Bay door Bit 7: Bowser in the dark world (8 star) door Bit 8: Bowser in the fire sea (30 star) door"
+                    },
+                    {
+                        "section":  "Save File Data",
+                        "range":  "0x0B",
+                        "description":  "Bit 1: Valid game (Game is empty otherwise) Bit 2: Wing cap switch Bit 3: Metal cap switch Bit 4: Vanish cap switch Bit 5: Bowser in the dark world key (disabled when the door is opened) Bit 6: Bowser in the fire sea key (disabled when the door is opened) Bit 7: Basement door open Bit 8: 2nd floor door open"
+                    },
+                    {
+                        "section":  "Save File Data",
+                        "range":  "0x0C - 0x1C",
+                        "description":  "Course Stars (the 8th bit is for the level\u0027s cannon)"
+                    },
+                    {
+                        "section":  "Save File Data",
+                        "range":  "0x1B - 0x24",
+                        "description":  "Secret stars in courses (secret, bowser levels)"
+                    },
+                    {
+                        "section":  "Save File Data",
+                        "range":  "0x25 - 0x33",
+                        "description":  "Course Coin scores"
+                    },
+                    {
+                        "section":  "Save File Data",
+                        "range":  "0x34 - 0x37",
+                        "description":  "Checksum"
+                    },
+                    {
+                        "section":  "Main Menu Data",
+                        "range":  "0x00 - 0x0F",
+                        "description":  "Related to high scores?"
+                    },
+                    {
+                        "section":  "Main Menu Data",
+                        "range":  "0x10 - 0x11",
+                        "description":  "Sound Select option: 0x0000 = Stereo, 0x0001 = Mono, 0x0002 = Headset"
+                    },
+                    {
+                        "section":  "Main Menu Data",
+                        "range":  "0x12 - 0x1B",
+                        "description":  "Unused?"
+                    },
+                    {
+                        "section":  "Main Menu Data",
+                        "range":  "0x1C - 0x1F",
+                        "description":  "Checksum"
+                    }
+                ]
+}

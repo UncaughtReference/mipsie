@@ -1,0 +1,811 @@
+{
+    "source":  "https://hack64.net/wiki/doku.php?id=super_mario_64:ram_memory_map",
+    "archive":  "https://web.archive.org/web/20260309092149/https://hack64.net/wiki/doku.php?id=super_mario_64:ram_memory_map",
+    "entries":  [
+                    {
+                        "address":  "800EE060",
+                        "length":  "4 bytes",
+                        "type":  "Pointer",
+                        "description":  "Pointer to debug function",
+                        "notes":  ""
+                    },
+                    {
+                        "address":  "80207700",
+                        "length":  "112 bytes",
+                        "type":  "Flag",
+                        "description":  "EEPROM file A flags",
+                        "notes":  ""
+                    },
+                    {
+                        "address":  "80207770",
+                        "length":  "112 bytes",
+                        "type":  "Flag",
+                        "description":  "EEPROM file B flags",
+                        "notes":  ""
+                    },
+                    {
+                        "address":  "802077E0",
+                        "length":  "112 bytes",
+                        "type":  "Flag",
+                        "description":  "EEPROM file C flags",
+                        "notes":  ""
+                    },
+                    {
+                        "address":  "80207850",
+                        "length":  "112 bytes",
+                        "type":  "Flag",
+                        "description":  "EEPROM file D flags",
+                        "notes":  ""
+                    },
+                    {
+                        "address":  "802F3C9F",
+                        "length":  "1 byte",
+                        "type":  "Integer",
+                        "description":  "1UP Lives Modifier",
+                        "notes":  "The number of lives Mario gets when collecting a 1UP."
+                    },
+                    {
+                        "address":  "8032D580",
+                        "length":  "4 bytes",
+                        "type":  "Integer",
+                        "description":  "VI timer",
+                        "notes":  ""
+                    },
+                    {
+                        "address":  "8032D58C",
+                        "length":  "1 byte",
+                        "type":  "Flag",
+                        "description":  "Debug level select enabled flag",
+                        "notes":  "01 to enable debug level select."
+                    },
+                    {
+                        "address":  "8032D594",
+                        "length":  "1 byte",
+                        "type":  "Flag",
+                        "description":  "Debug resource meter enabled flag",
+                        "notes":  "Greater than zero to enable debug resource meter."
+                    },
+                    {
+                        "address":  "8032D598",
+                        "length":  "1 byte",
+                        "type":  "Flag",
+                        "description":  "Debug display 1 enabled flag",
+                        "notes":  "Greater than zero to enable debug display 1."
+                    },
+                    {
+                        "address":  "8032D5D4",
+                        "length":  "4 bytes",
+                        "type":  "Integer",
+                        "description":  "Input timer",
+                        "notes":  ""
+                    },
+                    {
+                        "address":  "8032D5E4",
+                        "length":  "4 bytes",
+                        "type":  "Pointer",
+                        "description":  "Pointer to controller struct (P1)",
+                        "notes":  ""
+                    },
+                    {
+                        "address":  "8032D5E8",
+                        "length":  "4 bytes",
+                        "type":  "Pointer",
+                        "description":  "Pointer to controller struct (P2)",
+                        "notes":  ""
+                    },
+                    {
+                        "address":  "8032DDF4",
+                        "length":  "2 bytes",
+                        "type":  "Integer",
+                        "description":  "File",
+                        "notes":  ""
+                    },
+                    {
+                        "address":  "8032DDF8",
+                        "length":  "2 bytes",
+                        "type":  "Integer",
+                        "description":  "Level",
+                        "notes":  ""
+                    },
+                    {
+                        "address":  "80330E34",
+                        "length":  "4 bytes",
+                        "type":  "Pointer",
+                        "description":  "Pointer to object Mario is standing on",
+                        "notes":  ""
+                    },
+                    {
+                        "address":  "80330E94",
+                        "length":  "1 byte",
+                        "type":  "Integer",
+                        "description":  "Debug display 2 type",
+                        "notes":  ""
+                    },
+                    {
+                        "address":  "80330F3C",
+                        "length":  "4 bytes",
+                        "type":  "Float",
+                        "description":  "Painting entrance height",
+                        "notes":  "Controls initial WDW water level."
+                    },
+                    {
+                        "address":  "80331620",
+                        "length":  "1 byte",
+                        "type":  "Integer",
+                        "description":  "Act",
+                        "notes":  ""
+                    },
+                    {
+                        "address":  "80335B80",
+                        "length":  "4 bytes",
+                        "type":  "ASCII",
+                        "description":  "BUF text",
+                        "notes":  ""
+                    },
+                    {
+                        "address":  "80336420",
+                        "length":  "4 bytes",
+                        "type":  "ASCII",
+                        "description":  "ANG text",
+                        "notes":  ""
+                    },
+                    {
+                        "address":  "80336428",
+                        "length":  "4 bytes",
+                        "type":  "ASCII",
+                        "description":  "SPD text",
+                        "notes":  ""
+                    },
+                    {
+                        "address":  "80336430",
+                        "length":  "4 bytes",
+                        "type":  "ASCII",
+                        "description":  "STA text",
+                        "notes":  ""
+                    },
+                    {
+                        "address":  "803383A8",
+                        "length":  "4 bytes",
+                        "type":  "ASCII",
+                        "description":  "TIME text",
+                        "notes":  ""
+                    },
+                    {
+                        "address":  "8033AFA0",
+                        "length":  "2 bytes",
+                        "type":  "Flag",
+                        "description":  "Current button input (P1)",
+                        "notes":  ""
+                    },
+                    {
+                        "address":  "8033AFBC",
+                        "length":  "2 bytes",
+                        "type":  "Flag",
+                        "description":  "Current button input (P2)",
+                        "notes":  ""
+                    },
+                    {
+                        "address":  "8033AFD8",
+                        "length":  "2 bytes",
+                        "type":  "Flag",
+                        "description":  "Current button input (P1)",
+                        "notes":  ""
+                    },
+                    {
+                        "address":  "8033AFF8",
+                        "length":  "2 bytes",
+                        "type":  "Flag",
+                        "description":  "Current button input (P1)",
+                        "notes":  ""
+                    },
+                    {
+                        "address":  "8033AFFA",
+                        "length":  "2 bytes",
+                        "type":  "Integer",
+                        "description":  "Current joystick input (P1)",
+                        "notes":  "Upper byte is horizontal tilt, lower byte is vertical tilt."
+                    },
+                    {
+                        "address":  "8033AFFE",
+                        "length":  "2 bytes",
+                        "type":  "Flag",
+                        "description":  "Current button input (P2)",
+                        "notes":  ""
+                    },
+                    {
+                        "address":  "8033B000",
+                        "length":  "2 bytes",
+                        "type":  "Integer",
+                        "description":  "Current joystick input (P2)",
+                        "notes":  "Upper byte is horizontal tilt, lower byte is vertical tilt."
+                    },
+                    {
+                        "address":  "8033B004",
+                        "length":  "2 bytes",
+                        "type":  "Flag",
+                        "description":  "Current button input (P3)",
+                        "notes":  ""
+                    },
+                    {
+                        "address":  "8033B006",
+                        "length":  "2 bytes",
+                        "type":  "Integer",
+                        "description":  "Current joystick input (P3)",
+                        "notes":  "Upper byte is horizontal tilt, lower byte is vertical tilt."
+                    },
+                    {
+                        "address":  "8033B00A",
+                        "length":  "2 bytes",
+                        "type":  "Flag",
+                        "description":  "Current button input (P4)",
+                        "notes":  ""
+                    },
+                    {
+                        "address":  "8033B00C",
+                        "length":  "2 bytes",
+                        "type":  "Integer",
+                        "description":  "Current joystick input (P4)",
+                        "notes":  "Upper byte is horizontal tilt, lower byte is vertical tilt."
+                    },
+                    {
+                        "address":  "8033B172",
+                        "length":  "2 bytes",
+                        "type":  "Flag",
+                        "description":  "Mario status",
+                        "notes":  ""
+                    },
+                    {
+                        "address":  "8033B174",
+                        "length":  "4 bytes",
+                        "type":  "Flag",
+                        "description":  "Mario cap and other flags",
+                        "notes":  ""
+                    },
+                    {
+                        "address":  "8033B17C",
+                        "length":  "4 bytes",
+                        "type":  "",
+                        "description":  "Mario action",
+                        "notes":  ""
+                    },
+                    {
+                        "address":  "8033B180",
+                        "length":  "4 bytes",
+                        "type":  "",
+                        "description":  "Mario previous action",
+                        "notes":  ""
+                    },
+                    {
+                        "address":  "8033B188",
+                        "length":  "2 bytes",
+                        "type":  "Integer",
+                        "description":  "Mario animation phase",
+                        "notes":  ""
+                    },
+                    {
+                        "address":  "8033B18A",
+                        "length":  "2 bytes",
+                        "type":  "Integer",
+                        "description":  "Mario animation cycle counter",
+                        "notes":  ""
+                    },
+                    {
+                        "address":  "8033B194",
+                        "length":  "2 bytes",
+                        "type":  "Integer",
+                        "description":  "Mario angle (intended)",
+                        "notes":  ""
+                    },
+                    {
+                        "address":  "8033B196",
+                        "length":  "2 bytes",
+                        "type":  "Integer",
+                        "description":  "Mario invincibility frame counter",
+                        "notes":  ""
+                    },
+                    {
+                        "address":  "8033B198",
+                        "length":  "1 byte",
+                        "type":  "Integer",
+                        "description":  "Number of frames since last A press",
+                        "notes":  ""
+                    },
+                    {
+                        "address":  "8033B199",
+                        "length":  "1 byte",
+                        "type":  "Integer",
+                        "description":  "Number of frames since last B press",
+                        "notes":  ""
+                    },
+                    {
+                        "address":  "8033B19C",
+                        "length":  "2 bytes",
+                        "type":  "Integer",
+                        "description":  "Mario front tilt (facing)",
+                        "notes":  ""
+                    },
+                    {
+                        "address":  "8033B19E",
+                        "length":  "2 bytes",
+                        "type":  "Integer",
+                        "description":  "Mario angle (facing)",
+                        "notes":  ""
+                    },
+                    {
+                        "address":  "8033B1A8",
+                        "length":  "2 bytes",
+                        "type":  "Integer",
+                        "description":  "Mario angle (moving)",
+                        "notes":  ""
+                    },
+                    {
+                        "address":  "8033B1AC",
+                        "length":  "4 bytes",
+                        "type":  "Float",
+                        "description":  "Mario X position",
+                        "notes":  ""
+                    },
+                    {
+                        "address":  "8033B1B0",
+                        "length":  "4 bytes",
+                        "type":  "Float",
+                        "description":  "Mario Y position",
+                        "notes":  ""
+                    },
+                    {
+                        "address":  "8033B1B4",
+                        "length":  "4 bytes",
+                        "type":  "Float",
+                        "description":  "Mario Z position",
+                        "notes":  ""
+                    },
+                    {
+                        "address":  "8033B1B8",
+                        "length":  "4 bytes",
+                        "type":  "Float",
+                        "description":  "Mario X speed",
+                        "notes":  ""
+                    },
+                    {
+                        "address":  "8033B1BC",
+                        "length":  "4 bytes",
+                        "type":  "Float",
+                        "description":  "Mario Y speed",
+                        "notes":  ""
+                    },
+                    {
+                        "address":  "8033B1C0",
+                        "length":  "4 bytes",
+                        "type":  "Float",
+                        "description":  "Mario Z speed",
+                        "notes":  ""
+                    },
+                    {
+                        "address":  "8033B1C4",
+                        "length":  "4 bytes",
+                        "type":  "Float",
+                        "description":  "Mario horizontal speed",
+                        "notes":  ""
+                    },
+                    {
+                        "address":  "8033B1C8",
+                        "length":  "4 bytes",
+                        "type":  "Float",
+                        "description":  "Mario X speed",
+                        "notes":  ""
+                    },
+                    {
+                        "address":  "8033B1CC",
+                        "length":  "4 bytes",
+                        "type":  "Float",
+                        "description":  "Mario Y speed",
+                        "notes":  ""
+                    },
+                    {
+                        "address":  "8033B1D0",
+                        "length":  "4 bytes",
+                        "type":  "Pointer",
+                        "description":  "Pointer to wall collision triangle",
+                        "notes":  ""
+                    },
+                    {
+                        "address":  "8033B1D4",
+                        "length":  "4 bytes",
+                        "type":  "Pointer",
+                        "description":  "Pointer to ceiling collision triangle",
+                        "notes":  ""
+                    },
+                    {
+                        "address":  "8033B1D8",
+                        "length":  "4 bytes",
+                        "type":  "Pointer",
+                        "description":  "Pointer to ground collision triangle",
+                        "notes":  ""
+                    },
+                    {
+                        "address":  "8033B1DC",
+                        "length":  "4 bytes",
+                        "type":  "Float",
+                        "description":  "Mario ceiling Y",
+                        "notes":  ""
+                    },
+                    {
+                        "address":  "8033B1E0",
+                        "length":  "4 bytes",
+                        "type":  "Float",
+                        "description":  "Mario ground Y",
+                        "notes":  ""
+                    },
+                    {
+                        "address":  "8033B1E4",
+                        "length":  "2 bytes",
+                        "type":  "Integer",
+                        "description":  "Mario ground horizontal angle",
+                        "notes":  ""
+                    },
+                    {
+                        "address":  "8033B1EC",
+                        "length":  "4 bytes",
+                        "type":  "Pointer",
+                        "description":  "Pointer to held object",
+                        "notes":  ""
+                    },
+                    {
+                        "address":  "8033B1F0",
+                        "length":  "4 bytes",
+                        "type":  "Pointer",
+                        "description":  "Pointer to animating object",
+                        "notes":  ""
+                    },
+                    {
+                        "address":  "8033B1F8",
+                        "length":  "4 bytes",
+                        "type":  "Pointer",
+                        "description":  "Pointer to Mario object",
+                        "notes":  ""
+                    },
+                    {
+                        "address":  "8033B204",
+                        "length":  "4 bytes",
+                        "type":  "Pointer",
+                        "description":  "Pointer to camera struct",
+                        "notes":  ""
+                    },
+                    {
+                        "address":  "8033B20C",
+                        "length":  "4 bytes",
+                        "type":  "Pointer",
+                        "description":  "Pointer to controller struct",
+                        "notes":  ""
+                    },
+                    {
+                        "address":  "8033B210",
+                        "length":  "4 bytes",
+                        "type":  "Pointer",
+                        "description":  "Pointer to Mario animation struct",
+                        "notes":  ""
+                    },
+                    {
+                        "address":  "8033B218",
+                        "length":  "2 bytes",
+                        "type":  "Integer",
+                        "description":  "Number of coins",
+                        "notes":  ""
+                    },
+                    {
+                        "address":  "8033B21A",
+                        "length":  "2 bytes",
+                        "type":  "Integer",
+                        "description":  "Number of stars",
+                        "notes":  ""
+                    },
+                    {
+                        "address":  "8033B21C",
+                        "length":  "1 byte",
+                        "type":  "Integer",
+                        "description":  "Number of beta keys",
+                        "notes":  ""
+                    },
+                    {
+                        "address":  "8033B21D",
+                        "length":  "1 byte",
+                        "type":  "Integer",
+                        "description":  "Number of lives",
+                        "notes":  ""
+                    },
+                    {
+                        "address":  "8033B21E",
+                        "length":  "2 bytes",
+                        "type":  "Integer",
+                        "description":  "Mario Health",
+                        "notes":  "Upper byte is value, lower byte is decimal."
+                    },
+                    {
+                        "address":  "8033B220",
+                        "length":  "2 bytes",
+                        "type":  "Integer",
+                        "description":  "Mario Y offset from ground",
+                        "notes":  ""
+                    },
+                    {
+                        "address":  "8033B226",
+                        "length":  "2 bytes",
+                        "type":  "Integer",
+                        "description":  "Mario cap timer",
+                        "notes":  ""
+                    },
+                    {
+                        "address":  "8033B238",
+                        "length":  "2 bytes",
+                        "type":  "Flag",
+                        "description":  "Menu modifier",
+                        "notes":  ""
+                    },
+                    {
+                        "address":  "8033B248",
+                        "length":  "1 byte",
+                        "type":  "Flag",
+                        "description":  "Spawn status",
+                        "notes":  ""
+                    },
+                    {
+                        "address":  "8033B249",
+                        "length":  "1 byte",
+                        "type":  "Integer",
+                        "description":  "Level",
+                        "notes":  ""
+                    },
+                    {
+                        "address":  "8033B24A",
+                        "length":  "1 byte",
+                        "type":  "Integer",
+                        "description":  "Area",
+                        "notes":  ""
+                    },
+                    {
+                        "address":  "8033B24B",
+                        "length":  "1 byte",
+                        "type":  "Integer",
+                        "description":  "Spawn point",
+                        "notes":  ""
+                    },
+                    {
+                        "address":  "8033B256",
+                        "length":  "2 bytes",
+                        "type":  "Integer",
+                        "description":  "Spawn type",
+                        "notes":  ""
+                    },
+                    {
+                        "address":  "8033B25E",
+                        "length":  "1 byte",
+                        "type":  "Flag",
+                        "description":  "In-game timer enabled flag",
+                        "notes":  "Greater than zero to enable in-game timer."
+                    },
+                    {
+                        "address":  "8033B262",
+                        "length":  "2 bytes",
+                        "type":  "Integer",
+                        "description":  "Incremental coins",
+                        "notes":  ""
+                    },
+                    {
+                        "address":  "8033B26A",
+                        "length":  "2 bytes",
+                        "type":  "Flag",
+                        "description":  "HUD flags",
+                        "notes":  ""
+                    },
+                    {
+                        "address":  "8033B26C",
+                        "length":  "2 bytes",
+                        "type":  "Integer",
+                        "description":  "In-game timer",
+                        "notes":  ""
+                    },
+                    {
+                        "address":  "8033B3C8",
+                        "length":  "4 bytes",
+                        "type":  "Float",
+                        "description":  "HOLP X",
+                        "notes":  ""
+                    },
+                    {
+                        "address":  "8033B3CC",
+                        "length":  "4 bytes",
+                        "type":  "Float",
+                        "description":  "HOLP Y",
+                        "notes":  ""
+                    },
+                    {
+                        "address":  "8033B3D0",
+                        "length":  "4 bytes",
+                        "type":  "Float",
+                        "description":  "HOLP Z",
+                        "notes":  ""
+                    },
+                    {
+                        "address":  "8033B920",
+                        "length":  "4 bytes",
+                        "type":  "Pointer",
+                        "description":  "Pointer to spawn info linked list",
+                        "notes":  ""
+                    },
+                    {
+                        "address":  "8033B944",
+                        "length":  "2 bytes",
+                        "type":  "Integer",
+                        "description":  "Music track",
+                        "notes":  ""
+                    },
+                    {
+                        "address":  "8033C6A4",
+                        "length":  "4 bytes",
+                        "type":  "Float",
+                        "description":  "Camera X",
+                        "notes":  ""
+                    },
+                    {
+                        "address":  "8033C6A8",
+                        "length":  "4 bytes",
+                        "type":  "Float",
+                        "description":  "Camera Y",
+                        "notes":  ""
+                    },
+                    {
+                        "address":  "8033C6AC",
+                        "length":  "4 bytes",
+                        "type":  "Float",
+                        "description":  "Camera Z",
+                        "notes":  ""
+                    },
+                    {
+                        "address":  "8033C6D4",
+                        "length":  "1 byte",
+                        "type":  "Integer",
+                        "description":  "Camera type",
+                        "notes":  ""
+                    },
+                    {
+                        "address":  "8033C6E4",
+                        "length":  "2 bytes",
+                        "type":  "Integer",
+                        "description":  "Camera horizontal angle",
+                        "notes":  ""
+                    },
+                    {
+                        "address":  "8033C6E6",
+                        "length":  "2 bytes",
+                        "type":  "Integer",
+                        "description":  "Camera vertical angle",
+                        "notes":  ""
+                    },
+                    {
+                        "address":  "8033C714",
+                        "length":  "2 bytes",
+                        "type":  "Integer",
+                        "description":  "Camera centripetal angle",
+                        "notes":  ""
+                    },
+                    {
+                        "address":  "8033D260",
+                        "length":  "4 bytes",
+                        "type":  "Flag",
+                        "description":  "Debug display 2 enabled flag",
+                        "notes":  "00000001 to enable debug display 2."
+                    },
+                    {
+                        "address":  "8033D270",
+                        "length":  "4 bytes",
+                        "type":  "Integer",
+                        "description":  "Number of objects",
+                        "notes":  ""
+                    },
+                    {
+                        "address":  "8033D2DE",
+                        "length":  "2 bytes",
+                        "type":  "Flag",
+                        "description":  "Debug spawn enabled flag",
+                        "notes":  "0001 to enable debug spawn. Debug display type must also be set to 03."
+                    },
+                    {
+                        "address":  "80361158",
+                        "length":  "4 bytes",
+                        "type":  "Pointer",
+                        "description":  "Pointer to Mario object",
+                        "notes":  ""
+                    },
+                    {
+                        "address":  "80361160",
+                        "length":  "4 bytes",
+                        "type":  "Pointer",
+                        "description":  "Pointer to current object",
+                        "notes":  ""
+                    },
+                    {
+                        "address":  "80361258",
+                        "length":  "2 bytes",
+                        "type":  "Integer",
+                        "description":  "TTC clock speed",
+                        "notes":  ""
+                    },
+                    {
+                        "address":  "80361414",
+                        "length":  "2 bytes",
+                        "type":  "Integer",
+                        "description":  "CCM/SL snowfall intensity",
+                        "notes":  ""
+                    },
+                    {
+                        "address":  "80367054",
+                        "length":  "2 bytes",
+                        "type":  "Flag",
+                        "description":  "Current button input (P1)",
+                        "notes":  ""
+                    },
+                    {
+                        "address":  "80367056",
+                        "length":  "2 bytes",
+                        "type":  "Integer",
+                        "description":  "Current joystick input (P1)",
+                        "notes":  "Upper byte is horizontal tilt, lower byte is vertical tilt."
+                    },
+                    {
+                        "address":  "8036705C",
+                        "length":  "2 bytes",
+                        "type":  "Flag",
+                        "description":  "Current button input (P2)",
+                        "notes":  ""
+                    },
+                    {
+                        "address":  "8036705E",
+                        "length":  "2 bytes",
+                        "type":  "Integer",
+                        "description":  "Current joystick input (P2)",
+                        "notes":  "Upper byte is horizontal tilt, lower byte is vertical tilt."
+                    },
+                    {
+                        "address":  "80367064",
+                        "length":  "2 bytes",
+                        "type":  "Flag",
+                        "description":  "Current button input (P3)",
+                        "notes":  ""
+                    },
+                    {
+                        "address":  "80367066",
+                        "length":  "2 bytes",
+                        "type":  "Integer",
+                        "description":  "Current joystick input (P3)",
+                        "notes":  "Upper byte is horizontal tilt, lower byte is vertical tilt."
+                    },
+                    {
+                        "address":  "8036706C",
+                        "length":  "2 bytes",
+                        "type":  "Flag",
+                        "description":  "Current button input (P4)",
+                        "notes":  ""
+                    },
+                    {
+                        "address":  "8036706E",
+                        "length":  "2 bytes",
+                        "type":  "Integer",
+                        "description":  "Current joystick input (P4)",
+                        "notes":  "Upper byte is horizontal tilt, lower byte is vertical tilt."
+                    },
+                    {
+                        "address":  "8038BE28",
+                        "length":  "4 bytes",
+                        "type":  "Pointer",
+                        "description":  "Pointer to current level script command",
+                        "notes":  ""
+                    },
+                    {
+                        "address":  "8038EEE0",
+                        "length":  "2 bytes",
+                        "type":  "Integer",
+                        "description":  "RNG value",
+                        "notes":  ""
+                    }
+                ]
+}

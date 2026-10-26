@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/snippets">
+        <file>instructions.json</file>
+    </qresource>
+</RCC>

@@ -1,0 +1,1651 @@
+{
+    "source":  "https://hack64.net/wiki/doku.php?id=super_mario_64:actions",
+    "archive":  "https://web.archive.org/web/20260309092151/https://hack64.net/wiki/doku.php?id=super_mario_64:actions",
+    "entries":  [
+                    {
+                        "section":  "Mario\u0027s Actions",
+                        "action":  "",
+                        "group":  "0x000",
+                        "handler":  "0x80263898",
+                        "description":  "Idle, sleeping"
+                    },
+                    {
+                        "section":  "Mario\u0027s Actions",
+                        "action":  "",
+                        "group":  "0x040",
+                        "handler":  "0x80269954",
+                        "description":  "Crawling, sliding, fall damage"
+                    },
+                    {
+                        "section":  "Mario\u0027s Actions",
+                        "action":  "",
+                        "group":  "0x080",
+                        "handler":  "0x8026FB04",
+                        "description":  "In Air (Attacks, jumping, flips, falling)"
+                    },
+                    {
+                        "section":  "Mario\u0027s Actions",
+                        "action":  "",
+                        "group":  "0x0C0",
+                        "handler":  "0x8027499C",
+                        "description":  "Swimming/Underwater releated"
+                    },
+                    {
+                        "section":  "Mario\u0027s Actions",
+                        "action":  "",
+                        "group":  "0x100",
+                        "handler":  "0x8025D798",
+                        "description":  "Cutscene related"
+                    },
+                    {
+                        "section":  "Mario\u0027s Actions",
+                        "action":  "",
+                        "group":  "0x140",
+                        "handler":  "0x802605D0",
+                        "description":  "Not directly controlling Mario (Inside Cannon, Grabbing on a ledge, Climing tree)"
+                    },
+                    {
+                        "section":  "Mario\u0027s Actions",
+                        "action":  "",
+                        "group":  "0x180",
+                        "handler":  "0x80275FE0",
+                        "description":  "On Ground (punching, sweep-kick)"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x00000383",
+                        "group":  "0x180",
+                        "handler":  "0x8027546C",
+                        "description":  "Grabbed MIPS"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x00000385",
+                        "group":  "0x180",
+                        "handler":  "0x802755FC",
+                        "description":  "Dive end animation (grabbed MIPS)"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x00000386",
+                        "group":  "0x180",
+                        "handler":  "0x802759B4",
+                        "description":  "Dive end animation"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x00000387",
+                        "group":  "0x180",
+                        "handler":  "0x802756C8",
+                        "description":  "Put down MIPS"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x00000390",
+                        "group":  "0x180",
+                        "handler":  "0x80275A80",
+                        "description":  "Grab bowser\u0027s tail"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x00000391",
+                        "group":  "0x180",
+                        "handler":  "0x80275B34",
+                        "description":  "Holding onto bowser\u0027s tail"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x00000392",
+                        "group":  "0x180",
+                        "handler":  "0x80275E78",
+                        "description":  "Let go of bowser\u0027s tail"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x00000442",
+                        "group":  "0x040",
+                        "handler":  "0x80266734",
+                        "description":  "???"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x00000443",
+                        "group":  "0x040",
+                        "handler":  "0x80266AF8",
+                        "description":  "Stop Mario"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x00000444",
+                        "group":  "0x040",
+                        "handler":  "0x80266D4C",
+                        "description":  "Turn around 180 degrees"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x00000447",
+                        "group":  "0x040",
+                        "handler":  "0x8026699C",
+                        "description":  "Carrying King bob-omb/Chuckya"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x0000044B",
+                        "group":  "0x040",
+                        "handler":  "0x80267240",
+                        "description":  "???"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x00000474",
+                        "group":  "0x040",
+                        "handler":  "0x80269264",
+                        "description":  "Pickup object??"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x00000475",
+                        "group":  "0x040",
+                        "handler":  "0x80269300",
+                        "description":  "Pickup object??"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x00000476",
+                        "group":  "0x040",
+                        "handler":  "0x80269788",
+                        "description":  "???"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x00000477",
+                        "group":  "0x040",
+                        "handler":  "0x802697DC",
+                        "description":  "Pickup object??"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x00000479",
+                        "group":  "0x040",
+                        "handler":  "0x8026939C",
+                        "description":  "Long-jump ground landing"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x000004A8",
+                        "group":  "0x080",
+                        "handler":  "0x8026F158",
+                        "description":  "???"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x0000054C",
+                        "group":  "0x140",
+                        "handler":  "0x8025F970",
+                        "description":  "Climb up from edge"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x0000054D",
+                        "group":  "0x140",
+                        "handler":  "0x8025F970",
+                        "description":  "Climb up from edge (Part 2)"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x0000054E",
+                        "group":  "0x140",
+                        "handler":  "0x8025FA64",
+                        "description":  "Go down onto edge"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x0000054F",
+                        "group":  "0x140",
+                        "handler":  "0x8025FAE8",
+                        "description":  "Quick pull up from edge"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x000008A7",
+                        "group":  "0x080",
+                        "handler":  "0x8026D988",
+                        "description":  "Hit a wall?"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x000008AE",
+                        "group":  "0x080",
+                        "handler":  "0x8026CF28",
+                        "description":  "Picked up a crazy box"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x00001300",
+                        "group":  "0x100",
+                        "handler":  "0x80257A0C",
+                        "description":  "Destroy Mario object?"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x00001302",
+                        "group":  "0x100",
+                        "handler":  "0x80258420",
+                        "description":  "Grabbed star animation"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x00001303",
+                        "group":  "0x100",
+                        "handler":  "0x802584DC",
+                        "description":  "Grabbed star underwater animation"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x00001307",
+                        "group":  "0x100",
+                        "handler":  "0x80258420",
+                        "description":  "Grabbed star animation (Same as action 1302)"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x00001308",
+                        "group":  "0x100",
+                        "handler":  "0x80257CE4",
+                        "description":  "Reading a sign"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x0000130A",
+                        "group":  "0x100",
+                        "handler":  "0x80257980",
+                        "description":  "Looking forward?"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x0000130F",
+                        "group":  "0x100",
+                        "handler":  "0x80257EAC",
+                        "description":  "Model stuck in T-Position (debug/unused action?)"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x00001319",
+                        "group":  "0x100",
+                        "handler":  "0x8025D1D4",
+                        "description":  "Ending credits Mario, stand still and do nothing"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x0000131A",
+                        "group":  "0x100",
+                        "handler":  "0x8025D4F0",
+                        "description":  "Mario waving and go to End Cake Picture"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x00001320",
+                        "group":  "0x100",
+                        "handler":  "0x80259264",
+                        "description":  "Opening a warp door"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x00001321",
+                        "group":  "0x100",
+                        "handler":  "0x80259264",
+                        "description":  "Opening a regular door"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x00001322",
+                        "group":  "0x100",
+                        "handler":  "0x802593CC",
+                        "description":  "Warp door closing"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x00001325",
+                        "group":  "0x100",
+                        "handler":  "0x80259740",
+                        "description":  "Level entrance landing"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x00001327",
+                        "group":  "0x100",
+                        "handler":  "0x802598D0",
+                        "description":  "Star/Bowser key get fanfare"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x0000132E",
+                        "group":  "0x100",
+                        "handler":  "0x80258BA8",
+                        "description":  "Opening a locked door with a key"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x0000132F",
+                        "group":  "0x100",
+                        "handler":  "0x80258DAC",
+                        "description":  "Opening a door with star power"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x00001331",
+                        "group":  "0x100",
+                        "handler":  "0x80258F94",
+                        "description":  "Opening a star door"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x00001333",
+                        "group":  "0x100",
+                        "handler":  "0x8025A040",
+                        "description":  "Bowser level entrance landing"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x00001336",
+                        "group":  "0x100",
+                        "handler":  "0x8025A610",
+                        "description":  "Fade warp out"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x00001337",
+                        "group":  "0x100",
+                        "handler":  "0x8025A6FC",
+                        "description":  "Fade warp in"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x0000133D",
+                        "group":  "0x100",
+                        "handler":  "0x8025AE0C",
+                        "description":  "Putting on a cap"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x00001371",
+                        "group":  "0x140",
+                        "handler":  "0x8025FC6C",
+                        "description":  "Inside a cannon"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x00001535",
+                        "group":  "0x100",
+                        "handler":  "0x8025A0BC",
+                        "description":  "shrink warp to BBH"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x00001904",
+                        "group":  "0x100",
+                        "handler":  "0x802585C0",
+                        "description":  "Sets current action to 00001302"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x00001909",
+                        "group":  "0x100",
+                        "handler":  "0x8025BBEC",
+                        "description":  "Grabbed grand star, fly around third bowser stage"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x00001918",
+                        "group":  "0x100",
+                        "handler":  "0x8025D040",
+                        "description":  "Ending Castle Grounds peach sequence"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x00001923",
+                        "group":  "0x100",
+                        "handler":  "0x802594D4",
+                        "description":  "Coming out of Warp pipe"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x00001924",
+                        "group":  "0x100",
+                        "handler":  "0x80259608",
+                        "description":  "???"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x00001926",
+                        "group":  "0x100",
+                        "handler":  "0x802597AC",
+                        "description":  "Out of painting (success)"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x00001928",
+                        "group":  "0x100",
+                        "handler":  "0x80259C30",
+                        "description":  "Out of painting (failed)"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x00001929",
+                        "group":  "0x100",
+                        "handler":  "0x80259CE8",
+                        "description":  "Lose a life \u0026 regenerate health"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x0000192A",
+                        "group":  "0x100",
+                        "handler":  "0x80259D74",
+                        "description":  "Lose a life \u0026 regenerate health (knocked onto the ground)"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x0000192B",
+                        "group":  "0x100",
+                        "handler":  "0x80259E00",
+                        "description":  "Ejected from Bowser 1 entrance (success)"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x0000192C",
+                        "group":  "0x100",
+                        "handler":  "0x80259EF8",
+                        "description":  "Ejected from Bowser 1 entrance (failed)"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x0000192D",
+                        "group":  "0x100",
+                        "handler":  "0x80259854",
+                        "description":  "Falling from lobby ceiling (success)"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x00001932",
+                        "group":  "0x100",
+                        "handler":  "0x80259FCC",
+                        "description":  "Falling from lobby ceiling (failed)"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x00001934",
+                        "group":  "0x100",
+                        "handler":  "0x8025A494",
+                        "description":  "Start shrink warp to BBH"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x000042F4",
+                        "group":  "0x0C0",
+                        "handler":  "0x80274268",
+                        "description":  "???"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x000042F5",
+                        "group":  "0x0C0",
+                        "handler":  "0x80274384",
+                        "description":  "??? (Carrying object)"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x000042F6",
+                        "group":  "0x0C0",
+                        "handler":  "0x80274688",
+                        "description":  "Create ring of smoke?"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x000042F7",
+                        "group":  "0x0C0",
+                        "handler":  "0x8027475C",
+                        "description":  "Create ring of smoke? (Carrying object)"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x000044F2",
+                        "group":  "0x0C0",
+                        "handler":  "0x80273CD0",
+                        "description":  "Reset Mario in water?"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x000044F3",
+                        "group":  "0x0C0",
+                        "handler":  "0x80273E74",
+                        "description":  "Reset Mario in water? (Carrying object)"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x000044F8",
+                        "group":  "0x0C0",
+                        "handler":  "0x80274030",
+                        "description":  "???"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x000044F9",
+                        "group":  "0x0C0",
+                        "handler":  "0x80274134",
+                        "description":  "??? (Carrying object)"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x000044FA",
+                        "group":  "0x0C0",
+                        "handler":  "0x802744AC",
+                        "description":  "Create puff of smoke?"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x000044FB",
+                        "group":  "0x0C0",
+                        "handler":  "0x80274580",
+                        "description":  "Create puff of smoke? (Carrying object)"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x0002020D",
+                        "group":  "0x000",
+                        "handler":  "0x80261CEC",
+                        "description":  "???"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x00020226",
+                        "group":  "0x000",
+                        "handler":  "0x80262980",
+                        "description":  "Bouncing in place from Bowser\u0027s Jump onto platform"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x00020338",
+                        "group":  "0x100",
+                        "handler":  "0x8025A858",
+                        "description":  "Getting electrocuted"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x00020339",
+                        "group":  "0x100",
+                        "handler":  "0x8025A9AC",
+                        "description":  "Getting squished"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x0002033A",
+                        "group":  "0x100",
+                        "handler":  "0x8025AFFC",
+                        "description":  "Head stuck in snow"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x0002033B",
+                        "group":  "0x100",
+                        "handler":  "0x8025B050",
+                        "description":  "Butt stuck in snow"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x0002033C",
+                        "group":  "0x100",
+                        "handler":  "0x8025B0A4",
+                        "description":  "Lower torso stuck in snow"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x00020370",
+                        "group":  "0x140",
+                        "handler":  "0x8025FB90",
+                        "description":  "Being carried by King bob-omb/Chuckya"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x00020449",
+                        "group":  "0x040",
+                        "handler":  "0x8026795C",
+                        "description":  "On fire (Lose 3 health)"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x00020460",
+                        "group":  "0x040",
+                        "handler":  "0x802689F8",
+                        "description":  "Fallen down from high place (on back)"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x00020461",
+                        "group":  "0x040",
+                        "handler":  "0x80268ADC",
+                        "description":  "Fallen down from high place (on stomach)"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x00020462",
+                        "group":  "0x040",
+                        "handler":  "0x80268B64",
+                        "description":  "Knocked down after hitting a wall"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x00020463",
+                        "group":  "0x040",
+                        "handler":  "0x80268BB0",
+                        "description":  "Knocked down, got up quickly"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x00020464",
+                        "group":  "0x040",
+                        "handler":  "0x80268BFC",
+                        "description":  "Stumbling from getting hit"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x00020465",
+                        "group":  "0x040",
+                        "handler":  "0x80268C48",
+                        "description":  "Stumbling from getting hit"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x00020466",
+                        "group":  "0x040",
+                        "handler":  "0x80268C94",
+                        "description":  "Stumbled backward from getting hit"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x00020467",
+                        "group":  "0x040",
+                        "handler":  "0x80268D04",
+                        "description":  "Knocked backward hard"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x00021311",
+                        "group":  "0x100",
+                        "handler":  "0x80258744",
+                        "description":  "Kill Mario"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x00021312",
+                        "group":  "0x100",
+                        "handler":  "0x80258964",
+                        "description":  "Kill Mario by quicksand"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x00021313",
+                        "group":  "0x100",
+                        "handler":  "0x802587EC",
+                        "description":  "Kill Mario from shocking"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x00021314",
+                        "group":  "0x100",
+                        "handler":  "0x8025883C",
+                        "description":  "Kill Mario from toxic haze"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x00021315",
+                        "group":  "0x100",
+                        "handler":  "0x802588F8",
+                        "description":  "Kill Mario (laying on stomach)"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x00021316",
+                        "group":  "0x100",
+                        "handler":  "0x8025888C",
+                        "description":  "Kill Mario (laying on back)"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x00021317",
+                        "group":  "0x100",
+                        "handler":  "0x80258A7C",
+                        "description":  "Kill Mario by being eaten by Bubba"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x00100341",
+                        "group":  "0x140",
+                        "handler":  "0x8025E7A4",
+                        "description":  "Grabbed a tree/pole from base"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x00100342",
+                        "group":  "0x140",
+                        "handler":  "0x8025E830",
+                        "description":  "Grabbed tree from top part (produce leaves)"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x00100343",
+                        "group":  "0x140",
+                        "handler":  "0x8025E5A8",
+                        "description":  "Climbing up tree/pole"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x00100344",
+                        "group":  "0x140",
+                        "handler":  "0x8025E930",
+                        "description":  "Move to/from the top of a tree/pole"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x00100345",
+                        "group":  "0x140",
+                        "handler":  "0x8025EA30",
+                        "description":  "At the top of a tree/pole"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x00200349",
+                        "group":  "0x140",
+                        "handler":  "0x8025F0B4",
+                        "description":  "Some landing animation?"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x0020054A",
+                        "group":  "0x140",
+                        "handler":  "0x8025F1E4",
+                        "description":  "Some landing animation?"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x0080023C",
+                        "group":  "0x000",
+                        "handler":  "0x8026350C",
+                        "description":  "Ground pound hit"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x00800380",
+                        "group":  "0x180",
+                        "handler":  "0x80275328",
+                        "description":  "Leg sweep attack / punching"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x00800457",
+                        "group":  "0x040",
+                        "handler":  "0x802665B4",
+                        "description":  "Punch?"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x0080045A",
+                        "group":  "0x040",
+                        "handler":  "0x80268338",
+                        "description":  "Slide move (on ground)"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x008008A9",
+                        "group":  "0x080",
+                        "handler":  "0x8026C9FC",
+                        "description":  "Ground pounding"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x0081089B",
+                        "group":  "0x080",
+                        "handler":  "0x8026BF40",
+                        "description":  "Riding koopa shell (Free fall)"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x00840452",
+                        "group":  "0x040",
+                        "handler":  "0x80268074",
+                        "description":  "Sliding on butt"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x00840454",
+                        "group":  "0x040",
+                        "handler":  "0x802680D4",
+                        "description":  "Roll grab object?"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x00880456",
+                        "group":  "0x040",
+                        "handler":  "0x80268684",
+                        "description":  "Dive (sliding on ground)"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x00880898",
+                        "group":  "0x080",
+                        "handler":  "0x8026E968",
+                        "description":  "Shot out of cannon"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x008C0453",
+                        "group":  "0x040",
+                        "handler":  "0x802685C0",
+                        "description":  "Get up from dive?"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x008C0455",
+                        "group":  "0x040",
+                        "handler":  "0x80268608",
+                        "description":  "Slide grabbed object?"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x01000882",
+                        "group":  "0x080",
+                        "handler":  "0x8026B814",
+                        "description":  "Triple jump"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x01000883",
+                        "group":  "0x080",
+                        "handler":  "0x8026B90C",
+                        "description":  "backflip"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x01000887",
+                        "group":  "0x080",
+                        "handler":  "0x8026BCC0",
+                        "description":  "Side somersault"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x01000889",
+                        "group":  "0x080",
+                        "handler":  "0x8026C5D0",
+                        "description":  "Jump?"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x0100088C",
+                        "group":  "0x080",
+                        "handler":  "0x8026B9AC",
+                        "description":  "Falling"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x010008A1",
+                        "group":  "0x080",
+                        "handler":  "0x8026BBB4",
+                        "description":  "Pick up object?"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x010008A2",
+                        "group":  "0x080",
+                        "handler":  "0x8026E088",
+                        "description":  "Sliding on butt carrying object (in air)"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x010008A3",
+                        "group":  "0x080",
+                        "handler":  "0x8026C738",
+                        "description":  "??? (carrying object in air?)"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x010008A6",
+                        "group":  "0x080",
+                        "handler":  "0x8026DB54",
+                        "description":  "Dive role flip"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x010008AD",
+                        "group":  "0x080",
+                        "handler":  "0x8026DCF4",
+                        "description":  "Reverse roll in air?"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x010208B0",
+                        "group":  "0x080",
+                        "handler":  "0x8026D3C8",
+                        "description":  "Falling backward"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x010208B1",
+                        "group":  "0x080",
+                        "handler":  "0x8026D43C",
+                        "description":  "Falling forward"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x010208B2",
+                        "group":  "0x080",
+                        "handler":  "0x8026D508",
+                        "description":  "Knocked forward"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x010208B3",
+                        "group":  "0x080",
+                        "handler":  "0x8026D4B0",
+                        "description":  "Knocked backward"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x010208B4",
+                        "group":  "0x080",
+                        "handler":  "0x8026CD0C",
+                        "description":  "Set on fire (Lose 3 health)"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x010208B5",
+                        "group":  "0x080",
+                        "handler":  "0x8026CE50",
+                        "description":  "Set on fire (Lose 3 health)"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x010208B6",
+                        "group":  "0x080",
+                        "handler":  "0x8026D6FC",
+                        "description":  "Hit wall"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x010208B7",
+                        "group":  "0x080",
+                        "handler":  "0x8026E2B4",
+                        "description":  "Butt on fire"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x010208B8",
+                        "group":  "0x080",
+                        "handler":  "0x8026D770",
+                        "description":  "Blown away by big snowman (Lose cap)"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x010208BD",
+                        "group":  "0x080",
+                        "handler":  "0x8026D608",
+                        "description":  "Knocked down forward"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x010208BE",
+                        "group":  "0x080",
+                        "handler":  "0x8026D560",
+                        "description":  "Knocked down backward"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x018008AA",
+                        "group":  "0x080",
+                        "handler":  "0x8026E59C",
+                        "description":  "Slide move (moving + pressing Z then B)"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x018008AC",
+                        "group":  "0x080",
+                        "handler":  "0x8026E810",
+                        "description":  "Jump kick"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x0188088A",
+                        "group":  "0x080",
+                        "handler":  "0x8026C1E0",
+                        "description":  "Dive"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x0281089A",
+                        "group":  "0x080",
+                        "handler":  "0x8026BF40",
+                        "description":  "Riding koopa shell (Jumping)"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x03000880",
+                        "group":  "0x080",
+                        "handler":  "0x8026B6A0",
+                        "description":  "Jump"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x03000881",
+                        "group":  "0x080",
+                        "handler":  "0x8026B740",
+                        "description":  "Second jump"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x03000885",
+                        "group":  "0x080",
+                        "handler":  "0x8026C880",
+                        "description":  "???"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x03000886",
+                        "group":  "0x080",
+                        "handler":  "0x8026BDCC",
+                        "description":  "Jumping off of tree/pole"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x03000888",
+                        "group":  "0x080",
+                        "handler":  "0x8026BE78",
+                        "description":  "longjump"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x0300088D",
+                        "group":  "0x080",
+                        "handler":  "0x8026F614",
+                        "description":  "Jumping off top of tree/pole"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x0300088E",
+                        "group":  "0x080",
+                        "handler":  "0x8026DE98",
+                        "description":  "Sliding on butt (in air)"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x03000894",
+                        "group":  "0x080",
+                        "handler":  "0x8026F2EC",
+                        "description":  "Pushed forward? (Messes up camera)"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x030008A0",
+                        "group":  "0x080",
+                        "handler":  "0x8026BAB8",
+                        "description":  "Jumping with object"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x030008AF",
+                        "group":  "0x080",
+                        "handler":  "0x8026F840",
+                        "description":  "Sparkle triple jump"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x04000440",
+                        "group":  "0x040",
+                        "handler":  "0x80266354",
+                        "description":  "moving"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x04000445",
+                        "group":  "0x040",
+                        "handler":  "0x80266E48",
+                        "description":  "moving (sudden stop)"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x0400044A",
+                        "group":  "0x040",
+                        "handler":  "0x80266FC8",
+                        "description":  "moving (slowing down)"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x04000470",
+                        "group":  "0x040",
+                        "handler":  "0x80269108",
+                        "description":  "Landed on ground"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x04000471",
+                        "group":  "0x040",
+                        "handler":  "0x80269170",
+                        "description":  "Landed on ground harder"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x04000472",
+                        "group":  "0x040",
+                        "handler":  "0x8026947C",
+                        "description":  "Double jump landing"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x04000473",
+                        "group":  "0x040",
+                        "handler":  "0x802691D8",
+                        "description":  "Side-flip landing"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x04000478",
+                        "group":  "0x040",
+                        "handler":  "0x802694E4",
+                        "description":  "Triple jump ground landing"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x0400047A",
+                        "group":  "0x040",
+                        "handler":  "0x80269588",
+                        "description":  "Back-flip ground landing"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x04008448",
+                        "group":  "0x040",
+                        "handler":  "0x80267728",
+                        "description":  "Crawling"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x04001301",
+                        "group":  "0x100",
+                        "handler":  "0x8025B58C",
+                        "description":  "Activate intro cutscene"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x04808459",
+                        "group":  "0x040",
+                        "handler":  "0x80268168",
+                        "description":  "Sliding while crouching"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x08000206",
+                        "group":  "0x000",
+                        "handler":  "0x80262080",
+                        "description":  "???"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x08000207",
+                        "group":  "0x000",
+                        "handler":  "0x802619D0",
+                        "description":  "???"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x08000208",
+                        "group":  "0x000",
+                        "handler":  "0x80261AD0",
+                        "description":  "Holding king bob-omb/Chuckya"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x08000225",
+                        "group":  "0x000",
+                        "handler":  "0x80262FEC",
+                        "description":  "Slide move end animation"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x0800022F",
+                        "group":  "0x000",
+                        "handler":  "0x80262F50",
+                        "description":  "Back-flip end animation"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x08000234",
+                        "group":  "0x000",
+                        "handler":  "0x802630F8",
+                        "description":  "Pickup object?"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x08000235",
+                        "group":  "0x000",
+                        "handler":  "0x802631F0",
+                        "description":  "Pickup object?"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x08000239",
+                        "group":  "0x000",
+                        "handler":  "0x80262FEC",
+                        "description":  "Bounce out of lava end animation"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x0800023A",
+                        "group":  "0x000",
+                        "handler":  "0x80262EF0",
+                        "description":  "triple jump end animation"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x0800023B",
+                        "group":  "0x000",
+                        "handler":  "0x8026305C",
+                        "description":  "Long-jump end animation"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x0800043F",
+                        "group":  "0x000",
+                        "handler":  "0x80262398",
+                        "description":  "Roll grab object? Changes action to 0x08000207"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x0800034B",
+                        "group":  "0x140",
+                        "handler":  "0x8025F6C0",
+                        "description":  "Hanging on a ledge"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x080042F0",
+                        "group":  "0x0C0",
+                        "handler":  "0x80273A2C",
+                        "description":  "Set carrying nothing?"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x080042F1",
+                        "group":  "0x0C0",
+                        "handler":  "0x80273BD4",
+                        "description":  "Set carrying object?"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x08100340",
+                        "group":  "0x140",
+                        "handler":  "0x8025E21C",
+                        "description":  "On tree/pole"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x08200348",
+                        "group":  "0x140",
+                        "handler":  "0x8025EF58",
+                        "description":  "Some landing animation?"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x0C000203",
+                        "group":  "0x000",
+                        "handler":  "0x80261268",
+                        "description":  "Sleeping"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x0C000204",
+                        "group":  "0x000",
+                        "handler":  "0x802614FC",
+                        "description":  "Waking up"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x0C000227",
+                        "group":  "0x000",
+                        "handler":  "0x802635E8",
+                        "description":  "Looking around with zoomed-in camera (C-button up)"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x0C000230",
+                        "group":  "0x000",
+                        "handler":  "0x80262D68",
+                        "description":  "Landing from jump"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x0C000231",
+                        "group":  "0x000",
+                        "handler":  "0x80262DC4",
+                        "description":  "Landing from double-jump"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x0C000232",
+                        "group":  "0x000",
+                        "handler":  "0x80262E94",
+                        "description":  "Landing from falling off cliff"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x0C000233",
+                        "group":  "0x000",
+                        "handler":  "0x80262E20",
+                        "description":  "Landing from side-somersault"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x0C00023D",
+                        "group":  "0x000",
+                        "handler":  "0x802621DC",
+                        "description":  "End of sliding animation"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x0C00023E",
+                        "group":  "0x000",
+                        "handler":  "0x802622DC",
+                        "description":  "End of ground-pound animation"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x0C008220",
+                        "group":  "0x000",
+                        "handler":  "0x80261DB4",
+                        "description":  "Crouching"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x0C008221",
+                        "group":  "0x000",
+                        "handler":  "0x80262530",
+                        "description":  "Start crouching"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x0C008222",
+                        "group":  "0x000",
+                        "handler":  "0x80262650",
+                        "description":  "Stop crouching"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x0C008223",
+                        "group":  "0x000",
+                        "handler":  "0x80262770",
+                        "description":  "Start crawling"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x0C008224",
+                        "group":  "0x000",
+                        "handler":  "0x80262890",
+                        "description":  "Stop crawling"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x0C400201",
+                        "group":  "0x000",
+                        "handler":  "0x80260CB4",
+                        "description":  "Idle"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x0C400202",
+                        "group":  "0x000",
+                        "handler":  "0x80261000",
+                        "description":  "Yawning"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x0C400205",
+                        "group":  "0x000",
+                        "handler":  "0x80261F70",
+                        "description":  "Reset Mario to idle(0x0C400201)?"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x0C400209",
+                        "group":  "0x000",
+                        "handler":  "0x802618D8",
+                        "description":  "Coughing in toxic haze"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x0C40020A",
+                        "group":  "0x000",
+                        "handler":  "0x8026168C",
+                        "description":  "Shivering in cold idle"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x10020372",
+                        "group":  "0x140",
+                        "handler":  "0x80260154",
+                        "description":  "Activate Mario\u0027s helicopter spin"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x1008089C",
+                        "group":  "0x080",
+                        "handler":  "0x8026F660",
+                        "description":  "Caught in wind up-draft"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x108008A4",
+                        "group":  "0x080",
+                        "handler":  "0x8026C034",
+                        "description":  "Helicopter spin"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x10880899",
+                        "group":  "0x080",
+                        "handler":  "0x8026EC00",
+                        "description":  "Flying with wing cap"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x18800238",
+                        "group":  "0x000",
+                        "handler":  "0x802633B4",
+                        "description":  "Landing from helicopter spin"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x20001305",
+                        "group":  "0x100",
+                        "handler":  "0x80257AB0",
+                        "description":  "You got 1/3/8/30/50/70 stars IC message"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x20001306",
+                        "group":  "0x100",
+                        "handler":  "0x80257748",
+                        "description":  "Talking to a NPC (Toad/KTQ/Bowser)"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x20810446",
+                        "group":  "0x040",
+                        "handler":  "0x80267504",
+                        "description":  "Riding koopa shell"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x300024D0",
+                        "group":  "0x0C0",
+                        "handler":  "0x80271AA0",
+                        "description":  "Swimming in water"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x300024D1",
+                        "group":  "0x0C0",
+                        "handler":  "0x80271D04",
+                        "description":  "Swimming in water (slowing down)"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x300024D2",
+                        "group":  "0x0C0",
+                        "handler":  "0x80271EB4",
+                        "description":  "Stop swimming?"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x300024D3",
+                        "group":  "0x0C0",
+                        "handler":  "0x8027202C",
+                        "description":  "Swimming while carrying object"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x300024D4",
+                        "group":  "0x0C0",
+                        "handler":  "0x8027226C",
+                        "description":  "Swimming while carrying object (slowing down)"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x300024D5",
+                        "group":  "0x0C0",
+                        "handler":  "0x802723F0",
+                        "description":  "Stop swimming? (carrying object)"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x300024D6",
+                        "group":  "0x0C0",
+                        "handler":  "0x80272548",
+                        "description":  "Riding Koopa shell in water"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x300024E0",
+                        "group":  "0x0C0",
+                        "handler":  "0x80272778",
+                        "description":  "Throwing object (in/under water)"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x300024E1",
+                        "group":  "0x0C0",
+                        "handler":  "0x80272870",
+                        "description":  "Punching/Grabbing (in/under water)"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x300022C2",
+                        "group":  "0x0C0",
+                        "handler":  "0x802713BC",
+                        "description":  "Swim movement end animation"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x300022C3",
+                        "group":  "0x0C0",
+                        "handler":  "0x802714A8",
+                        "description":  "Swim movement end animation (Carrying Object)"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x300022E2",
+                        "group":  "0x0C0",
+                        "handler":  "0x80272E3C",
+                        "description":  "Splash into water"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x300032C4",
+                        "group":  "0x0C0",
+                        "handler":  "0x80272CBC",
+                        "description":  "Kill Mario in water (drowned)"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x300032C7",
+                        "group":  "0x0C0",
+                        "handler":  "0x80272DC0",
+                        "description":  "Kill Mario in water"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x300222C5",
+                        "group":  "0x0C0",
+                        "handler":  "0x80272B1C",
+                        "description":  "Knocked backward in water"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x300222C6",
+                        "group":  "0x0C0",
+                        "handler":  "0x80272B64",
+                        "description":  "Knocked forward in water"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x300222C8",
+                        "group":  "0x0C0",
+                        "handler":  "0x80272BAC",
+                        "description":  "Getting electrocuted in water"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x300222E3",
+                        "group":  "0x0C0",
+                        "handler":  "0x80273160",
+                        "description":  "Teleport somewhere?"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x380022C0",
+                        "group":  "0x0C0",
+                        "handler":  "0x802711D4",
+                        "description":  "Idle in water"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x380022C1",
+                        "group":  "0x0C0",
+                        "handler":  "0x802712C0",
+                        "description":  "Carrying object underwater"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x80000588",
+                        "group":  "0x180",
+                        "handler":  "0x80275794",
+                        "description":  "Throwing a box"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x80000589",
+                        "group":  "0x180",
+                        "handler":  "0x802758C0",
+                        "description":  "Throwing King bob-omb/Chuckya"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x80000A36",
+                        "group":  "0x000",
+                        "handler":  "0x802632E8",
+                        "description":  "Throwing some object?"
+                    },
+                    {
+                        "section":  "List of actions",
+                        "action":  "0x830008AB",
+                        "group":  "0x080",
+                        "handler":  "0x8026C4B8",
+                        "description":  "Throwing box while in the air"
+                    }
+                ]
+}

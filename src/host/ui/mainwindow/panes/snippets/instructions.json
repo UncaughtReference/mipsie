@@ -1,0 +1,2831 @@
+{
+    "source":  "https://asm-editor.specy.app/documentation/mips/instruction",
+    "highlighterSource":  "src/host/ui/mainwindow/panes/editor/mipshighlighter.cpp",
+    "entries":  [
+                    {
+                        "name":  "abs",
+                        "longName":  "Absolute value",
+                        "summary":  "Sets $t1 to the absolute value of $t2.",
+                        "forms":  [
+                                      "abs $t1, $t2"
+                                  ],
+                        "operands":  [
+                                         {
+                                             "operand":  "$t1",
+                                             "description":  "Any general-purpose register, $0 to $31, using its numeric or named spelling, such as $8 or $t0 ($zero is $0; $ra is $31)."
+                                         },
+                                         {
+                                             "operand":  "$t2",
+                                             "description":  "A general-purpose register. It may be the same register as $t1."
+                                         }
+                                     ],
+                        "source":  "https://asm-editor.specy.app/documentation/mips/instruction/abs"
+                    },
+                    {
+                        "name":  "add",
+                        "longName":  "Add with overflow trap",
+                        "summary":  "Adds $t2 and $t3, or $t2 and an immediate, into $t1 and traps if the signed result overflows.",
+                        "forms":  [
+                                      "add $t1, $t2, $t3"
+                                  ],
+                        "operands":  [
+                                         {
+                                             "operand":  "$t1",
+                                             "description":  "Any general-purpose register, $0 to $31, using its numeric or named spelling, such as $8 or $t0 ($zero is $0; $ra is $31)."
+                                         },
+                                         {
+                                             "operand":  "$t2",
+                                             "description":  "A general-purpose register. It may be the same register as $t1."
+                                         },
+                                         {
+                                             "operand":  "$t3",
+                                             "description":  "A general-purpose register. It may be the same register as $t1."
+                                         },
+                                         {
+                                             "operand":  "imm",
+                                             "description":  "An immediate value: a signed 16-bit value (-32768 to 32767) or a 32-bit value (-2147483648 to 4294967295). The assembler chooses a supported encoding for the value and other operands; a pseudoinstruction may expand into several instructions."
+                                         }
+                                     ],
+                        "source":  "https://asm-editor.specy.app/documentation/mips/instruction/add"
+                    },
+                    {
+                        "name":  "addi",
+                        "longName":  "Add immediate with overflow trap",
+                        "summary":  "Adds an immediate to $t2 and puts the sum in $t1, trapping if the signed result overflows.",
+                        "forms":  [
+                                      "addi $t1, $t2, imm16"
+                                  ],
+                        "operands":  [
+                                         {
+                                             "operand":  "$t1",
+                                             "description":  "Any general-purpose register, $0 to $31, using its numeric or named spelling, such as $8 or $t0 ($zero is $0; $ra is $31)."
+                                         },
+                                         {
+                                             "operand":  "$t2",
+                                             "description":  "A general-purpose register. It may be the same register as $t1."
+                                         },
+                                         {
+                                             "operand":  "imm16",
+                                             "description":  "A signed 16-bit immediate, -32768 to 32767."
+                                         },
+                                         {
+                                             "operand":  "imm32",
+                                             "description":  "A 32-bit immediate, -2147483648 to 4294967295. Pseudoinstruction expansion may overwrite $at, losing its previous value."
+                                         },
+                                         {
+                                             "operand":  "label",
+                                             "description":  "A named address in the program, such as the start of a loop or a variable in.data."
+                                         }
+                                     ],
+                        "source":  "https://asm-editor.specy.app/documentation/mips/instruction/addi"
+                    },
+                    {
+                        "name":  "addiu",
+                        "longName":  "Add immediate unsigned (no overflow trap)",
+                        "summary":  "Adds a sign-extended immediate to $t2 and puts the sum in $t1, wrapping on overflow instead of trapping.",
+                        "forms":  [
+                                      "addiu $t1, $t2, imm16"
+                                  ],
+                        "operands":  [
+                                         {
+                                             "operand":  "$t1",
+                                             "description":  "Any general-purpose register, $0 to $31, using its numeric or named spelling, such as $8 or $t0 ($zero is $0; $ra is $31)."
+                                         },
+                                         {
+                                             "operand":  "$t2",
+                                             "description":  "A general-purpose register. It may be the same register as $t1."
+                                         },
+                                         {
+                                             "operand":  "imm16",
+                                             "description":  "A signed 16-bit immediate, -32768 to 32767."
+                                         },
+                                         {
+                                             "operand":  "imm32",
+                                             "description":  "A 32-bit immediate, -2147483648 to 4294967295. Pseudoinstruction expansion may overwrite $at, losing its previous value."
+                                         },
+                                         {
+                                             "operand":  "label",
+                                             "description":  "A named address in the program, such as the start of a loop or a variable in.data."
+                                         }
+                                     ],
+                        "source":  "https://asm-editor.specy.app/documentation/mips/instruction/addiu"
+                    },
+                    {
+                        "name":  "addu",
+                        "longName":  "Add unsigned (no overflow trap)",
+                        "summary":  "Adds $t2 and $t3, or $t2 and an immediate, into $t1 and wraps on overflow instead of trapping.",
+                        "forms":  [
+                                      "addu $t1, $t2, $t3"
+                                  ],
+                        "operands":  [
+                                         {
+                                             "operand":  "$t1",
+                                             "description":  "Any general-purpose register, $0 to $31, using its numeric or named spelling, such as $8 or $t0 ($zero is $0; $ra is $31)."
+                                         },
+                                         {
+                                             "operand":  "$t2",
+                                             "description":  "A general-purpose register. It may be the same register as $t1."
+                                         },
+                                         {
+                                             "operand":  "$t3",
+                                             "description":  "A general-purpose register. It may be the same register as $t1."
+                                         },
+                                         {
+                                             "operand":  "imm32",
+                                             "description":  "A 32-bit immediate, -2147483648 to 4294967295. Pseudoinstruction expansion may overwrite $at, losing its previous value."
+                                         }
+                                     ],
+                        "source":  "https://asm-editor.specy.app/documentation/mips/instruction/addu"
+                    },
+                    {
+                        "name":  "and",
+                        "longName":  "Bitwise AND",
+                        "summary":  "Sets $t1 to $t2 AND $t3, or an immediate, so each result bit is 1 only where both inputs are 1.",
+                        "forms":  [
+                                      "and $t1, $t2, $t3"
+                                  ],
+                        "operands":  [
+                                         {
+                                             "operand":  "$t1",
+                                             "description":  "Any general-purpose register, $0 to $31, using its numeric or named spelling, such as $8 or $t0 ($zero is $0; $ra is $31)."
+                                         },
+                                         {
+                                             "operand":  "$t2",
+                                             "description":  "A general-purpose register. It may be the same register as $t1."
+                                         },
+                                         {
+                                             "operand":  "$t3",
+                                             "description":  "A general-purpose register. It may be the same register as $t1."
+                                         },
+                                         {
+                                             "operand":  "uimm16",
+                                             "description":  "An unsigned 16-bit immediate, 0 to 65535."
+                                         }
+                                     ],
+                        "source":  "https://asm-editor.specy.app/documentation/mips/instruction/and"
+                    },
+                    {
+                        "name":  "andi",
+                        "longName":  "Bitwise AND immediate",
+                        "summary":  "Sets $t1 to $t2 AND an immediate, with the immediate zero-extended instead of sign-extended.",
+                        "forms":  [
+                                      "andi $t1, $t2, uimm16"
+                                  ],
+                        "operands":  [
+                                         {
+                                             "operand":  "$t1",
+                                             "description":  "Any general-purpose register, $0 to $31, using its numeric or named spelling, such as $8 or $t0 ($zero is $0; $ra is $31)."
+                                         },
+                                         {
+                                             "operand":  "$t2",
+                                             "description":  "A general-purpose register. It may be the same register as $t1."
+                                         },
+                                         {
+                                             "operand":  "uimm16",
+                                             "description":  "An unsigned 16-bit immediate, 0 to 65535."
+                                         },
+                                         {
+                                             "operand":  "imm32",
+                                             "description":  "A 32-bit immediate, -2147483648 to 4294967295. Pseudoinstruction expansion may overwrite $at, losing its previous value."
+                                         },
+                                         {
+                                             "operand":  "imm",
+                                             "description":  "An immediate value: an unsigned 16-bit value (0 to 65535) or a 32-bit value (-2147483648 to 4294967295). The assembler chooses a supported encoding for the value and other operands; a pseudoinstruction may expand into several instructions."
+                                         }
+                                     ],
+                        "source":  "https://asm-editor.specy.app/documentation/mips/instruction/andi"
+                    },
+                    {
+                        "name":  "b",
+                        "longName":  "Branch",
+                        "summary":  "Branches unconditionally to label.",
+                        "forms":  [
+                                      "b label"
+                                  ],
+                        "operands":  [
+                                         {
+                                             "operand":  "label",
+                                             "description":  "A named address in the program, such as the start of a loop or a variable in.data."
+                                         }
+                                     ],
+                        "source":  "https://asm-editor.specy.app/documentation/mips/instruction/b"
+                    },
+                    {
+                        "name":  "bal",
+                        "longName":  "Branch and link",
+                        "summary":  "Branches unconditionally to label and saves the return address in $ra.",
+                        "forms":  [
+                                      "bal label"
+                                  ],
+                        "operands":  [
+                                         {
+                                             "operand":  "label",
+                                             "description":  "A named address in the program, such as the start of a loop or a variable in.data."
+                                         }
+                                     ],
+                        "source":  "https://asm-editor.specy.app/documentation/mips/instruction/bal"
+                    },
+                    {
+                        "name":  "bc1f",
+                        "longName":  "Branch if FP condition false",
+                        "summary":  "Branches to label if the FP condition flag (flag 0 by default) is false, as set by a preceding compare instruction.",
+                        "forms":  [
+                                      "bc1f label",
+                                      "bc1f cc, label"
+                                  ],
+                        "operands":  [
+                                         {
+                                             "operand":  "label",
+                                             "description":  "A named address in the program, such as the start of a loop or a variable in.data."
+                                         },
+                                         {
+                                             "operand":  "cc",
+                                             "description":  "A floating-point condition flag number, 0 to 7. Comparisons set these flags; bc1t and bc1f test them."
+                                         }
+                                     ],
+                        "source":  "https://asm-editor.specy.app/documentation/mips/instruction/bc1f"
+                    },
+                    {
+                        "name":  "bc1t",
+                        "longName":  "Branch if FP condition true",
+                        "summary":  "Branches to label if the FP condition flag (flag 0 by default) is true, as set by a preceding compare instruction.",
+                        "forms":  [
+                                      "bc1t label",
+                                      "bc1t cc, label"
+                                  ],
+                        "operands":  [
+                                         {
+                                             "operand":  "label",
+                                             "description":  "A named address in the program, such as the start of a loop or a variable in.data."
+                                         },
+                                         {
+                                             "operand":  "cc",
+                                             "description":  "A floating-point condition flag number, 0 to 7. Comparisons set these flags; bc1t and bc1f test them."
+                                         }
+                                     ],
+                        "source":  "https://asm-editor.specy.app/documentation/mips/instruction/bc1t"
+                    },
+                    {
+                        "name":  "beq",
+                        "longName":  "Branch on equal",
+                        "summary":  "Branches to label if $t1 equals $t2, or an immediate.",
+                        "forms":  [
+                                      "beq $t1, $t2, label"
+                                  ],
+                        "operands":  [
+                                         {
+                                             "operand":  "$t1",
+                                             "description":  "Any general-purpose register, $0 to $31, using its numeric or named spelling, such as $8 or $t0 ($zero is $0; $ra is $31)."
+                                         },
+                                         {
+                                             "operand":  "$t2",
+                                             "description":  "A general-purpose register. It may be the same register as $t1."
+                                         },
+                                         {
+                                             "operand":  "label",
+                                             "description":  "A named address in the program, such as the start of a loop or a variable in.data."
+                                         },
+                                         {
+                                             "operand":  "imm",
+                                             "description":  "An immediate value: a signed 16-bit value (-32768 to 32767) or a 32-bit value (-2147483648 to 4294967295). The assembler chooses a supported encoding for the value and other operands; a pseudoinstruction may expand into several instructions."
+                                         }
+                                     ],
+                        "source":  "https://asm-editor.specy.app/documentation/mips/instruction/beq"
+                    },
+                    {
+                        "name":  "beqz",
+                        "longName":  "Branch if equal to zero",
+                        "summary":  "Branches to label if $t1 is zero.",
+                        "forms":  [
+                                      "beqz $t1, label"
+                                  ],
+                        "operands":  [
+                                         {
+                                             "operand":  "$t1",
+                                             "description":  "Any general-purpose register, $0 to $31, using its numeric or named spelling, such as $8 or $t0 ($zero is $0; $ra is $31)."
+                                         },
+                                         {
+                                             "operand":  "label",
+                                             "description":  "A named address in the program, such as the start of a loop or a variable in.data."
+                                         }
+                                     ],
+                        "source":  "https://asm-editor.specy.app/documentation/mips/instruction/beqz"
+                    },
+                    {
+                        "name":  "bge",
+                        "longName":  "Branch if greater or equal",
+                        "summary":  "Branches to label if $t1 is greater than or equal to $t2, or an immediate, as signed values.",
+                        "forms":  [
+                                      "bge $t1, $t2, label",
+                                      "bge $t1, imm, label"
+                                  ],
+                        "operands":  [
+                                         {
+                                             "operand":  "$t1",
+                                             "description":  "Any general-purpose register, $0 to $31, using its numeric or named spelling, such as $8 or $t0 ($zero is $0; $ra is $31)."
+                                         },
+                                         {
+                                             "operand":  "$t2",
+                                             "description":  "A general-purpose register. It may be the same register as $t1."
+                                         },
+                                         {
+                                             "operand":  "label",
+                                             "description":  "A named address in the program, such as the start of a loop or a variable in.data."
+                                         },
+                                         {
+                                             "operand":  "imm",
+                                             "description":  "An immediate value: a signed 16-bit value (-32768 to 32767) or a 32-bit value (-2147483648 to 4294967295). The assembler chooses a supported encoding for the value and other operands; a pseudoinstruction may expand into several instructions."
+                                         }
+                                     ],
+                        "source":  "https://asm-editor.specy.app/documentation/mips/instruction/bge"
+                    },
+                    {
+                        "name":  "bgeu",
+                        "longName":  "Branch if greater or equal unsigned",
+                        "summary":  "Branches to label if $t1 is greater than or equal to $t2, or an immediate, as unsigned values.",
+                        "forms":  [
+                                      "bgeu $t1, $t2, label",
+                                      "bgeu $t1, imm, label"
+                                  ],
+                        "operands":  [
+                                         {
+                                             "operand":  "$t1",
+                                             "description":  "Any general-purpose register, $0 to $31, using its numeric or named spelling, such as $8 or $t0 ($zero is $0; $ra is $31)."
+                                         },
+                                         {
+                                             "operand":  "$t2",
+                                             "description":  "A general-purpose register. It may be the same register as $t1."
+                                         },
+                                         {
+                                             "operand":  "label",
+                                             "description":  "A named address in the program, such as the start of a loop or a variable in.data."
+                                         },
+                                         {
+                                             "operand":  "imm",
+                                             "description":  "An immediate value: a signed 16-bit value (-32768 to 32767) or a 32-bit value (-2147483648 to 4294967295). The assembler chooses a supported encoding for the value and other operands; a pseudoinstruction may expand into several instructions."
+                                         }
+                                     ],
+                        "source":  "https://asm-editor.specy.app/documentation/mips/instruction/bgeu"
+                    },
+                    {
+                        "name":  "bgez",
+                        "longName":  "Branch on greater than or equal to zero",
+                        "summary":  "Branches to label if $t1 is greater than or equal to zero, as a signed comparison.",
+                        "forms":  [
+                                      "bgez $t1, label"
+                                  ],
+                        "operands":  [
+                                         {
+                                             "operand":  "$t1",
+                                             "description":  "Any general-purpose register, $0 to $31, using its numeric or named spelling, such as $8 or $t0 ($zero is $0; $ra is $31)."
+                                         },
+                                         {
+                                             "operand":  "label",
+                                             "description":  "A named address in the program, such as the start of a loop or a variable in.data."
+                                         }
+                                     ],
+                        "source":  "https://asm-editor.specy.app/documentation/mips/instruction/bgez"
+                    },
+                    {
+                        "name":  "bgt",
+                        "longName":  "Branch if greater than",
+                        "summary":  "Branches to label if $t1 is greater than $t2, or an immediate, as signed values.",
+                        "forms":  [
+                                      "bgt $t1, $t2, label",
+                                      "bgt $t1, imm, label"
+                                  ],
+                        "operands":  [
+                                         {
+                                             "operand":  "$t1",
+                                             "description":  "Any general-purpose register, $0 to $31, using its numeric or named spelling, such as $8 or $t0 ($zero is $0; $ra is $31)."
+                                         },
+                                         {
+                                             "operand":  "$t2",
+                                             "description":  "A general-purpose register. It may be the same register as $t1."
+                                         },
+                                         {
+                                             "operand":  "label",
+                                             "description":  "A named address in the program, such as the start of a loop or a variable in.data."
+                                         },
+                                         {
+                                             "operand":  "imm",
+                                             "description":  "An immediate value: a signed 16-bit value (-32768 to 32767) or a 32-bit value (-2147483648 to 4294967295). The assembler chooses a supported encoding for the value and other operands; a pseudoinstruction may expand into several instructions."
+                                         }
+                                     ],
+                        "source":  "https://asm-editor.specy.app/documentation/mips/instruction/bgt"
+                    },
+                    {
+                        "name":  "bgtu",
+                        "longName":  "Branch if greater than unsigned",
+                        "summary":  "Branches to label if $t1 is greater than $t2, or an immediate, as unsigned values.",
+                        "forms":  [
+                                      "bgtu $t1, $t2, label",
+                                      "bgtu $t1, imm, label"
+                                  ],
+                        "operands":  [
+                                         {
+                                             "operand":  "$t1",
+                                             "description":  "Any general-purpose register, $0 to $31, using its numeric or named spelling, such as $8 or $t0 ($zero is $0; $ra is $31)."
+                                         },
+                                         {
+                                             "operand":  "$t2",
+                                             "description":  "A general-purpose register. It may be the same register as $t1."
+                                         },
+                                         {
+                                             "operand":  "label",
+                                             "description":  "A named address in the program, such as the start of a loop or a variable in.data."
+                                         },
+                                         {
+                                             "operand":  "imm",
+                                             "description":  "An immediate value: a signed 16-bit value (-32768 to 32767) or a 32-bit value (-2147483648 to 4294967295). The assembler chooses a supported encoding for the value and other operands; a pseudoinstruction may expand into several instructions."
+                                         }
+                                     ],
+                        "source":  "https://asm-editor.specy.app/documentation/mips/instruction/bgtu"
+                    },
+                    {
+                        "name":  "bgtz",
+                        "longName":  "Branch on greater than zero",
+                        "summary":  "Branches to label if $t1 is greater than zero, as a signed comparison.",
+                        "forms":  [
+                                      "bgtz $t1, label"
+                                  ],
+                        "operands":  [
+                                         {
+                                             "operand":  "$t1",
+                                             "description":  "Any general-purpose register, $0 to $31, using its numeric or named spelling, such as $8 or $t0 ($zero is $0; $ra is $31)."
+                                         },
+                                         {
+                                             "operand":  "label",
+                                             "description":  "A named address in the program, such as the start of a loop or a variable in.data."
+                                         }
+                                     ],
+                        "source":  "https://asm-editor.specy.app/documentation/mips/instruction/bgtz"
+                    },
+                    {
+                        "name":  "ble",
+                        "longName":  "Branch if less or equal",
+                        "summary":  "Branches to label if $t1 is less than or equal to $t2, or an immediate, as signed values.",
+                        "forms":  [
+                                      "ble $t1, $t2, label",
+                                      "ble $t1, imm, label"
+                                  ],
+                        "operands":  [
+                                         {
+                                             "operand":  "$t1",
+                                             "description":  "Any general-purpose register, $0 to $31, using its numeric or named spelling, such as $8 or $t0 ($zero is $0; $ra is $31)."
+                                         },
+                                         {
+                                             "operand":  "$t2",
+                                             "description":  "A general-purpose register. It may be the same register as $t1."
+                                         },
+                                         {
+                                             "operand":  "label",
+                                             "description":  "A named address in the program, such as the start of a loop or a variable in.data."
+                                         },
+                                         {
+                                             "operand":  "imm",
+                                             "description":  "An immediate value: a signed 16-bit value (-32768 to 32767) or a 32-bit value (-2147483648 to 4294967295). The assembler chooses a supported encoding for the value and other operands; a pseudoinstruction may expand into several instructions."
+                                         }
+                                     ],
+                        "source":  "https://asm-editor.specy.app/documentation/mips/instruction/ble"
+                    },
+                    {
+                        "name":  "bleu",
+                        "longName":  "Branch if less or equal unsigned",
+                        "summary":  "Branches to label if $t1 is less than or equal to $t2, or an immediate, as unsigned values.",
+                        "forms":  [
+                                      "bleu $t1, $t2, label",
+                                      "bleu $t1, imm, label"
+                                  ],
+                        "operands":  [
+                                         {
+                                             "operand":  "$t1",
+                                             "description":  "Any general-purpose register, $0 to $31, using its numeric or named spelling, such as $8 or $t0 ($zero is $0; $ra is $31)."
+                                         },
+                                         {
+                                             "operand":  "$t2",
+                                             "description":  "A general-purpose register. It may be the same register as $t1."
+                                         },
+                                         {
+                                             "operand":  "label",
+                                             "description":  "A named address in the program, such as the start of a loop or a variable in.data."
+                                         },
+                                         {
+                                             "operand":  "imm",
+                                             "description":  "An immediate value: a signed 16-bit value (-32768 to 32767) or a 32-bit value (-2147483648 to 4294967295). The assembler chooses a supported encoding for the value and other operands; a pseudoinstruction may expand into several instructions."
+                                         }
+                                     ],
+                        "source":  "https://asm-editor.specy.app/documentation/mips/instruction/bleu"
+                    },
+                    {
+                        "name":  "blez",
+                        "longName":  "Branch on less than or equal to zero",
+                        "summary":  "Branches to label if $t1 is less than or equal to zero, as a signed comparison.",
+                        "forms":  [
+                                      "blez $t1, label"
+                                  ],
+                        "operands":  [
+                                         {
+                                             "operand":  "$t1",
+                                             "description":  "Any general-purpose register, $0 to $31, using its numeric or named spelling, such as $8 or $t0 ($zero is $0; $ra is $31)."
+                                         },
+                                         {
+                                             "operand":  "label",
+                                             "description":  "A named address in the program, such as the start of a loop or a variable in.data."
+                                         }
+                                     ],
+                        "source":  "https://asm-editor.specy.app/documentation/mips/instruction/blez"
+                    },
+                    {
+                        "name":  "blt",
+                        "longName":  "Branch if less than",
+                        "summary":  "Branches to label if $t1 is less than $t2, or an immediate, as signed values.",
+                        "forms":  [
+                                      "blt $t1, $t2, label",
+                                      "blt $t1, imm, label"
+                                  ],
+                        "operands":  [
+                                         {
+                                             "operand":  "$t1",
+                                             "description":  "Any general-purpose register, $0 to $31, using its numeric or named spelling, such as $8 or $t0 ($zero is $0; $ra is $31)."
+                                         },
+                                         {
+                                             "operand":  "$t2",
+                                             "description":  "A general-purpose register. It may be the same register as $t1."
+                                         },
+                                         {
+                                             "operand":  "label",
+                                             "description":  "A named address in the program, such as the start of a loop or a variable in.data."
+                                         },
+                                         {
+                                             "operand":  "imm",
+                                             "description":  "An immediate value: a signed 16-bit value (-32768 to 32767) or a 32-bit value (-2147483648 to 4294967295). The assembler chooses a supported encoding for the value and other operands; a pseudoinstruction may expand into several instructions."
+                                         }
+                                     ],
+                        "source":  "https://asm-editor.specy.app/documentation/mips/instruction/blt"
+                    },
+                    {
+                        "name":  "bltu",
+                        "longName":  "Branch if less than unsigned",
+                        "summary":  "Branches to label if $t1 is less than $t2, or an immediate, as unsigned values.",
+                        "forms":  [
+                                      "bltu $t1, $t2, label",
+                                      "bltu $t1, imm, label"
+                                  ],
+                        "operands":  [
+                                         {
+                                             "operand":  "$t1",
+                                             "description":  "Any general-purpose register, $0 to $31, using its numeric or named spelling, such as $8 or $t0 ($zero is $0; $ra is $31)."
+                                         },
+                                         {
+                                             "operand":  "$t2",
+                                             "description":  "A general-purpose register. It may be the same register as $t1."
+                                         },
+                                         {
+                                             "operand":  "label",
+                                             "description":  "A named address in the program, such as the start of a loop or a variable in.data."
+                                         },
+                                         {
+                                             "operand":  "imm",
+                                             "description":  "An immediate value: a signed 16-bit value (-32768 to 32767) or a 32-bit value (-2147483648 to 4294967295). The assembler chooses a supported encoding for the value and other operands; a pseudoinstruction may expand into several instructions."
+                                         }
+                                     ],
+                        "source":  "https://asm-editor.specy.app/documentation/mips/instruction/bltu"
+                    },
+                    {
+                        "name":  "bltz",
+                        "longName":  "Branch on less than zero",
+                        "summary":  "Branches to label if $t1 is less than zero, as a signed comparison.",
+                        "forms":  [
+                                      "bltz $t1, label"
+                                  ],
+                        "operands":  [
+                                         {
+                                             "operand":  "$t1",
+                                             "description":  "Any general-purpose register, $0 to $31, using its numeric or named spelling, such as $8 or $t0 ($zero is $0; $ra is $31)."
+                                         },
+                                         {
+                                             "operand":  "label",
+                                             "description":  "A named address in the program, such as the start of a loop or a variable in.data."
+                                         }
+                                     ],
+                        "source":  "https://asm-editor.specy.app/documentation/mips/instruction/bltz"
+                    },
+                    {
+                        "name":  "bne",
+                        "longName":  "Branch on not equal",
+                        "summary":  "Branches to label if $t1 does not equal $t2, or an immediate.",
+                        "forms":  [
+                                      "bne $t1, $t2, label"
+                                  ],
+                        "operands":  [
+                                         {
+                                             "operand":  "$t1",
+                                             "description":  "Any general-purpose register, $0 to $31, using its numeric or named spelling, such as $8 or $t0 ($zero is $0; $ra is $31)."
+                                         },
+                                         {
+                                             "operand":  "$t2",
+                                             "description":  "A general-purpose register. It may be the same register as $t1."
+                                         },
+                                         {
+                                             "operand":  "label",
+                                             "description":  "A named address in the program, such as the start of a loop or a variable in.data."
+                                         },
+                                         {
+                                             "operand":  "imm",
+                                             "description":  "An immediate value: a signed 16-bit value (-32768 to 32767) or a 32-bit value (-2147483648 to 4294967295). The assembler chooses a supported encoding for the value and other operands; a pseudoinstruction may expand into several instructions."
+                                         }
+                                     ],
+                        "source":  "https://asm-editor.specy.app/documentation/mips/instruction/bne"
+                    },
+                    {
+                        "name":  "bnez",
+                        "longName":  "Branch if not equal to zero",
+                        "summary":  "Branches to label if $t1 is not zero.",
+                        "forms":  [
+                                      "bnez $t1, label"
+                                  ],
+                        "operands":  [
+                                         {
+                                             "operand":  "$t1",
+                                             "description":  "Any general-purpose register, $0 to $31, using its numeric or named spelling, such as $8 or $t0 ($zero is $0; $ra is $31)."
+                                         },
+                                         {
+                                             "operand":  "label",
+                                             "description":  "A named address in the program, such as the start of a loop or a variable in.data."
+                                         }
+                                     ],
+                        "source":  "https://asm-editor.specy.app/documentation/mips/instruction/bnez"
+                    },
+                    {
+                        "name":  "break",
+                        "longName":  "Breakpoint",
+                        "summary":  "Raises a breakpoint exception, with an optional code, that halts execution in this simulator.",
+                        "forms":  [
+                                      "break uimm16",
+                                      "break"
+                                  ],
+                        "operands":  [
+                                         {
+                                             "operand":  "uimm16",
+                                             "description":  "An unsigned 16-bit immediate, 0 to 65535."
+                                         }
+                                     ],
+                        "source":  "https://asm-editor.specy.app/documentation/mips/instruction/break"
+                    },
+                    {
+                        "name":  "cfc1",
+                        "longName":  "Move control word from FPU",
+                        "summary":  "Copies an FPU control register into integer register $t1.",
+                        "forms":  [
+                                      "cfc1 $t1, $f31"
+                                  ],
+                        "operands":  [
+                                         {
+                                             "operand":  "$t1",
+                                             "description":  "Any general-purpose register, $0 to $31, using its numeric or named spelling, such as $8 or $t0 ($zero is $0; $ra is $31)."
+                                         },
+                                         {
+                                             "operand":  "$f31",
+                                             "description":  "$f31 here names the floating-point control and status register (FCSR), containing the rounding mode and exception flags."
+                                         }
+                                     ],
+                        "source":  "https://asm-editor.specy.app/documentation/mips/instruction/cfc1"
+                    },
+                    {
+                        "name":  "ctc1",
+                        "longName":  "Move control word to FPU",
+                        "summary":  "Copies integer register $t1 into an FPU control register.",
+                        "forms":  [
+                                      "ctc1 $t1, $f31"
+                                  ],
+                        "operands":  [
+                                         {
+                                             "operand":  "$t1",
+                                             "description":  "Any general-purpose register, $0 to $31, using its numeric or named spelling, such as $8 or $t0 ($zero is $0; $ra is $31)."
+                                         },
+                                         {
+                                             "operand":  "$f31",
+                                             "description":  "$f31 here names the floating-point control and status register (FCSR), containing the rounding mode and exception flags."
+                                         }
+                                     ],
+                        "source":  "https://asm-editor.specy.app/documentation/mips/instruction/ctc1"
+                    },
+                    {
+                        "name":  "div",
+                        "longName":  "Divide signed",
+                        "summary":  "Divides signed integers: with three operands the quotient goes to $t1, with two it goes to LO and the remainder to HI.",
+                        "forms":  [
+                                      "div $t1, $t2"
+                                  ],
+                        "operands":  [
+                                         {
+                                             "operand":  "$t1",
+                                             "description":  "Any general-purpose register, $0 to $31, using its numeric or named spelling, such as $8 or $t0 ($zero is $0; $ra is $31)."
+                                         },
+                                         {
+                                             "operand":  "$t2",
+                                             "description":  "A general-purpose register. It may be the same register as $t1."
+                                         },
+                                         {
+                                             "operand":  "$t3",
+                                             "description":  "A general-purpose register. It may be the same register as $t1."
+                                         },
+                                         {
+                                             "operand":  "imm",
+                                             "description":  "An immediate value: a signed 16-bit value (-32768 to 32767) or a 32-bit value (-2147483648 to 4294967295). The assembler chooses a supported encoding for the value and other operands; a pseudoinstruction may expand into several instructions."
+                                         }
+                                     ],
+                        "source":  "https://asm-editor.specy.app/documentation/mips/instruction/div"
+                    },
+                    {
+                        "name":  "divu",
+                        "longName":  "Divide unsigned",
+                        "summary":  "Divides unsigned integers: with three operands the quotient goes to $t1, with two it goes to LO and the remainder to HI.",
+                        "forms":  [
+                                      "divu $t1, $t2"
+                                  ],
+                        "operands":  [
+                                         {
+                                             "operand":  "$t1",
+                                             "description":  "Any general-purpose register, $0 to $31, using its numeric or named spelling, such as $8 or $t0 ($zero is $0; $ra is $31)."
+                                         },
+                                         {
+                                             "operand":  "$t2",
+                                             "description":  "A general-purpose register. It may be the same register as $t1."
+                                         },
+                                         {
+                                             "operand":  "$t3",
+                                             "description":  "A general-purpose register. It may be the same register as $t1."
+                                         },
+                                         {
+                                             "operand":  "imm",
+                                             "description":  "An immediate value: a signed 16-bit value (-32768 to 32767) or a 32-bit value (-2147483648 to 4294967295). The assembler chooses a supported encoding for the value and other operands; a pseudoinstruction may expand into several instructions."
+                                         }
+                                     ],
+                        "source":  "https://asm-editor.specy.app/documentation/mips/instruction/divu"
+                    },
+                    {
+                        "name":  "eret",
+                        "longName":  "Exception return",
+                        "summary":  "Returns from an exception or interrupt handler by restoring the PC from EPC and clearing the exception level bit.",
+                        "forms":  [
+                                      "eret"
+                                  ],
+                        "operands":  [
+
+                                     ],
+                        "source":  "https://asm-editor.specy.app/documentation/mips/instruction/eret"
+                    },
+                    {
+                        "name":  "j",
+                        "longName":  "Jump",
+                        "summary":  "Jumps unconditionally to label, which must lie in the same 256 MB region as the instruction after the jump.",
+                        "forms":  [
+                                      "j label"
+                                  ],
+                        "operands":  [
+                                         {
+                                             "operand":  "label",
+                                             "description":  "A named address in the program, such as the start of a loop or a variable in.data."
+                                         }
+                                     ],
+                        "source":  "https://asm-editor.specy.app/documentation/mips/instruction/j"
+                    },
+                    {
+                        "name":  "jal",
+                        "longName":  "Jump and link",
+                        "summary":  "Saves the return address in $ra and jumps to label, the usual way to call a function.",
+                        "forms":  [
+                                      "jal label"
+                                  ],
+                        "operands":  [
+                                         {
+                                             "operand":  "label",
+                                             "description":  "A named address in the program, such as the start of a loop or a variable in.data."
+                                         }
+                                     ],
+                        "source":  "https://asm-editor.specy.app/documentation/mips/instruction/jal"
+                    },
+                    {
+                        "name":  "jalr",
+                        "longName":  "Jump and link register",
+                        "summary":  "Saves the return address in $t1 and jumps to the address in $t2; with one register, the return address goes to $ra.",
+                        "forms":  [
+                                      "jalr $t1, $t2",
+                                      "jalr $t1"
+                                  ],
+                        "operands":  [
+                                         {
+                                             "operand":  "$t1",
+                                             "description":  "Any general-purpose register, $0 to $31, using its numeric or named spelling, such as $8 or $t0 ($zero is $0; $ra is $31)."
+                                         },
+                                         {
+                                             "operand":  "$t2",
+                                             "description":  "A general-purpose register. It may be the same register as $t1."
+                                         }
+                                     ],
+                        "source":  "https://asm-editor.specy.app/documentation/mips/instruction/jalr"
+                    },
+                    {
+                        "name":  "jr",
+                        "longName":  "Jump register",
+                        "summary":  "Transfers execution to the address stored in $t1.",
+                        "forms":  [
+                                      "jr $t1"
+                                  ],
+                        "operands":  [
+                                         {
+                                             "operand":  "$t1",
+                                             "description":  "Any general-purpose register, $0 to $31, using its numeric or named spelling, such as $8 or $t0 ($zero is $0; $ra is $31)."
+                                         }
+                                     ],
+                        "source":  "https://asm-editor.specy.app/documentation/mips/instruction/jr"
+                    },
+                    {
+                        "name":  "la",
+                        "longName":  "Load address",
+                        "summary":  "Puts the address of a label, or a computed address, into a register.",
+                        "forms":  [
+                                      "la $t1, ($t2)",
+                                      "la $t1, imm",
+                                      "la $t1, imm ($t2)",
+                                      "la $t1, label",
+                                      "la $t1, label ($t2)",
+                                      "la $t1, label + imm32",
+                                      "la $t1, label + imm32 ($t2)"
+                                  ],
+                        "operands":  [
+                                         {
+                                             "operand":  "$t1",
+                                             "description":  "Any general-purpose register, $0 to $31, using its numeric or named spelling, such as $8 or $t0 ($zero is $0; $ra is $31)."
+                                         },
+                                         {
+                                             "operand":  "$t2",
+                                             "description":  "A general-purpose register. It may be the same register as $t1."
+                                         },
+                                         {
+                                             "operand":  "imm",
+                                             "description":  "An immediate value: a signed 16-bit value (-32768 to 32767), an unsigned 16-bit value (0 to 65535) or a 32-bit value (-2147483648 to 4294967295). The assembler chooses a supported encoding for the value and other operands; a pseudoinstruction may expand into several instructions."
+                                         },
+                                         {
+                                             "operand":  "label",
+                                             "description":  "A named address in the program, such as the start of a loop or a variable in.data."
+                                         },
+                                         {
+                                             "operand":  "imm32",
+                                             "description":  "A 32-bit immediate, -2147483648 to 4294967295. Pseudoinstruction expansion may overwrite $at, losing its previous value."
+                                         }
+                                     ],
+                        "source":  "https://asm-editor.specy.app/documentation/mips/instruction/la"
+                    },
+                    {
+                        "name":  "lb",
+                        "longName":  "Load byte (sign-extended)",
+                        "summary":  "Loads one byte from the address $t2 plus an offset into $t1, sign-extended to 32 bits.",
+                        "forms":  [
+                                      "lb $t1, imm16 ($t2)"
+                                  ],
+                        "operands":  [
+                                         {
+                                             "operand":  "$t1",
+                                             "description":  "Any general-purpose register, $0 to $31, using its numeric or named spelling, such as $8 or $t0 ($zero is $0; $ra is $31)."
+                                         },
+                                         {
+                                             "operand":  "imm16",
+                                             "description":  "A signed 16-bit immediate, -32768 to 32767."
+                                         },
+                                         {
+                                             "operand":  "$t2",
+                                             "description":  "A general-purpose register. It may be the same register as $t1."
+                                         },
+                                         {
+                                             "operand":  "label",
+                                             "description":  "A named address in the program, such as the start of a loop or a variable in.data."
+                                         },
+                                         {
+                                             "operand":  "imm",
+                                             "description":  "An immediate value: a signed 16-bit value (-32768 to 32767), an unsigned 16-bit value (0 to 65535) or a 32-bit value (-2147483648 to 4294967295). The assembler chooses a supported encoding for the value and other operands; a pseudoinstruction may expand into several instructions."
+                                         },
+                                         {
+                                             "operand":  "imm32",
+                                             "description":  "A 32-bit immediate, -2147483648 to 4294967295. Pseudoinstruction expansion may overwrite $at, losing its previous value."
+                                         }
+                                     ],
+                        "source":  "https://asm-editor.specy.app/documentation/mips/instruction/lb"
+                    },
+                    {
+                        "name":  "lbu",
+                        "longName":  "Load byte unsigned (zero-extended)",
+                        "summary":  "Loads one byte from the address $t2 plus an offset into $t1, zero-extended to 32 bits.",
+                        "forms":  [
+                                      "lbu $t1, imm16 ($t2)"
+                                  ],
+                        "operands":  [
+                                         {
+                                             "operand":  "$t1",
+                                             "description":  "Any general-purpose register, $0 to $31, using its numeric or named spelling, such as $8 or $t0 ($zero is $0; $ra is $31)."
+                                         },
+                                         {
+                                             "operand":  "imm16",
+                                             "description":  "A signed 16-bit immediate, -32768 to 32767."
+                                         },
+                                         {
+                                             "operand":  "$t2",
+                                             "description":  "A general-purpose register. It may be the same register as $t1."
+                                         },
+                                         {
+                                             "operand":  "label",
+                                             "description":  "A named address in the program, such as the start of a loop or a variable in.data."
+                                         },
+                                         {
+                                             "operand":  "imm",
+                                             "description":  "An immediate value: a signed 16-bit value (-32768 to 32767), an unsigned 16-bit value (0 to 65535) or a 32-bit value (-2147483648 to 4294967295). The assembler chooses a supported encoding for the value and other operands; a pseudoinstruction may expand into several instructions."
+                                         },
+                                         {
+                                             "operand":  "imm32",
+                                             "description":  "A 32-bit immediate, -2147483648 to 4294967295. Pseudoinstruction expansion may overwrite $at, losing its previous value."
+                                         }
+                                     ],
+                        "source":  "https://asm-editor.specy.app/documentation/mips/instruction/lbu"
+                    },
+                    {
+                        "name":  "ld",
+                        "longName":  "Load doubleword",
+                        "summary":  "Loads the 64 bits at an address into $t1 and the next register, as a doubleword.",
+                        "forms":  [
+                                      "ld $t1, imm ($t2)",
+                                      "ld $t1, imm32",
+                                      "ld $t1, label",
+                                      "ld $t1, label + imm32",
+                                      "ld $t1, ($t2)",
+                                      "ld $t1, label ($t2)",
+                                      "ld $t1, label + imm32 ($t2)"
+                                  ],
+                        "operands":  [
+                                         {
+                                             "operand":  "$t1",
+                                             "description":  "Any general-purpose register, $0 to $31, using its numeric or named spelling, such as $8 or $t0 ($zero is $0; $ra is $31)."
+                                         },
+                                         {
+                                             "operand":  "imm",
+                                             "description":  "An immediate value: a signed 16-bit value (-32768 to 32767) or a 32-bit value (-2147483648 to 4294967295). The assembler chooses a supported encoding for the value and other operands; a pseudoinstruction may expand into several instructions."
+                                         },
+                                         {
+                                             "operand":  "$t2",
+                                             "description":  "A general-purpose register. It may be the same register as $t1."
+                                         },
+                                         {
+                                             "operand":  "imm32",
+                                             "description":  "A 32-bit immediate, -2147483648 to 4294967295. Pseudoinstruction expansion may overwrite $at, losing its previous value."
+                                         },
+                                         {
+                                             "operand":  "label",
+                                             "description":  "A named address in the program, such as the start of a loop or a variable in.data."
+                                         }
+                                     ],
+                        "source":  "https://asm-editor.specy.app/documentation/mips/instruction/ld"
+                    },
+                    {
+                        "name":  "ldc1",
+                        "longName":  "Load doubleword to FP register pair",
+                        "summary":  "Loads a 64-bit value from memory at address ($t2 + offset) into the even FP register pair $f2/$f3.",
+                        "forms":  [
+                                      "ldc1 $f2, imm16 ($t2)"
+                                  ],
+                        "operands":  [
+                                         {
+                                             "operand":  "$f2",
+                                             "description":  "An even-numbered floating-point register, $f0 to $f30. A double-precision value uses this register and the next odd-numbered register."
+                                         },
+                                         {
+                                             "operand":  "imm16",
+                                             "description":  "A signed 16-bit immediate, -32768 to 32767."
+                                         },
+                                         {
+                                             "operand":  "$t2",
+                                             "description":  "Any general-purpose register, $0 to $31, using its numeric or named spelling, such as $8 or $t0 ($zero is $0; $ra is $31)."
+                                         },
+                                         {
+                                             "operand":  "$f1",
+                                             "description":  "Any floating-point register, $f0 to $f31."
+                                         },
+                                         {
+                                             "operand":  "label",
+                                             "description":  "A named address in the program, such as the start of a loop or a variable in.data."
+                                         },
+                                         {
+                                             "operand":  "imm",
+                                             "description":  "An immediate value: a signed 16-bit value (-32768 to 32767) or a 32-bit value (-2147483648 to 4294967295). The assembler chooses a supported encoding for the value and other operands; a pseudoinstruction may expand into several instructions."
+                                         },
+                                         {
+                                             "operand":  "imm32",
+                                             "description":  "A 32-bit immediate, -2147483648 to 4294967295. Pseudoinstruction expansion may overwrite $at, losing its previous value."
+                                         }
+                                     ],
+                        "source":  "https://asm-editor.specy.app/documentation/mips/instruction/ldc1"
+                    },
+                    {
+                        "name":  "lh",
+                        "longName":  "Load halfword (sign-extended)",
+                        "summary":  "Loads a 16-bit halfword from the address $t2 plus an offset into $t1, sign-extended; the address must be halfword-aligned.",
+                        "forms":  [
+                                      "lh $t1, imm16 ($t2)"
+                                  ],
+                        "operands":  [
+                                         {
+                                             "operand":  "$t1",
+                                             "description":  "Any general-purpose register, $0 to $31, using its numeric or named spelling, such as $8 or $t0 ($zero is $0; $ra is $31)."
+                                         },
+                                         {
+                                             "operand":  "imm16",
+                                             "description":  "A signed 16-bit immediate, -32768 to 32767."
+                                         },
+                                         {
+                                             "operand":  "$t2",
+                                             "description":  "A general-purpose register. It may be the same register as $t1."
+                                         },
+                                         {
+                                             "operand":  "label",
+                                             "description":  "A named address in the program, such as the start of a loop or a variable in.data."
+                                         },
+                                         {
+                                             "operand":  "imm",
+                                             "description":  "An immediate value: a signed 16-bit value (-32768 to 32767), an unsigned 16-bit value (0 to 65535) or a 32-bit value (-2147483648 to 4294967295). The assembler chooses a supported encoding for the value and other operands; a pseudoinstruction may expand into several instructions."
+                                         },
+                                         {
+                                             "operand":  "imm32",
+                                             "description":  "A 32-bit immediate, -2147483648 to 4294967295. Pseudoinstruction expansion may overwrite $at, losing its previous value."
+                                         }
+                                     ],
+                        "source":  "https://asm-editor.specy.app/documentation/mips/instruction/lh"
+                    },
+                    {
+                        "name":  "lhu",
+                        "longName":  "Load halfword unsigned (zero-extended)",
+                        "summary":  "Loads a 16-bit halfword from the address $t2 plus an offset into $t1, zero-extended to 32 bits.",
+                        "forms":  [
+                                      "lhu $t1, imm16 ($t2)"
+                                  ],
+                        "operands":  [
+                                         {
+                                             "operand":  "$t1",
+                                             "description":  "Any general-purpose register, $0 to $31, using its numeric or named spelling, such as $8 or $t0 ($zero is $0; $ra is $31)."
+                                         },
+                                         {
+                                             "operand":  "imm16",
+                                             "description":  "A signed 16-bit immediate, -32768 to 32767."
+                                         },
+                                         {
+                                             "operand":  "$t2",
+                                             "description":  "A general-purpose register. It may be the same register as $t1."
+                                         },
+                                         {
+                                             "operand":  "label",
+                                             "description":  "A named address in the program, such as the start of a loop or a variable in.data."
+                                         },
+                                         {
+                                             "operand":  "imm",
+                                             "description":  "An immediate value: a signed 16-bit value (-32768 to 32767), an unsigned 16-bit value (0 to 65535) or a 32-bit value (-2147483648 to 4294967295). The assembler chooses a supported encoding for the value and other operands; a pseudoinstruction may expand into several instructions."
+                                         },
+                                         {
+                                             "operand":  "imm32",
+                                             "description":  "A 32-bit immediate, -2147483648 to 4294967295. Pseudoinstruction expansion may overwrite $at, losing its previous value."
+                                         }
+                                     ],
+                        "source":  "https://asm-editor.specy.app/documentation/mips/instruction/lhu"
+                    },
+                    {
+                        "name":  "li",
+                        "longName":  "Load immediate",
+                        "summary":  "Puts an immediate value into a register, using one or two instructions as its size needs.",
+                        "forms":  [
+                                      "li $t1, imm"
+                                  ],
+                        "operands":  [
+                                         {
+                                             "operand":  "$t1",
+                                             "description":  "Any general-purpose register, $0 to $31, using its numeric or named spelling, such as $8 or $t0 ($zero is $0; $ra is $31)."
+                                         },
+                                         {
+                                             "operand":  "imm",
+                                             "description":  "An immediate value: a signed 16-bit value (-32768 to 32767), an unsigned 16-bit value (0 to 65535) or a 32-bit value (-2147483648 to 4294967295). The assembler chooses a supported encoding for the value and other operands; a pseudoinstruction may expand into several instructions."
+                                         }
+                                     ],
+                        "source":  "https://asm-editor.specy.app/documentation/mips/instruction/li"
+                    },
+                    {
+                        "name":  "ll",
+                        "longName":  "Load linked",
+                        "summary":  "Loads a 32-bit word into $t1 like lw; paired with sc, it forms an atomic read-modify-write on multiprocessor hardware.",
+                        "forms":  [
+                                      "ll $t1, imm16 ($t2)"
+                                  ],
+                        "operands":  [
+                                         {
+                                             "operand":  "$t1",
+                                             "description":  "Any general-purpose register, $0 to $31, using its numeric or named spelling, such as $8 or $t0 ($zero is $0; $ra is $31)."
+                                         },
+                                         {
+                                             "operand":  "imm16",
+                                             "description":  "A signed 16-bit immediate, -32768 to 32767."
+                                         },
+                                         {
+                                             "operand":  "$t2",
+                                             "description":  "A general-purpose register. It may be the same register as $t1."
+                                         },
+                                         {
+                                             "operand":  "imm",
+                                             "description":  "An immediate value: a signed 16-bit value (-32768 to 32767), an unsigned 16-bit value (0 to 65535) or a 32-bit value (-2147483648 to 4294967295). The assembler chooses a supported encoding for the value and other operands; a pseudoinstruction may expand into several instructions."
+                                         },
+                                         {
+                                             "operand":  "label",
+                                             "description":  "A named address in the program, such as the start of a loop or a variable in.data."
+                                         },
+                                         {
+                                             "operand":  "imm32",
+                                             "description":  "A 32-bit immediate, -2147483648 to 4294967295. Pseudoinstruction expansion may overwrite $at, losing its previous value."
+                                         }
+                                     ],
+                        "source":  "https://asm-editor.specy.app/documentation/mips/instruction/ll"
+                    },
+                    {
+                        "name":  "lui",
+                        "longName":  "Load upper immediate",
+                        "summary":  "Puts a 16-bit immediate into the upper half of $t1 and clears the lower half, often as the first step of a 32-bit constant.",
+                        "forms":  [
+                                      "lui $t1, uimm16"
+                                  ],
+                        "operands":  [
+                                         {
+                                             "operand":  "$t1",
+                                             "description":  "Any general-purpose register, $0 to $31, using its numeric or named spelling, such as $8 or $t0 ($zero is $0; $ra is $31)."
+                                         },
+                                         {
+                                             "operand":  "uimm16",
+                                             "description":  "An unsigned 16-bit immediate, 0 to 65535."
+                                         },
+                                         {
+                                             "operand":  "label",
+                                             "description":  "A named address in the program, such as the start of a loop or a variable in.data."
+                                         }
+                                     ],
+                        "source":  "https://asm-editor.specy.app/documentation/mips/instruction/lui"
+                    },
+                    {
+                        "name":  "lw",
+                        "longName":  "Load word",
+                        "summary":  "Loads the 32-bit word at the address $t2 plus an offset into $t1; the address must be word-aligned.",
+                        "forms":  [
+                                      "lw $t1, imm16 ($t2)"
+                                  ],
+                        "operands":  [
+                                         {
+                                             "operand":  "$t1",
+                                             "description":  "Any general-purpose register, $0 to $31, using its numeric or named spelling, such as $8 or $t0 ($zero is $0; $ra is $31)."
+                                         },
+                                         {
+                                             "operand":  "imm16",
+                                             "description":  "A signed 16-bit immediate, -32768 to 32767."
+                                         },
+                                         {
+                                             "operand":  "$t2",
+                                             "description":  "A general-purpose register. It may be the same register as $t1."
+                                         },
+                                         {
+                                             "operand":  "imm",
+                                             "description":  "An immediate value: a signed 16-bit value (-32768 to 32767), an unsigned 16-bit value (0 to 65535) or a 32-bit value (-2147483648 to 4294967295). The assembler chooses a supported encoding for the value and other operands; a pseudoinstruction may expand into several instructions."
+                                         },
+                                         {
+                                             "operand":  "label",
+                                             "description":  "A named address in the program, such as the start of a loop or a variable in.data."
+                                         },
+                                         {
+                                             "operand":  "imm32",
+                                             "description":  "A 32-bit immediate, -2147483648 to 4294967295. Pseudoinstruction expansion may overwrite $at, losing its previous value."
+                                         }
+                                     ],
+                        "source":  "https://asm-editor.specy.app/documentation/mips/instruction/lw"
+                    },
+                    {
+                        "name":  "lwc1",
+                        "longName":  "Load word to FP register",
+                        "summary":  "Loads a 32-bit value from memory at address ($t2 + offset) directly into FP register $f1.",
+                        "forms":  [
+                                      "lwc1 $f1, imm16 ($t2)"
+                                  ],
+                        "operands":  [
+                                         {
+                                             "operand":  "$f1",
+                                             "description":  "Any floating-point register, $f0 to $f31."
+                                         },
+                                         {
+                                             "operand":  "imm16",
+                                             "description":  "A signed 16-bit immediate, -32768 to 32767."
+                                         },
+                                         {
+                                             "operand":  "$t2",
+                                             "description":  "Any general-purpose register, $0 to $31, using its numeric or named spelling, such as $8 or $t0 ($zero is $0; $ra is $31)."
+                                         },
+                                         {
+                                             "operand":  "label",
+                                             "description":  "A named address in the program, such as the start of a loop or a variable in.data."
+                                         },
+                                         {
+                                             "operand":  "imm",
+                                             "description":  "An immediate value: a signed 16-bit value (-32768 to 32767) or a 32-bit value (-2147483648 to 4294967295). The assembler chooses a supported encoding for the value and other operands; a pseudoinstruction may expand into several instructions."
+                                         },
+                                         {
+                                             "operand":  "imm32",
+                                             "description":  "A 32-bit immediate, -2147483648 to 4294967295. Pseudoinstruction expansion may overwrite $at, losing its previous value."
+                                         }
+                                     ],
+                        "source":  "https://asm-editor.specy.app/documentation/mips/instruction/lwc1"
+                    },
+                    {
+                        "name":  "lwl",
+                        "longName":  "Load word left (unaligned)",
+                        "summary":  "Loads 1 to 4 bytes from an unaligned address into the high-order end of $t1, up to the end of that word.",
+                        "forms":  [
+                                      "lwl $t1, imm16 ($t2)"
+                                  ],
+                        "operands":  [
+                                         {
+                                             "operand":  "$t1",
+                                             "description":  "Any general-purpose register, $0 to $31, using its numeric or named spelling, such as $8 or $t0 ($zero is $0; $ra is $31)."
+                                         },
+                                         {
+                                             "operand":  "imm16",
+                                             "description":  "A signed 16-bit immediate, -32768 to 32767."
+                                         },
+                                         {
+                                             "operand":  "$t2",
+                                             "description":  "A general-purpose register. It may be the same register as $t1."
+                                         },
+                                         {
+                                             "operand":  "imm",
+                                             "description":  "An immediate value: a signed 16-bit value (-32768 to 32767), an unsigned 16-bit value (0 to 65535) or a 32-bit value (-2147483648 to 4294967295). The assembler chooses a supported encoding for the value and other operands; a pseudoinstruction may expand into several instructions."
+                                         },
+                                         {
+                                             "operand":  "label",
+                                             "description":  "A named address in the program, such as the start of a loop or a variable in.data."
+                                         },
+                                         {
+                                             "operand":  "imm32",
+                                             "description":  "A 32-bit immediate, -2147483648 to 4294967295. Pseudoinstruction expansion may overwrite $at, losing its previous value."
+                                         }
+                                     ],
+                        "source":  "https://asm-editor.specy.app/documentation/mips/instruction/lwl"
+                    },
+                    {
+                        "name":  "lwr",
+                        "longName":  "Load word right (unaligned)",
+                        "summary":  "Loads 1 to 4 bytes from the start of a word up to an unaligned address into the low-order end of $t1.",
+                        "forms":  [
+                                      "lwr $t1, imm16 ($t2)"
+                                  ],
+                        "operands":  [
+                                         {
+                                             "operand":  "$t1",
+                                             "description":  "Any general-purpose register, $0 to $31, using its numeric or named spelling, such as $8 or $t0 ($zero is $0; $ra is $31)."
+                                         },
+                                         {
+                                             "operand":  "imm16",
+                                             "description":  "A signed 16-bit immediate, -32768 to 32767."
+                                         },
+                                         {
+                                             "operand":  "$t2",
+                                             "description":  "A general-purpose register. It may be the same register as $t1."
+                                         },
+                                         {
+                                             "operand":  "imm",
+                                             "description":  "An immediate value: a signed 16-bit value (-32768 to 32767), an unsigned 16-bit value (0 to 65535) or a 32-bit value (-2147483648 to 4294967295). The assembler chooses a supported encoding for the value and other operands; a pseudoinstruction may expand into several instructions."
+                                         },
+                                         {
+                                             "operand":  "label",
+                                             "description":  "A named address in the program, such as the start of a loop or a variable in.data."
+                                         },
+                                         {
+                                             "operand":  "imm32",
+                                             "description":  "A 32-bit immediate, -2147483648 to 4294967295. Pseudoinstruction expansion may overwrite $at, losing its previous value."
+                                         }
+                                     ],
+                        "source":  "https://asm-editor.specy.app/documentation/mips/instruction/lwr"
+                    },
+                    {
+                        "name":  "mfc0",
+                        "longName":  "Move from coprocessor 0",
+                        "summary":  "Reads a Coprocessor 0 (CP0) control register and places its value in general-purpose register $t1.",
+                        "forms":  [
+                                      "mfc0 $t1, $8"
+                                  ],
+                        "operands":  [
+                                         {
+                                             "operand":  "$t1",
+                                             "description":  "Any general-purpose register, $0 to $31, using its numeric or named spelling, such as $8 or $t0 ($zero is $0; $ra is $31)."
+                                         },
+                                         {
+                                             "operand":  "$8",
+                                             "description":  "A coprocessor 0 register, written by number: $8 (vaddr), $12 (status), $13 (cause) or $14 (epc)."
+                                         }
+                                     ],
+                        "source":  "https://asm-editor.specy.app/documentation/mips/instruction/mfc0"
+                    },
+                    {
+                        "name":  "mfc1",
+                        "longName":  "Move from FP register to integer register",
+                        "summary":  "Copies the raw 32-bit bit-pattern stored in FP register $f1 into integer register $t1.",
+                        "forms":  [
+                                      "mfc1 $t1, $f1"
+                                  ],
+                        "operands":  [
+                                         {
+                                             "operand":  "$t1",
+                                             "description":  "Any general-purpose register, $0 to $31, using its numeric or named spelling, such as $8 or $t0 ($zero is $0; $ra is $31)."
+                                         },
+                                         {
+                                             "operand":  "$f1",
+                                             "description":  "Any floating-point register, $f0 to $f31."
+                                         }
+                                     ],
+                        "source":  "https://asm-editor.specy.app/documentation/mips/instruction/mfc1"
+                    },
+                    {
+                        "name":  "mfhi",
+                        "longName":  "Move from HI",
+                        "summary":  "Copies the special HI register into $t1.",
+                        "forms":  [
+                                      "mfhi $t1"
+                                  ],
+                        "operands":  [
+                                         {
+                                             "operand":  "$t1",
+                                             "description":  "Any general-purpose register, $0 to $31, using its numeric or named spelling, such as $8 or $t0 ($zero is $0; $ra is $31)."
+                                         }
+                                     ],
+                        "source":  "https://asm-editor.specy.app/documentation/mips/instruction/mfhi"
+                    },
+                    {
+                        "name":  "mflo",
+                        "longName":  "Move from LO",
+                        "summary":  "Copies the special LO register into $t1.",
+                        "forms":  [
+                                      "mflo $t1"
+                                  ],
+                        "operands":  [
+                                         {
+                                             "operand":  "$t1",
+                                             "description":  "Any general-purpose register, $0 to $31, using its numeric or named spelling, such as $8 or $t0 ($zero is $0; $ra is $31)."
+                                         }
+                                     ],
+                        "source":  "https://asm-editor.specy.app/documentation/mips/instruction/mflo"
+                    },
+                    {
+                        "name":  "move",
+                        "longName":  "move",
+                        "summary":  "Copies the contents of $t2 into $t1.",
+                        "forms":  [
+                                      "move $t1, $t2"
+                                  ],
+                        "operands":  [
+                                         {
+                                             "operand":  "$t1",
+                                             "description":  "Any general-purpose register, $0 to $31, using its numeric or named spelling, such as $8 or $t0 ($zero is $0; $ra is $31)."
+                                         },
+                                         {
+                                             "operand":  "$t2",
+                                             "description":  "A general-purpose register. It may be the same register as $t1."
+                                         }
+                                     ],
+                        "source":  "https://asm-editor.specy.app/documentation/mips/instruction/move"
+                    },
+                    {
+                        "name":  "movf",
+                        "longName":  "Move if FP condition false",
+                        "summary":  "Copies $t2 into $t1 if the FP condition flag (flag 0 by default) is false.",
+                        "forms":  [
+                                      "movf $t1, $t2",
+                                      "movf $t1, $t2, cc"
+                                  ],
+                        "operands":  [
+                                         {
+                                             "operand":  "$t1",
+                                             "description":  "Any general-purpose register, $0 to $31, using its numeric or named spelling, such as $8 or $t0 ($zero is $0; $ra is $31)."
+                                         },
+                                         {
+                                             "operand":  "$t2",
+                                             "description":  "A general-purpose register. It may be the same register as $t1."
+                                         },
+                                         {
+                                             "operand":  "cc",
+                                             "description":  "A floating-point condition flag number, 0 to 7. Comparisons set these flags; bc1t and bc1f test them."
+                                         }
+                                     ],
+                        "source":  "https://asm-editor.specy.app/documentation/mips/instruction/movf"
+                    },
+                    {
+                        "name":  "movn",
+                        "longName":  "Move if not zero",
+                        "summary":  "Copies $t2 into $t1 if $t3 is not zero, without a branch.",
+                        "forms":  [
+                                      "movn $t1, $t2, $t3"
+                                  ],
+                        "operands":  [
+                                         {
+                                             "operand":  "$t1",
+                                             "description":  "Any general-purpose register, $0 to $31, using its numeric or named spelling, such as $8 or $t0 ($zero is $0; $ra is $31)."
+                                         },
+                                         {
+                                             "operand":  "$t2",
+                                             "description":  "A general-purpose register. It may be the same register as $t1."
+                                         },
+                                         {
+                                             "operand":  "$t3",
+                                             "description":  "A general-purpose register. It may be the same register as $t1."
+                                         }
+                                     ],
+                        "source":  "https://asm-editor.specy.app/documentation/mips/instruction/movn"
+                    },
+                    {
+                        "name":  "movt",
+                        "longName":  "Move if FP condition true",
+                        "summary":  "Copies $t2 into $t1 if the FP condition flag (flag 0 by default) is true.",
+                        "forms":  [
+                                      "movt $t1, $t2",
+                                      "movt $t1, $t2, cc"
+                                  ],
+                        "operands":  [
+                                         {
+                                             "operand":  "$t1",
+                                             "description":  "Any general-purpose register, $0 to $31, using its numeric or named spelling, such as $8 or $t0 ($zero is $0; $ra is $31)."
+                                         },
+                                         {
+                                             "operand":  "$t2",
+                                             "description":  "A general-purpose register. It may be the same register as $t1."
+                                         },
+                                         {
+                                             "operand":  "cc",
+                                             "description":  "A floating-point condition flag number, 0 to 7. Comparisons set these flags; bc1t and bc1f test them."
+                                         }
+                                     ],
+                        "source":  "https://asm-editor.specy.app/documentation/mips/instruction/movt"
+                    },
+                    {
+                        "name":  "movz",
+                        "longName":  "Move if zero",
+                        "summary":  "Copies $t2 into $t1 if $t3 is zero, without a branch.",
+                        "forms":  [
+                                      "movz $t1, $t2, $t3"
+                                  ],
+                        "operands":  [
+                                         {
+                                             "operand":  "$t1",
+                                             "description":  "Any general-purpose register, $0 to $31, using its numeric or named spelling, such as $8 or $t0 ($zero is $0; $ra is $31)."
+                                         },
+                                         {
+                                             "operand":  "$t2",
+                                             "description":  "A general-purpose register. It may be the same register as $t1."
+                                         },
+                                         {
+                                             "operand":  "$t3",
+                                             "description":  "A general-purpose register. It may be the same register as $t1."
+                                         }
+                                     ],
+                        "source":  "https://asm-editor.specy.app/documentation/mips/instruction/movz"
+                    },
+                    {
+                        "name":  "mtc0",
+                        "longName":  "Move to coprocessor 0",
+                        "summary":  "Writes the value of general-purpose register $t1 into a Coprocessor 0 (CP0) control register.",
+                        "forms":  [
+                                      "mtc0 $t1, $8"
+                                  ],
+                        "operands":  [
+                                         {
+                                             "operand":  "$t1",
+                                             "description":  "Any general-purpose register, $0 to $31, using its numeric or named spelling, such as $8 or $t0 ($zero is $0; $ra is $31)."
+                                         },
+                                         {
+                                             "operand":  "$8",
+                                             "description":  "A coprocessor 0 register, written by number: $8 (vaddr), $12 (status), $13 (cause) or $14 (epc)."
+                                         }
+                                     ],
+                        "source":  "https://asm-editor.specy.app/documentation/mips/instruction/mtc0"
+                    },
+                    {
+                        "name":  "mtc1",
+                        "longName":  "Move from integer register to FP register",
+                        "summary":  "Copies the 32-bit value in integer register $t1 into FP register $f1 without any conversion.",
+                        "forms":  [
+                                      "mtc1 $t1, $f1"
+                                  ],
+                        "operands":  [
+                                         {
+                                             "operand":  "$t1",
+                                             "description":  "Any general-purpose register, $0 to $31, using its numeric or named spelling, such as $8 or $t0 ($zero is $0; $ra is $31)."
+                                         },
+                                         {
+                                             "operand":  "$f1",
+                                             "description":  "Any floating-point register, $f0 to $f31."
+                                         }
+                                     ],
+                        "source":  "https://asm-editor.specy.app/documentation/mips/instruction/mtc1"
+                    },
+                    {
+                        "name":  "mthi",
+                        "longName":  "Move to HI",
+                        "summary":  "Copies $t1 into the special HI register, overwriting any prior multiply or divide result stored there.",
+                        "forms":  [
+                                      "mthi $t1"
+                                  ],
+                        "operands":  [
+                                         {
+                                             "operand":  "$t1",
+                                             "description":  "Any general-purpose register, $0 to $31, using its numeric or named spelling, such as $8 or $t0 ($zero is $0; $ra is $31)."
+                                         }
+                                     ],
+                        "source":  "https://asm-editor.specy.app/documentation/mips/instruction/mthi"
+                    },
+                    {
+                        "name":  "mtlo",
+                        "longName":  "Move to LO",
+                        "summary":  "Copies $t1 into the special LO register, overwriting any prior multiply or divide result stored there.",
+                        "forms":  [
+                                      "mtlo $t1"
+                                  ],
+                        "operands":  [
+                                         {
+                                             "operand":  "$t1",
+                                             "description":  "Any general-purpose register, $0 to $31, using its numeric or named spelling, such as $8 or $t0 ($zero is $0; $ra is $31)."
+                                         }
+                                     ],
+                        "source":  "https://asm-editor.specy.app/documentation/mips/instruction/mtlo"
+                    },
+                    {
+                        "name":  "mul",
+                        "longName":  "Multiply (low 32-bit result to register)",
+                        "summary":  "Multiplies $t2 by $t3, or an immediate, as signed values and puts the low 32 bits of the product in $t1.",
+                        "forms":  [
+                                      "mul $t1, $t2, $t3"
+                                  ],
+                        "operands":  [
+                                         {
+                                             "operand":  "$t1",
+                                             "description":  "Any general-purpose register, $0 to $31, using its numeric or named spelling, such as $8 or $t0 ($zero is $0; $ra is $31)."
+                                         },
+                                         {
+                                             "operand":  "$t2",
+                                             "description":  "A general-purpose register. It may be the same register as $t1."
+                                         },
+                                         {
+                                             "operand":  "$t3",
+                                             "description":  "A general-purpose register. It may be the same register as $t1."
+                                         },
+                                         {
+                                             "operand":  "imm",
+                                             "description":  "An immediate value: a signed 16-bit value (-32768 to 32767) or a 32-bit value (-2147483648 to 4294967295). The assembler chooses a supported encoding for the value and other operands; a pseudoinstruction may expand into several instructions."
+                                         }
+                                     ],
+                        "source":  "https://asm-editor.specy.app/documentation/mips/instruction/mul"
+                    },
+                    {
+                        "name":  "mult",
+                        "longName":  "Multiply signed",
+                        "summary":  "Multiplies $t1 by $t2 as signed 32-bit integers and leaves the 64-bit product in HI and LO.",
+                        "forms":  [
+                                      "mult $t1, $t2"
+                                  ],
+                        "operands":  [
+                                         {
+                                             "operand":  "$t1",
+                                             "description":  "Any general-purpose register, $0 to $31, using its numeric or named spelling, such as $8 or $t0 ($zero is $0; $ra is $31)."
+                                         },
+                                         {
+                                             "operand":  "$t2",
+                                             "description":  "A general-purpose register. It may be the same register as $t1."
+                                         }
+                                     ],
+                        "source":  "https://asm-editor.specy.app/documentation/mips/instruction/mult"
+                    },
+                    {
+                        "name":  "multu",
+                        "longName":  "Multiply unsigned",
+                        "summary":  "Multiplies $t1 by $t2 as unsigned 32-bit integers and leaves the 64-bit product in HI and LO.",
+                        "forms":  [
+                                      "multu $t1, $t2"
+                                  ],
+                        "operands":  [
+                                         {
+                                             "operand":  "$t1",
+                                             "description":  "Any general-purpose register, $0 to $31, using its numeric or named spelling, such as $8 or $t0 ($zero is $0; $ra is $31)."
+                                         },
+                                         {
+                                             "operand":  "$t2",
+                                             "description":  "A general-purpose register. It may be the same register as $t1."
+                                         }
+                                     ],
+                        "source":  "https://asm-editor.specy.app/documentation/mips/instruction/multu"
+                    },
+                    {
+                        "name":  "neg",
+                        "longName":  "Negate",
+                        "summary":  "Sets $t1 to the negation of $t2.",
+                        "forms":  [
+                                      "neg $t1, $t2"
+                                  ],
+                        "operands":  [
+                                         {
+                                             "operand":  "$t1",
+                                             "description":  "Any general-purpose register, $0 to $31, using its numeric or named spelling, such as $8 or $t0 ($zero is $0; $ra is $31)."
+                                         },
+                                         {
+                                             "operand":  "$t2",
+                                             "description":  "A general-purpose register. It may be the same register as $t1."
+                                         }
+                                     ],
+                        "source":  "https://asm-editor.specy.app/documentation/mips/instruction/neg"
+                    },
+                    {
+                        "name":  "negu",
+                        "longName":  "Negate unsigned (no overflow trap)",
+                        "summary":  "Sets $t1 to the negation of $t2, wrapping on overflow instead of trapping.",
+                        "forms":  [
+                                      "negu $t1, $t2"
+                                  ],
+                        "operands":  [
+                                         {
+                                             "operand":  "$t1",
+                                             "description":  "Any general-purpose register, $0 to $31, using its numeric or named spelling, such as $8 or $t0 ($zero is $0; $ra is $31)."
+                                         },
+                                         {
+                                             "operand":  "$t2",
+                                             "description":  "A general-purpose register. It may be the same register as $t1."
+                                         }
+                                     ],
+                        "source":  "https://asm-editor.specy.app/documentation/mips/instruction/negu"
+                    },
+                    {
+                        "name":  "nop",
+                        "longName":  "No operation",
+                        "summary":  "Does nothing; the processor simply advances to the next instruction.",
+                        "forms":  [
+                                      "nop"
+                                  ],
+                        "operands":  [
+
+                                     ],
+                        "source":  "https://asm-editor.specy.app/documentation/mips/instruction/nop"
+                    },
+                    {
+                        "name":  "nor",
+                        "longName":  "Bitwise NOR",
+                        "summary":  "Sets $t1 to the bitwise NOR of $t2 and $t3, so each result bit is 1 only where both inputs are 0.",
+                        "forms":  [
+                                      "nor $t1, $t2, $t3"
+                                  ],
+                        "operands":  [
+                                         {
+                                             "operand":  "$t1",
+                                             "description":  "Any general-purpose register, $0 to $31, using its numeric or named spelling, such as $8 or $t0 ($zero is $0; $ra is $31)."
+                                         },
+                                         {
+                                             "operand":  "$t2",
+                                             "description":  "A general-purpose register. It may be the same register as $t1."
+                                         },
+                                         {
+                                             "operand":  "$t3",
+                                             "description":  "A general-purpose register. It may be the same register as $t1."
+                                         }
+                                     ],
+                        "source":  "https://asm-editor.specy.app/documentation/mips/instruction/nor"
+                    },
+                    {
+                        "name":  "not",
+                        "longName":  "Bitwise NOT (bit inversion)",
+                        "summary":  "Sets $t1 to the bitwise complement of $t2, flipping every bit.",
+                        "forms":  [
+                                      "not $t1, $t2"
+                                  ],
+                        "operands":  [
+                                         {
+                                             "operand":  "$t1",
+                                             "description":  "Any general-purpose register, $0 to $31, using its numeric or named spelling, such as $8 or $t0 ($zero is $0; $ra is $31)."
+                                         },
+                                         {
+                                             "operand":  "$t2",
+                                             "description":  "A general-purpose register. It may be the same register as $t1."
+                                         }
+                                     ],
+                        "source":  "https://asm-editor.specy.app/documentation/mips/instruction/not"
+                    },
+                    {
+                        "name":  "or",
+                        "longName":  "Bitwise OR",
+                        "summary":  "Sets $t1 to $t2 OR $t3, or an immediate, so each result bit is 1 where either input is 1.",
+                        "forms":  [
+                                      "or $t1, $t2, $t3"
+                                  ],
+                        "operands":  [
+                                         {
+                                             "operand":  "$t1",
+                                             "description":  "Any general-purpose register, $0 to $31, using its numeric or named spelling, such as $8 or $t0 ($zero is $0; $ra is $31)."
+                                         },
+                                         {
+                                             "operand":  "$t2",
+                                             "description":  "A general-purpose register. It may be the same register as $t1."
+                                         },
+                                         {
+                                             "operand":  "$t3",
+                                             "description":  "A general-purpose register. It may be the same register as $t1."
+                                         },
+                                         {
+                                             "operand":  "uimm16",
+                                             "description":  "An unsigned 16-bit immediate, 0 to 65535."
+                                         }
+                                     ],
+                        "source":  "https://asm-editor.specy.app/documentation/mips/instruction/or"
+                    },
+                    {
+                        "name":  "ori",
+                        "longName":  "Bitwise OR immediate",
+                        "summary":  "Sets $t1 to $t2 OR an immediate, with the immediate zero-extended instead of sign-extended.",
+                        "forms":  [
+                                      "ori $t1, $t2, uimm16"
+                                  ],
+                        "operands":  [
+                                         {
+                                             "operand":  "$t1",
+                                             "description":  "Any general-purpose register, $0 to $31, using its numeric or named spelling, such as $8 or $t0 ($zero is $0; $ra is $31)."
+                                         },
+                                         {
+                                             "operand":  "$t2",
+                                             "description":  "A general-purpose register. It may be the same register as $t1."
+                                         },
+                                         {
+                                             "operand":  "uimm16",
+                                             "description":  "An unsigned 16-bit immediate, 0 to 65535."
+                                         },
+                                         {
+                                             "operand":  "imm32",
+                                             "description":  "A 32-bit immediate, -2147483648 to 4294967295. Pseudoinstruction expansion may overwrite $at, losing its previous value."
+                                         },
+                                         {
+                                             "operand":  "imm",
+                                             "description":  "An immediate value: an unsigned 16-bit value (0 to 65535) or a 32-bit value (-2147483648 to 4294967295). The assembler chooses a supported encoding for the value and other operands; a pseudoinstruction may expand into several instructions."
+                                         },
+                                         {
+                                             "operand":  "label",
+                                             "description":  "A named address in the program, such as the start of a loop or a variable in.data."
+                                         }
+                                     ],
+                        "source":  "https://asm-editor.specy.app/documentation/mips/instruction/ori"
+                    },
+                    {
+                        "name":  "pref",
+                        "longName":  "Prefetch",
+                        "summary":  "Hints that the data at address ($t2 + offset) will be needed soon, so the hardware can begin moving it into cache.",
+                        "forms":  [
+                                      "pref imm5, imm16 ($t2)"
+                                  ],
+                        "operands":  [
+                                         {
+                                             "operand":  "imm5",
+                                             "description":  "An unsigned 5-bit immediate, 0 to 31, used for values such as a shift count."
+                                         },
+                                         {
+                                             "operand":  "imm16",
+                                             "description":  "A signed 16-bit immediate, -32768 to 32767."
+                                         },
+                                         {
+                                             "operand":  "$t2",
+                                             "description":  "Any general-purpose register, $0 to $31, using its numeric or named spelling, such as $8 or $t0 ($zero is $0; $ra is $31)."
+                                         }
+                                     ],
+                        "source":  "https://asm-editor.specy.app/documentation/mips/instruction/pref"
+                    },
+                    {
+                        "name":  "rem",
+                        "longName":  "Remainder signed",
+                        "summary":  "Sets $t1 to the remainder of $t2 divided by $t3, or an immediate, as signed values.",
+                        "forms":  [
+                                      "rem $t1, $t2, $t3",
+                                      "rem $t1, $t2, imm"
+                                  ],
+                        "operands":  [
+                                         {
+                                             "operand":  "$t1",
+                                             "description":  "Any general-purpose register, $0 to $31, using its numeric or named spelling, such as $8 or $t0 ($zero is $0; $ra is $31)."
+                                         },
+                                         {
+                                             "operand":  "$t2",
+                                             "description":  "A general-purpose register. It may be the same register as $t1."
+                                         },
+                                         {
+                                             "operand":  "$t3",
+                                             "description":  "A general-purpose register. It may be the same register as $t1."
+                                         },
+                                         {
+                                             "operand":  "imm",
+                                             "description":  "An immediate value: a signed 16-bit value (-32768 to 32767) or a 32-bit value (-2147483648 to 4294967295). The assembler chooses a supported encoding for the value and other operands; a pseudoinstruction may expand into several instructions."
+                                         }
+                                     ],
+                        "source":  "https://asm-editor.specy.app/documentation/mips/instruction/rem"
+                    },
+                    {
+                        "name":  "remu",
+                        "longName":  "Remainder unsigned",
+                        "summary":  "Sets $t1 to the remainder of $t2 divided by $t3, or an immediate, as unsigned values.",
+                        "forms":  [
+                                      "remu $t1, $t2, $t3",
+                                      "remu $t1, $t2, imm"
+                                  ],
+                        "operands":  [
+                                         {
+                                             "operand":  "$t1",
+                                             "description":  "Any general-purpose register, $0 to $31, using its numeric or named spelling, such as $8 or $t0 ($zero is $0; $ra is $31)."
+                                         },
+                                         {
+                                             "operand":  "$t2",
+                                             "description":  "A general-purpose register. It may be the same register as $t1."
+                                         },
+                                         {
+                                             "operand":  "$t3",
+                                             "description":  "A general-purpose register. It may be the same register as $t1."
+                                         },
+                                         {
+                                             "operand":  "imm",
+                                             "description":  "An immediate value: a signed 16-bit value (-32768 to 32767) or a 32-bit value (-2147483648 to 4294967295). The assembler chooses a supported encoding for the value and other operands; a pseudoinstruction may expand into several instructions."
+                                         }
+                                     ],
+                        "source":  "https://asm-editor.specy.app/documentation/mips/instruction/remu"
+                    },
+                    {
+                        "name":  "rol",
+                        "longName":  "Rotate left (register or immediate)",
+                        "summary":  "Sets $t1 to $t2 rotated left by the amount in $t3, or by a 5-bit immediate.",
+                        "forms":  [
+                                      "rol $t1, $t2, $t3",
+                                      "rol $t1, $t2, imm5"
+                                  ],
+                        "operands":  [
+                                         {
+                                             "operand":  "$t1",
+                                             "description":  "Any general-purpose register, $0 to $31, using its numeric or named spelling, such as $8 or $t0 ($zero is $0; $ra is $31)."
+                                         },
+                                         {
+                                             "operand":  "$t2",
+                                             "description":  "A general-purpose register. It may be the same register as $t1."
+                                         },
+                                         {
+                                             "operand":  "$t3",
+                                             "description":  "A general-purpose register. It may be the same register as $t1."
+                                         },
+                                         {
+                                             "operand":  "imm5",
+                                             "description":  "An unsigned 5-bit immediate, 0 to 31, used for values such as a shift count."
+                                         }
+                                     ],
+                        "source":  "https://asm-editor.specy.app/documentation/mips/instruction/rol"
+                    },
+                    {
+                        "name":  "ror",
+                        "longName":  "Rotate right (register or immediate)",
+                        "summary":  "Sets $t1 to $t2 rotated right by the amount in $t3, or by a 5-bit immediate.",
+                        "forms":  [
+                                      "ror $t1, $t2, $t3",
+                                      "ror $t1, $t2, imm5"
+                                  ],
+                        "operands":  [
+                                         {
+                                             "operand":  "$t1",
+                                             "description":  "Any general-purpose register, $0 to $31, using its numeric or named spelling, such as $8 or $t0 ($zero is $0; $ra is $31)."
+                                         },
+                                         {
+                                             "operand":  "$t2",
+                                             "description":  "A general-purpose register. It may be the same register as $t1."
+                                         },
+                                         {
+                                             "operand":  "$t3",
+                                             "description":  "A general-purpose register. It may be the same register as $t1."
+                                         },
+                                         {
+                                             "operand":  "imm5",
+                                             "description":  "An unsigned 5-bit immediate, 0 to 31, used for values such as a shift count."
+                                         }
+                                     ],
+                        "source":  "https://asm-editor.specy.app/documentation/mips/instruction/ror"
+                    },
+                    {
+                        "name":  "sb",
+                        "longName":  "Store byte",
+                        "summary":  "Stores the lowest 8 bits of $t1 at the address $t2 plus an offset.",
+                        "forms":  [
+                                      "sb $t1, imm16 ($t2)"
+                                  ],
+                        "operands":  [
+                                         {
+                                             "operand":  "$t1",
+                                             "description":  "Any general-purpose register, $0 to $31, using its numeric or named spelling, such as $8 or $t0 ($zero is $0; $ra is $31)."
+                                         },
+                                         {
+                                             "operand":  "imm16",
+                                             "description":  "A signed 16-bit immediate, -32768 to 32767."
+                                         },
+                                         {
+                                             "operand":  "$t2",
+                                             "description":  "A general-purpose register. It may be the same register as $t1."
+                                         },
+                                         {
+                                             "operand":  "label",
+                                             "description":  "A named address in the program, such as the start of a loop or a variable in.data."
+                                         },
+                                         {
+                                             "operand":  "imm",
+                                             "description":  "An immediate value: a signed 16-bit value (-32768 to 32767), an unsigned 16-bit value (0 to 65535) or a 32-bit value (-2147483648 to 4294967295). The assembler chooses a supported encoding for the value and other operands; a pseudoinstruction may expand into several instructions."
+                                         },
+                                         {
+                                             "operand":  "imm32",
+                                             "description":  "A 32-bit immediate, -2147483648 to 4294967295. Pseudoinstruction expansion may overwrite $at, losing its previous value."
+                                         }
+                                     ],
+                        "source":  "https://asm-editor.specy.app/documentation/mips/instruction/sb"
+                    },
+                    {
+                        "name":  "sc",
+                        "longName":  "Store conditional",
+                        "summary":  "Stores $t1 at the address $t2 plus an offset and sets $t1 to 1 if the store succeeds, or 0 if it fails.",
+                        "forms":  [
+                                      "sc $t1, imm16 ($t2)"
+                                  ],
+                        "operands":  [
+                                         {
+                                             "operand":  "$t1",
+                                             "description":  "Any general-purpose register, $0 to $31, using its numeric or named spelling, such as $8 or $t0 ($zero is $0; $ra is $31)."
+                                         },
+                                         {
+                                             "operand":  "imm16",
+                                             "description":  "A signed 16-bit immediate, -32768 to 32767."
+                                         },
+                                         {
+                                             "operand":  "$t2",
+                                             "description":  "A general-purpose register. It may be the same register as $t1."
+                                         },
+                                         {
+                                             "operand":  "imm",
+                                             "description":  "An immediate value: a signed 16-bit value (-32768 to 32767), an unsigned 16-bit value (0 to 65535) or a 32-bit value (-2147483648 to 4294967295). The assembler chooses a supported encoding for the value and other operands; a pseudoinstruction may expand into several instructions."
+                                         },
+                                         {
+                                             "operand":  "label",
+                                             "description":  "A named address in the program, such as the start of a loop or a variable in.data."
+                                         },
+                                         {
+                                             "operand":  "imm32",
+                                             "description":  "A 32-bit immediate, -2147483648 to 4294967295. Pseudoinstruction expansion may overwrite $at, losing its previous value."
+                                         }
+                                     ],
+                        "source":  "https://asm-editor.specy.app/documentation/mips/instruction/sc"
+                    },
+                    {
+                        "name":  "sd",
+                        "longName":  "Store doubleword",
+                        "summary":  "Stores $t1 and the next register as a 64-bit doubleword at an address.",
+                        "forms":  [
+                                      "sd $t1, imm ($t2)",
+                                      "sd $t1, imm32",
+                                      "sd $t1, label",
+                                      "sd $t1, label + imm32",
+                                      "sd $t1, ($t2)",
+                                      "sd $t1, label ($t2)",
+                                      "sd $t1, label + imm32 ($t2)"
+                                  ],
+                        "operands":  [
+                                         {
+                                             "operand":  "$t1",
+                                             "description":  "Any general-purpose register, $0 to $31, using its numeric or named spelling, such as $8 or $t0 ($zero is $0; $ra is $31)."
+                                         },
+                                         {
+                                             "operand":  "imm",
+                                             "description":  "An immediate value: a signed 16-bit value (-32768 to 32767) or a 32-bit value (-2147483648 to 4294967295). The assembler chooses a supported encoding for the value and other operands; a pseudoinstruction may expand into several instructions."
+                                         },
+                                         {
+                                             "operand":  "$t2",
+                                             "description":  "A general-purpose register. It may be the same register as $t1."
+                                         },
+                                         {
+                                             "operand":  "imm32",
+                                             "description":  "A 32-bit immediate, -2147483648 to 4294967295. Pseudoinstruction expansion may overwrite $at, losing its previous value."
+                                         },
+                                         {
+                                             "operand":  "label",
+                                             "description":  "A named address in the program, such as the start of a loop or a variable in.data."
+                                         }
+                                     ],
+                        "source":  "https://asm-editor.specy.app/documentation/mips/instruction/sd"
+                    },
+                    {
+                        "name":  "sdc1",
+                        "longName":  "Store doubleword from FP register pair",
+                        "summary":  "Writes the 64-bit value in the even FP register pair $f2/$f3 to memory at address ($t2 + offset).",
+                        "forms":  [
+                                      "sdc1 $f2, imm16 ($t2)"
+                                  ],
+                        "operands":  [
+                                         {
+                                             "operand":  "$f2",
+                                             "description":  "An even-numbered floating-point register, $f0 to $f30. A double-precision value uses this register and the next odd-numbered register."
+                                         },
+                                         {
+                                             "operand":  "imm16",
+                                             "description":  "A signed 16-bit immediate, -32768 to 32767."
+                                         },
+                                         {
+                                             "operand":  "$t2",
+                                             "description":  "Any general-purpose register, $0 to $31, using its numeric or named spelling, such as $8 or $t0 ($zero is $0; $ra is $31)."
+                                         },
+                                         {
+                                             "operand":  "$f1",
+                                             "description":  "Any floating-point register, $f0 to $f31."
+                                         },
+                                         {
+                                             "operand":  "label",
+                                             "description":  "A named address in the program, such as the start of a loop or a variable in.data."
+                                         },
+                                         {
+                                             "operand":  "imm",
+                                             "description":  "An immediate value: a signed 16-bit value (-32768 to 32767) or a 32-bit value (-2147483648 to 4294967295). The assembler chooses a supported encoding for the value and other operands; a pseudoinstruction may expand into several instructions."
+                                         },
+                                         {
+                                             "operand":  "imm32",
+                                             "description":  "A 32-bit immediate, -2147483648 to 4294967295. Pseudoinstruction expansion may overwrite $at, losing its previous value."
+                                         }
+                                     ],
+                        "source":  "https://asm-editor.specy.app/documentation/mips/instruction/sdc1"
+                    },
+                    {
+                        "name":  "sh",
+                        "longName":  "Store halfword",
+                        "summary":  "Stores the lowest 16 bits of $t1 at the address $t2 plus an offset; the address must be halfword-aligned.",
+                        "forms":  [
+                                      "sh $t1, imm16 ($t2)"
+                                  ],
+                        "operands":  [
+                                         {
+                                             "operand":  "$t1",
+                                             "description":  "Any general-purpose register, $0 to $31, using its numeric or named spelling, such as $8 or $t0 ($zero is $0; $ra is $31)."
+                                         },
+                                         {
+                                             "operand":  "imm16",
+                                             "description":  "A signed 16-bit immediate, -32768 to 32767."
+                                         },
+                                         {
+                                             "operand":  "$t2",
+                                             "description":  "A general-purpose register. It may be the same register as $t1."
+                                         },
+                                         {
+                                             "operand":  "label",
+                                             "description":  "A named address in the program, such as the start of a loop or a variable in.data."
+                                         },
+                                         {
+                                             "operand":  "imm",
+                                             "description":  "An immediate value: a signed 16-bit value (-32768 to 32767), an unsigned 16-bit value (0 to 65535) or a 32-bit value (-2147483648 to 4294967295). The assembler chooses a supported encoding for the value and other operands; a pseudoinstruction may expand into several instructions."
+                                         },
+                                         {
+                                             "operand":  "imm32",
+                                             "description":  "A 32-bit immediate, -2147483648 to 4294967295. Pseudoinstruction expansion may overwrite $at, losing its previous value."
+                                         }
+                                     ],
+                        "source":  "https://asm-editor.specy.app/documentation/mips/instruction/sh"
+                    },
+                    {
+                        "name":  "sll",
+                        "longName":  "Shift left logical",
+                        "summary":  "Sets $t1 to $t2 shifted left by a fixed amount of 0 to 31 bits, filling vacated bits with zeros.",
+                        "forms":  [
+                                      "sll $t1, $t2, imm5"
+                                  ],
+                        "operands":  [
+                                         {
+                                             "operand":  "$t1",
+                                             "description":  "Any general-purpose register, $0 to $31, using its numeric or named spelling, such as $8 or $t0 ($zero is $0; $ra is $31)."
+                                         },
+                                         {
+                                             "operand":  "$t2",
+                                             "description":  "A general-purpose register. It may be the same register as $t1."
+                                         },
+                                         {
+                                             "operand":  "imm5",
+                                             "description":  "An unsigned 5-bit immediate, 0 to 31, used for values such as a shift count."
+                                         }
+                                     ],
+                        "source":  "https://asm-editor.specy.app/documentation/mips/instruction/sll"
+                    },
+                    {
+                        "name":  "sllv",
+                        "longName":  "Shift left logical variable",
+                        "summary":  "Sets $t1 to $t2 shifted left by the amount in the low 5 bits of $t3, filling vacated bits with zeros.",
+                        "forms":  [
+                                      "sllv $t1, $t2, $t3"
+                                  ],
+                        "operands":  [
+                                         {
+                                             "operand":  "$t1",
+                                             "description":  "Any general-purpose register, $0 to $31, using its numeric or named spelling, such as $8 or $t0 ($zero is $0; $ra is $31)."
+                                         },
+                                         {
+                                             "operand":  "$t2",
+                                             "description":  "A general-purpose register. It may be the same register as $t1."
+                                         },
+                                         {
+                                             "operand":  "$t3",
+                                             "description":  "A general-purpose register. It may be the same register as $t1."
+                                         }
+                                     ],
+                        "source":  "https://asm-editor.specy.app/documentation/mips/instruction/sllv"
+                    },
+                    {
+                        "name":  "slt",
+                        "longName":  "Set on less than (signed)",
+                        "summary":  "Sets $t1 to 1 if $t2 is less than $t3 as signed integers, otherwise to 0.",
+                        "forms":  [
+                                      "slt $t1, $t2, $t3"
+                                  ],
+                        "operands":  [
+                                         {
+                                             "operand":  "$t1",
+                                             "description":  "Any general-purpose register, $0 to $31, using its numeric or named spelling, such as $8 or $t0 ($zero is $0; $ra is $31)."
+                                         },
+                                         {
+                                             "operand":  "$t2",
+                                             "description":  "A general-purpose register. It may be the same register as $t1."
+                                         },
+                                         {
+                                             "operand":  "$t3",
+                                             "description":  "A general-purpose register. It may be the same register as $t1."
+                                         }
+                                     ],
+                        "source":  "https://asm-editor.specy.app/documentation/mips/instruction/slt"
+                    },
+                    {
+                        "name":  "slti",
+                        "longName":  "Set on less than immediate (signed)",
+                        "summary":  "Sets $t1 to 1 if $t2 is less than an immediate as signed integers, otherwise to 0.",
+                        "forms":  [
+                                      "slti $t1, $t2, imm16"
+                                  ],
+                        "operands":  [
+                                         {
+                                             "operand":  "$t1",
+                                             "description":  "Any general-purpose register, $0 to $31, using its numeric or named spelling, such as $8 or $t0 ($zero is $0; $ra is $31)."
+                                         },
+                                         {
+                                             "operand":  "$t2",
+                                             "description":  "A general-purpose register. It may be the same register as $t1."
+                                         },
+                                         {
+                                             "operand":  "imm16",
+                                             "description":  "A signed 16-bit immediate, -32768 to 32767."
+                                         }
+                                     ],
+                        "source":  "https://asm-editor.specy.app/documentation/mips/instruction/slti"
+                    },
+                    {
+                        "name":  "sltiu",
+                        "longName":  "Set on less than immediate unsigned",
+                        "summary":  "Sets $t1 to 1 if $t2 is less than an immediate as unsigned integers, otherwise to 0.",
+                        "forms":  [
+                                      "sltiu $t1, $t2, imm16"
+                                  ],
+                        "operands":  [
+                                         {
+                                             "operand":  "$t1",
+                                             "description":  "Any general-purpose register, $0 to $31, using its numeric or named spelling, such as $8 or $t0 ($zero is $0; $ra is $31)."
+                                         },
+                                         {
+                                             "operand":  "$t2",
+                                             "description":  "A general-purpose register. It may be the same register as $t1."
+                                         },
+                                         {
+                                             "operand":  "imm16",
+                                             "description":  "A signed 16-bit immediate, -32768 to 32767."
+                                         }
+                                     ],
+                        "source":  "https://asm-editor.specy.app/documentation/mips/instruction/sltiu"
+                    },
+                    {
+                        "name":  "sltu",
+                        "longName":  "Set on less than unsigned",
+                        "summary":  "Sets $t1 to 1 if $t2 is less than $t3 as unsigned integers, otherwise to 0.",
+                        "forms":  [
+                                      "sltu $t1, $t2, $t3"
+                                  ],
+                        "operands":  [
+                                         {
+                                             "operand":  "$t1",
+                                             "description":  "Any general-purpose register, $0 to $31, using its numeric or named spelling, such as $8 or $t0 ($zero is $0; $ra is $31)."
+                                         },
+                                         {
+                                             "operand":  "$t2",
+                                             "description":  "A general-purpose register. It may be the same register as $t1."
+                                         },
+                                         {
+                                             "operand":  "$t3",
+                                             "description":  "A general-purpose register. It may be the same register as $t1."
+                                         }
+                                     ],
+                        "source":  "https://asm-editor.specy.app/documentation/mips/instruction/sltu"
+                    },
+                    {
+                        "name":  "sra",
+                        "longName":  "Shift right arithmetic",
+                        "summary":  "Sets $t1 to $t2 shifted right by a fixed amount of 0 to 31 bits, filling vacated bits with copies of the sign bit.",
+                        "forms":  [
+                                      "sra $t1, $t2, imm5"
+                                  ],
+                        "operands":  [
+                                         {
+                                             "operand":  "$t1",
+                                             "description":  "Any general-purpose register, $0 to $31, using its numeric or named spelling, such as $8 or $t0 ($zero is $0; $ra is $31)."
+                                         },
+                                         {
+                                             "operand":  "$t2",
+                                             "description":  "A general-purpose register. It may be the same register as $t1."
+                                         },
+                                         {
+                                             "operand":  "imm5",
+                                             "description":  "An unsigned 5-bit immediate, 0 to 31, used for values such as a shift count."
+                                         }
+                                     ],
+                        "source":  "https://asm-editor.specy.app/documentation/mips/instruction/sra"
+                    },
+                    {
+                        "name":  "srav",
+                        "longName":  "Shift right arithmetic variable",
+                        "summary":  "Sets $t1 to $t2 shifted right by the amount in the low 5 bits of $t3, filling vacated bits with the sign bit.",
+                        "forms":  [
+                                      "srav $t1, $t2, $t3"
+                                  ],
+                        "operands":  [
+                                         {
+                                             "operand":  "$t1",
+                                             "description":  "Any general-purpose register, $0 to $31, using its numeric or named spelling, such as $8 or $t0 ($zero is $0; $ra is $31)."
+                                         },
+                                         {
+                                             "operand":  "$t2",
+                                             "description":  "A general-purpose register. It may be the same register as $t1."
+                                         },
+                                         {
+                                             "operand":  "$t3",
+                                             "description":  "A general-purpose register. It may be the same register as $t1."
+                                         }
+                                     ],
+                        "source":  "https://asm-editor.specy.app/documentation/mips/instruction/srav"
+                    },
+                    {
+                        "name":  "srl",
+                        "longName":  "Shift right logical",
+                        "summary":  "Sets $t1 to $t2 shifted right by a fixed amount of 0 to 31 bits, filling vacated bits with zeros.",
+                        "forms":  [
+                                      "srl $t1, $t2, imm5"
+                                  ],
+                        "operands":  [
+                                         {
+                                             "operand":  "$t1",
+                                             "description":  "Any general-purpose register, $0 to $31, using its numeric or named spelling, such as $8 or $t0 ($zero is $0; $ra is $31)."
+                                         },
+                                         {
+                                             "operand":  "$t2",
+                                             "description":  "A general-purpose register. It may be the same register as $t1."
+                                         },
+                                         {
+                                             "operand":  "imm5",
+                                             "description":  "An unsigned 5-bit immediate, 0 to 31, used for values such as a shift count."
+                                         }
+                                     ],
+                        "source":  "https://asm-editor.specy.app/documentation/mips/instruction/srl"
+                    },
+                    {
+                        "name":  "srlv",
+                        "longName":  "Shift right logical variable",
+                        "summary":  "Sets $t1 to $t2 shifted right by the amount in the low 5 bits of $t3, filling vacated bits with zeros.",
+                        "forms":  [
+                                      "srlv $t1, $t2, $t3"
+                                  ],
+                        "operands":  [
+                                         {
+                                             "operand":  "$t1",
+                                             "description":  "Any general-purpose register, $0 to $31, using its numeric or named spelling, such as $8 or $t0 ($zero is $0; $ra is $31)."
+                                         },
+                                         {
+                                             "operand":  "$t2",
+                                             "description":  "A general-purpose register. It may be the same register as $t1."
+                                         },
+                                         {
+                                             "operand":  "$t3",
+                                             "description":  "A general-purpose register. It may be the same register as $t1."
+                                         }
+                                     ],
+                        "source":  "https://asm-editor.specy.app/documentation/mips/instruction/srlv"
+                    },
+                    {
+                        "name":  "sub",
+                        "longName":  "Subtract with overflow trap",
+                        "summary":  "Subtracts $t3, or an immediate, from $t2 into $t1 and traps if the signed result overflows.",
+                        "forms":  [
+                                      "sub $t1, $t2, $t3"
+                                  ],
+                        "operands":  [
+                                         {
+                                             "operand":  "$t1",
+                                             "description":  "Any general-purpose register, $0 to $31, using its numeric or named spelling, such as $8 or $t0 ($zero is $0; $ra is $31)."
+                                         },
+                                         {
+                                             "operand":  "$t2",
+                                             "description":  "A general-purpose register. It may be the same register as $t1."
+                                         },
+                                         {
+                                             "operand":  "$t3",
+                                             "description":  "A general-purpose register. It may be the same register as $t1."
+                                         },
+                                         {
+                                             "operand":  "imm",
+                                             "description":  "An immediate value: a signed 16-bit value (-32768 to 32767) or a 32-bit value (-2147483648 to 4294967295). The assembler chooses a supported encoding for the value and other operands; a pseudoinstruction may expand into several instructions."
+                                         }
+                                     ],
+                        "source":  "https://asm-editor.specy.app/documentation/mips/instruction/sub"
+                    },
+                    {
+                        "name":  "subu",
+                        "longName":  "Subtract unsigned (no overflow trap)",
+                        "summary":  "Subtracts $t3, or an immediate, from $t2 into $t1 and wraps on overflow instead of trapping.",
+                        "forms":  [
+                                      "subu $t1, $t2, $t3"
+                                  ],
+                        "operands":  [
+                                         {
+                                             "operand":  "$t1",
+                                             "description":  "Any general-purpose register, $0 to $31, using its numeric or named spelling, such as $8 or $t0 ($zero is $0; $ra is $31)."
+                                         },
+                                         {
+                                             "operand":  "$t2",
+                                             "description":  "A general-purpose register. It may be the same register as $t1."
+                                         },
+                                         {
+                                             "operand":  "$t3",
+                                             "description":  "A general-purpose register. It may be the same register as $t1."
+                                         },
+                                         {
+                                             "operand":  "imm32",
+                                             "description":  "A 32-bit immediate, -2147483648 to 4294967295. Pseudoinstruction expansion may overwrite $at, losing its previous value."
+                                         }
+                                     ],
+                        "source":  "https://asm-editor.specy.app/documentation/mips/instruction/subu"
+                    },
+                    {
+                        "name":  "sw",
+                        "longName":  "Store word",
+                        "summary":  "Stores the 32-bit value in $t1 at the address $t2 plus an offset; the address must be word-aligned.",
+                        "forms":  [
+                                      "sw $t1, imm16 ($t2)"
+                                  ],
+                        "operands":  [
+                                         {
+                                             "operand":  "$t1",
+                                             "description":  "Any general-purpose register, $0 to $31, using its numeric or named spelling, such as $8 or $t0 ($zero is $0; $ra is $31)."
+                                         },
+                                         {
+                                             "operand":  "imm16",
+                                             "description":  "A signed 16-bit immediate, -32768 to 32767."
+                                         },
+                                         {
+                                             "operand":  "$t2",
+                                             "description":  "A general-purpose register. It may be the same register as $t1."
+                                         },
+                                         {
+                                             "operand":  "label",
+                                             "description":  "A named address in the program, such as the start of a loop or a variable in.data."
+                                         },
+                                         {
+                                             "operand":  "imm",
+                                             "description":  "An immediate value: a signed 16-bit value (-32768 to 32767), an unsigned 16-bit value (0 to 65535) or a 32-bit value (-2147483648 to 4294967295). The assembler chooses a supported encoding for the value and other operands; a pseudoinstruction may expand into several instructions."
+                                         },
+                                         {
+                                             "operand":  "imm32",
+                                             "description":  "A 32-bit immediate, -2147483648 to 4294967295. Pseudoinstruction expansion may overwrite $at, losing its previous value."
+                                         }
+                                     ],
+                        "source":  "https://asm-editor.specy.app/documentation/mips/instruction/sw"
+                    },
+                    {
+                        "name":  "swc1",
+                        "longName":  "Store word from FP register",
+                        "summary":  "Writes the 32-bit value in FP register $f1 to memory at address ($t2 + offset).",
+                        "forms":  [
+                                      "swc1 $f1, imm16 ($t2)"
+                                  ],
+                        "operands":  [
+                                         {
+                                             "operand":  "$f1",
+                                             "description":  "Any floating-point register, $f0 to $f31."
+                                         },
+                                         {
+                                             "operand":  "imm16",
+                                             "description":  "A signed 16-bit immediate, -32768 to 32767."
+                                         },
+                                         {
+                                             "operand":  "$t2",
+                                             "description":  "Any general-purpose register, $0 to $31, using its numeric or named spelling, such as $8 or $t0 ($zero is $0; $ra is $31)."
+                                         },
+                                         {
+                                             "operand":  "label",
+                                             "description":  "A named address in the program, such as the start of a loop or a variable in.data."
+                                         },
+                                         {
+                                             "operand":  "imm",
+                                             "description":  "An immediate value: a signed 16-bit value (-32768 to 32767) or a 32-bit value (-2147483648 to 4294967295). The assembler chooses a supported encoding for the value and other operands; a pseudoinstruction may expand into several instructions."
+                                         },
+                                         {
+                                             "operand":  "imm32",
+                                             "description":  "A 32-bit immediate, -2147483648 to 4294967295. Pseudoinstruction expansion may overwrite $at, losing its previous value."
+                                         }
+                                     ],
+                        "source":  "https://asm-editor.specy.app/documentation/mips/instruction/swc1"
+                    },
+                    {
+                        "name":  "swl",
+                        "longName":  "Store word left (unaligned)",
+                        "summary":  "Stores the high-order 1 to 4 bytes of $t1 at an unaligned address, up to the end of that word.",
+                        "forms":  [
+                                      "swl $t1, imm16 ($t2)"
+                                  ],
+                        "operands":  [
+                                         {
+                                             "operand":  "$t1",
+                                             "description":  "Any general-purpose register, $0 to $31, using its numeric or named spelling, such as $8 or $t0 ($zero is $0; $ra is $31)."
+                                         },
+                                         {
+                                             "operand":  "imm16",
+                                             "description":  "A signed 16-bit immediate, -32768 to 32767."
+                                         },
+                                         {
+                                             "operand":  "$t2",
+                                             "description":  "A general-purpose register. It may be the same register as $t1."
+                                         },
+                                         {
+                                             "operand":  "imm",
+                                             "description":  "An immediate value: a signed 16-bit value (-32768 to 32767), an unsigned 16-bit value (0 to 65535) or a 32-bit value (-2147483648 to 4294967295). The assembler chooses a supported encoding for the value and other operands; a pseudoinstruction may expand into several instructions."
+                                         },
+                                         {
+                                             "operand":  "label",
+                                             "description":  "A named address in the program, such as the start of a loop or a variable in.data."
+                                         },
+                                         {
+                                             "operand":  "imm32",
+                                             "description":  "A 32-bit immediate, -2147483648 to 4294967295. Pseudoinstruction expansion may overwrite $at, losing its previous value."
+                                         }
+                                     ],
+                        "source":  "https://asm-editor.specy.app/documentation/mips/instruction/swl"
+                    },
+                    {
+                        "name":  "swr",
+                        "longName":  "Store word right (unaligned)",
+                        "summary":  "Stores the low-order 1 to 4 bytes of $t1 from the start of a word up to an unaligned address.",
+                        "forms":  [
+                                      "swr $t1, imm16 ($t2)"
+                                  ],
+                        "operands":  [
+                                         {
+                                             "operand":  "$t1",
+                                             "description":  "Any general-purpose register, $0 to $31, using its numeric or named spelling, such as $8 or $t0 ($zero is $0; $ra is $31)."
+                                         },
+                                         {
+                                             "operand":  "imm16",
+                                             "description":  "A signed 16-bit immediate, -32768 to 32767."
+                                         },
+                                         {
+                                             "operand":  "$t2",
+                                             "description":  "A general-purpose register. It may be the same register as $t1."
+                                         },
+                                         {
+                                             "operand":  "imm",
+                                             "description":  "An immediate value: a signed 16-bit value (-32768 to 32767), an unsigned 16-bit value (0 to 65535) or a 32-bit value (-2147483648 to 4294967295). The assembler chooses a supported encoding for the value and other operands; a pseudoinstruction may expand into several instructions."
+                                         },
+                                         {
+                                             "operand":  "label",
+                                             "description":  "A named address in the program, such as the start of a loop or a variable in.data."
+                                         },
+                                         {
+                                             "operand":  "imm32",
+                                             "description":  "A 32-bit immediate, -2147483648 to 4294967295. Pseudoinstruction expansion may overwrite $at, losing its previous value."
+                                         }
+                                     ],
+                        "source":  "https://asm-editor.specy.app/documentation/mips/instruction/swr"
+                    },
+                    {
+                        "name":  "sync",
+                        "longName":  "Synchronize shared memory",
+                        "summary":  "Orders the loads and stores around it, so that another processor observes them in program order.",
+                        "forms":  [
+                                      "sync",
+                                      "sync imm5"
+                                  ],
+                        "operands":  [
+                                         {
+                                             "operand":  "imm5",
+                                             "description":  "An unsigned 5-bit immediate, 0 to 31, used for values such as a shift count."
+                                         }
+                                     ],
+                        "source":  "https://asm-editor.specy.app/documentation/mips/instruction/sync"
+                    },
+                    {
+                        "name":  "syscall",
+                        "longName":  "System call",
+                        "summary":  "Invokes an OS service identified by the integer in $v0.",
+                        "forms":  [
+                                      "syscall"
+                                  ],
+                        "operands":  [
+
+                                     ],
+                        "source":  "https://asm-editor.specy.app/documentation/mips/instruction/syscall"
+                    },
+                    {
+                        "name":  "teq",
+                        "longName":  "Trap if equal",
+                        "summary":  "Raises a trap exception if $t1 equals $t2, which halts execution in this simulator.",
+                        "forms":  [
+                                      "teq $t1, $t2"
+                                  ],
+                        "operands":  [
+                                         {
+                                             "operand":  "$t1",
+                                             "description":  "Any general-purpose register, $0 to $31, using its numeric or named spelling, such as $8 or $t0 ($zero is $0; $ra is $31)."
+                                         },
+                                         {
+                                             "operand":  "$t2",
+                                             "description":  "A general-purpose register. It may be the same register as $t1."
+                                         }
+                                     ],
+                        "source":  "https://asm-editor.specy.app/documentation/mips/instruction/teq"
+                    },
+                    {
+                        "name":  "teqi",
+                        "longName":  "Trap if equal to immediate",
+                        "summary":  "Raises a trap exception if $t1 equals an immediate, sign-extended to 32 bits.",
+                        "forms":  [
+                                      "teqi $t1, imm16"
+                                  ],
+                        "operands":  [
+                                         {
+                                             "operand":  "$t1",
+                                             "description":  "Any general-purpose register, $0 to $31, using its numeric or named spelling, such as $8 or $t0 ($zero is $0; $ra is $31)."
+                                         },
+                                         {
+                                             "operand":  "imm16",
+                                             "description":  "A signed 16-bit immediate, -32768 to 32767."
+                                         }
+                                     ],
+                        "source":  "https://asm-editor.specy.app/documentation/mips/instruction/teqi"
+                    },
+                    {
+                        "name":  "tge",
+                        "longName":  "Trap if greater or equal (signed)",
+                        "summary":  "Raises a trap exception if $t1 is greater than or equal to $t2, as signed values.",
+                        "forms":  [
+                                      "tge $t1, $t2"
+                                  ],
+                        "operands":  [
+                                         {
+                                             "operand":  "$t1",
+                                             "description":  "Any general-purpose register, $0 to $31, using its numeric or named spelling, such as $8 or $t0 ($zero is $0; $ra is $31)."
+                                         },
+                                         {
+                                             "operand":  "$t2",
+                                             "description":  "A general-purpose register. It may be the same register as $t1."
+                                         }
+                                     ],
+                        "source":  "https://asm-editor.specy.app/documentation/mips/instruction/tge"
+                    },
+                    {
+                        "name":  "tgei",
+                        "longName":  "Trap if greater or equal to immediate (signed)",
+                        "summary":  "Raises a trap exception if $t1 is greater than or equal to an immediate, as signed values.",
+                        "forms":  [
+                                      "tgei $t1, imm16"
+                                  ],
+                        "operands":  [
+                                         {
+                                             "operand":  "$t1",
+                                             "description":  "Any general-purpose register, $0 to $31, using its numeric or named spelling, such as $8 or $t0 ($zero is $0; $ra is $31)."
+                                         },
+                                         {
+                                             "operand":  "imm16",
+                                             "description":  "A signed 16-bit immediate, -32768 to 32767."
+                                         }
+                                     ],
+                        "source":  "https://asm-editor.specy.app/documentation/mips/instruction/tgei"
+                    },
+                    {
+                        "name":  "tgeiu",
+                        "longName":  "Trap if greater or equal to immediate (unsigned)",
+                        "summary":  "Raises a trap exception if $t1 is greater than or equal to an immediate, as unsigned values.",
+                        "forms":  [
+                                      "tgeiu $t1, imm16"
+                                  ],
+                        "operands":  [
+                                         {
+                                             "operand":  "$t1",
+                                             "description":  "Any general-purpose register, $0 to $31, using its numeric or named spelling, such as $8 or $t0 ($zero is $0; $ra is $31)."
+                                         },
+                                         {
+                                             "operand":  "imm16",
+                                             "description":  "A signed 16-bit immediate, -32768 to 32767."
+                                         }
+                                     ],
+                        "source":  "https://asm-editor.specy.app/documentation/mips/instruction/tgeiu"
+                    },
+                    {
+                        "name":  "tgeu",
+                        "longName":  "Trap if greater or equal (unsigned)",
+                        "summary":  "Raises a trap exception if $t1 is greater than or equal to $t2, as unsigned values.",
+                        "forms":  [
+                                      "tgeu $t1, $t2"
+                                  ],
+                        "operands":  [
+                                         {
+                                             "operand":  "$t1",
+                                             "description":  "Any general-purpose register, $0 to $31, using its numeric or named spelling, such as $8 or $t0 ($zero is $0; $ra is $31)."
+                                         },
+                                         {
+                                             "operand":  "$t2",
+                                             "description":  "A general-purpose register. It may be the same register as $t1."
+                                         }
+                                     ],
+                        "source":  "https://asm-editor.specy.app/documentation/mips/instruction/tgeu"
+                    },
+                    {
+                        "name":  "tlt",
+                        "longName":  "Trap if less than (signed)",
+                        "summary":  "Raises a trap exception if $t1 is less than $t2, as signed values.",
+                        "forms":  [
+                                      "tlt $t1, $t2"
+                                  ],
+                        "operands":  [
+                                         {
+                                             "operand":  "$t1",
+                                             "description":  "Any general-purpose register, $0 to $31, using its numeric or named spelling, such as $8 or $t0 ($zero is $0; $ra is $31)."
+                                         },
+                                         {
+                                             "operand":  "$t2",
+                                             "description":  "A general-purpose register. It may be the same register as $t1."
+                                         }
+                                     ],
+                        "source":  "https://asm-editor.specy.app/documentation/mips/instruction/tlt"
+                    },
+                    {
+                        "name":  "tlti",
+                        "longName":  "Trap if less than immediate (signed)",
+                        "summary":  "Raises a trap exception if $t1 is less than an immediate, as signed values.",
+                        "forms":  [
+                                      "tlti $t1, imm16"
+                                  ],
+                        "operands":  [
+                                         {
+                                             "operand":  "$t1",
+                                             "description":  "Any general-purpose register, $0 to $31, using its numeric or named spelling, such as $8 or $t0 ($zero is $0; $ra is $31)."
+                                         },
+                                         {
+                                             "operand":  "imm16",
+                                             "description":  "A signed 16-bit immediate, -32768 to 32767."
+                                         }
+                                     ],
+                        "source":  "https://asm-editor.specy.app/documentation/mips/instruction/tlti"
+                    },
+                    {
+                        "name":  "tltu",
+                        "longName":  "Trap if less than (unsigned)",
+                        "summary":  "Raises a trap exception if $t1 is less than $t2, as unsigned values.",
+                        "forms":  [
+                                      "tltu $t1, $t2"
+                                  ],
+                        "operands":  [
+                                         {
+                                             "operand":  "$t1",
+                                             "description":  "Any general-purpose register, $0 to $31, using its numeric or named spelling, such as $8 or $t0 ($zero is $0; $ra is $31)."
+                                         },
+                                         {
+                                             "operand":  "$t2",
+                                             "description":  "A general-purpose register. It may be the same register as $t1."
+                                         }
+                                     ],
+                        "source":  "https://asm-editor.specy.app/documentation/mips/instruction/tltu"
+                    },
+                    {
+                        "name":  "tne",
+                        "longName":  "Trap if not equal",
+                        "summary":  "Raises a trap exception if $t1 does not equal $t2, which halts execution in this simulator.",
+                        "forms":  [
+                                      "tne $t1, $t2"
+                                  ],
+                        "operands":  [
+                                         {
+                                             "operand":  "$t1",
+                                             "description":  "Any general-purpose register, $0 to $31, using its numeric or named spelling, such as $8 or $t0 ($zero is $0; $ra is $31)."
+                                         },
+                                         {
+                                             "operand":  "$t2",
+                                             "description":  "A general-purpose register. It may be the same register as $t1."
+                                         }
+                                     ],
+                        "source":  "https://asm-editor.specy.app/documentation/mips/instruction/tne"
+                    },
+                    {
+                        "name":  "tnei",
+                        "longName":  "Trap if not equal to immediate",
+                        "summary":  "Raises a trap exception if $t1 does not equal an immediate, sign-extended to 32 bits.",
+                        "forms":  [
+                                      "tnei $t1, imm16"
+                                  ],
+                        "operands":  [
+                                         {
+                                             "operand":  "$t1",
+                                             "description":  "Any general-purpose register, $0 to $31, using its numeric or named spelling, such as $8 or $t0 ($zero is $0; $ra is $31)."
+                                         },
+                                         {
+                                             "operand":  "imm16",
+                                             "description":  "A signed 16-bit immediate, -32768 to 32767."
+                                         }
+                                     ],
+                        "source":  "https://asm-editor.specy.app/documentation/mips/instruction/tnei"
+                    },
+                    {
+                        "name":  "wait",
+                        "longName":  "Wait for interrupt",
+                        "summary":  "Halts the processor until an interrupt arrives.",
+                        "forms":  [
+                                      "wait"
+                                  ],
+                        "operands":  [
+
+                                     ],
+                        "source":  "https://asm-editor.specy.app/documentation/mips/instruction/wait"
+                    },
+                    {
+                        "name":  "xor",
+                        "longName":  "Bitwise XOR (exclusive OR)",
+                        "summary":  "Sets $t1 to $t2 XOR $t3, or an immediate, so each result bit is 1 where the inputs differ.",
+                        "forms":  [
+                                      "xor $t1, $t2, $t3"
+                                  ],
+                        "operands":  [
+                                         {
+                                             "operand":  "$t1",
+                                             "description":  "Any general-purpose register, $0 to $31, using its numeric or named spelling, such as $8 or $t0 ($zero is $0; $ra is $31)."
+                                         },
+                                         {
+                                             "operand":  "$t2",
+                                             "description":  "A general-purpose register. It may be the same register as $t1."
+                                         },
+                                         {
+                                             "operand":  "$t3",
+                                             "description":  "A general-purpose register. It may be the same register as $t1."
+                                         },
+                                         {
+                                             "operand":  "uimm16",
+                                             "description":  "An unsigned 16-bit immediate, 0 to 65535."
+                                         }
+                                     ],
+                        "source":  "https://asm-editor.specy.app/documentation/mips/instruction/xor"
+                    },
+                    {
+                        "name":  "xori",
+                        "longName":  "Bitwise XOR immediate",
+                        "summary":  "Sets $t1 to $t2 XOR an immediate, with the immediate zero-extended instead of sign-extended.",
+                        "forms":  [
+                                      "xori $t1, $t2, uimm16"
+                                  ],
+                        "operands":  [
+                                         {
+                                             "operand":  "$t1",
+                                             "description":  "Any general-purpose register, $0 to $31, using its numeric or named spelling, such as $8 or $t0 ($zero is $0; $ra is $31)."
+                                         },
+                                         {
+                                             "operand":  "$t2",
+                                             "description":  "A general-purpose register. It may be the same register as $t1."
+                                         },
+                                         {
+                                             "operand":  "uimm16",
+                                             "description":  "An unsigned 16-bit immediate, 0 to 65535."
+                                         },
+                                         {
+                                             "operand":  "imm32",
+                                             "description":  "A 32-bit immediate, -2147483648 to 4294967295. Pseudoinstruction expansion may overwrite $at, losing its previous value."
+                                         },
+                                         {
+                                             "operand":  "imm",
+                                             "description":  "An immediate value: an unsigned 16-bit value (0 to 65535) or a 32-bit value (-2147483648 to 4294967295). The assembler chooses a supported encoding for the value and other operands; a pseudoinstruction may expand into several instructions."
+                                         }
+                                     ],
+                        "source":  "https://asm-editor.specy.app/documentation/mips/instruction/xori"
+                    }
+                ]
+}

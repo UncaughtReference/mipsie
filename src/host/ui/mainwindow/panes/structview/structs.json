@@ -1,0 +1,1680 @@
+{
+    "source":  "https://hack64.net/wiki/doku.php?id=super_mario_64:structs",
+    "archive":  "https://web.archive.org/web/20260309092153/https://hack64.net/wiki/doku.php?id=super_mario_64:structs",
+    "entries":  [
+                    {
+                        "name":  "Collision Triangle",
+                        "offset":  "0x00",
+                        "type":  "u16",
+                        "description":  "collision_type"
+                    },
+                    {
+                        "name":  "Collision Triangle",
+                        "offset":  "0x02",
+                        "type":  "u16",
+                        "description":  "Special Parameter for Col types (e.g. wind direction, flowing water)"
+                    },
+                    {
+                        "name":  "Collision Triangle",
+                        "offset":  "0x04",
+                        "type":  "u8",
+                        "description":  "flag"
+                    },
+                    {
+                        "name":  "Collision Triangle",
+                        "offset":  "0x05",
+                        "type":  "u8",
+                        "description":  "index to be used when the asm function 0x8029DBD4 (in the US version) is used in the geometry layout switch command ."
+                    },
+                    {
+                        "name":  "Collision Triangle",
+                        "offset":  "0x06",
+                        "type":  "s16",
+                        "description":  "ymin"
+                    },
+                    {
+                        "name":  "Collision Triangle",
+                        "offset":  "0x08",
+                        "type":  "s16",
+                        "description":  "ymax"
+                    },
+                    {
+                        "name":  "Collision Triangle",
+                        "offset":  "0x0A",
+                        "type":  "s16",
+                        "description":  "vertex1_x"
+                    },
+                    {
+                        "name":  "Collision Triangle",
+                        "offset":  "0x0C",
+                        "type":  "s16",
+                        "description":  "vertex1_y"
+                    },
+                    {
+                        "name":  "Collision Triangle",
+                        "offset":  "0x0E",
+                        "type":  "s16",
+                        "description":  "vertex1_z"
+                    },
+                    {
+                        "name":  "Collision Triangle",
+                        "offset":  "0x10",
+                        "type":  "s16",
+                        "description":  "vertex2_x"
+                    },
+                    {
+                        "name":  "Collision Triangle",
+                        "offset":  "0x12",
+                        "type":  "s16",
+                        "description":  "vertex2_y"
+                    },
+                    {
+                        "name":  "Collision Triangle",
+                        "offset":  "0x14",
+                        "type":  "s16",
+                        "description":  "vertex2_z"
+                    },
+                    {
+                        "name":  "Collision Triangle",
+                        "offset":  "0x16",
+                        "type":  "s16",
+                        "description":  "vertex3_x"
+                    },
+                    {
+                        "name":  "Collision Triangle",
+                        "offset":  "0x18",
+                        "type":  "s16",
+                        "description":  "vertex3_y"
+                    },
+                    {
+                        "name":  "Collision Triangle",
+                        "offset":  "0x1A",
+                        "type":  "s16",
+                        "description":  "vertex3_z"
+                    },
+                    {
+                        "name":  "Collision Triangle",
+                        "offset":  "0x1C",
+                        "type":  "float",
+                        "description":  "normal_x"
+                    },
+                    {
+                        "name":  "Collision Triangle",
+                        "offset":  "0x20",
+                        "type":  "float",
+                        "description":  "normal_y"
+                    },
+                    {
+                        "name":  "Collision Triangle",
+                        "offset":  "0x24",
+                        "type":  "float",
+                        "description":  "normal_z"
+                    },
+                    {
+                        "name":  "Collision Triangle",
+                        "offset":  "0x28",
+                        "type":  "float",
+                        "description":  "origin offset"
+                    },
+                    {
+                        "name":  "Collision Triangle",
+                        "offset":  "0x2C",
+                        "type":  "u32",
+                        "description":  "*object"
+                    },
+                    {
+                        "name":  "Controller",
+                        "offset":  "0x00",
+                        "type":  "s16",
+                        "description":  "stick_x"
+                    },
+                    {
+                        "name":  "Controller",
+                        "offset":  "0x02",
+                        "type":  "s16",
+                        "description":  "stick_y"
+                    },
+                    {
+                        "name":  "Controller",
+                        "offset":  "0x04",
+                        "type":  "float",
+                        "description":  "x"
+                    },
+                    {
+                        "name":  "Controller",
+                        "offset":  "0x08",
+                        "type":  "float",
+                        "description":  "y"
+                    },
+                    {
+                        "name":  "Controller",
+                        "offset":  "0x0C",
+                        "type":  "float",
+                        "description":  "z"
+                    },
+                    {
+                        "name":  "Controller",
+                        "offset":  "0x10",
+                        "type":  "u16",
+                        "description":  "currentButton"
+                    },
+                    {
+                        "name":  "Controller",
+                        "offset":  "0x10",
+                        "type":  "u16",
+                        "description":  "previousButton"
+                    },
+                    {
+                        "name":  "Controller",
+                        "offset":  "0x14",
+                        "type":  "u32*",
+                        "description":  "statusData"
+                    },
+                    {
+                        "name":  "Controller",
+                        "offset":  "0x18",
+                        "type":  "u32*",
+                        "description":  "controllerData"
+                    },
+                    {
+                        "name":  "Camera",
+                        "offset":  "0x00",
+                        "type":  "u32",
+                        "description":  "mario_action (copied from marioâ†’action)"
+                    },
+                    {
+                        "name":  "Camera",
+                        "offset":  "0x04",
+                        "type":  "float",
+                        "description":  "x (also copied from Mario struct)"
+                    },
+                    {
+                        "name":  "Camera",
+                        "offset":  "0x08",
+                        "type":  "float",
+                        "description":  "y"
+                    },
+                    {
+                        "name":  "Camera",
+                        "offset":  "0x0C",
+                        "type":  "float",
+                        "description":  "z"
+                    },
+                    {
+                        "name":  "Camera",
+                        "offset":  "0x10",
+                        "type":  "s16",
+                        "description":  "mario_0x2c"
+                    },
+                    {
+                        "name":  "Camera",
+                        "offset":  "0x12",
+                        "type":  "u16",
+                        "description":  "rotation (again copied from Mario struct)"
+                    },
+                    {
+                        "name":  "Camera",
+                        "offset":  "0x14",
+                        "type":  "s16",
+                        "description":  "mario_0x30"
+                    },
+                    {
+                        "name":  "Camera",
+                        "offset":  "0x16",
+                        "type":  "s16",
+                        "description":  "mario_0x32"
+                    },
+                    {
+                        "name":  "Camera",
+                        "offset":  "0x18",
+                        "type":  "u32",
+                        "description":  ""
+                    },
+                    {
+                        "name":  "Camera",
+                        "offset":  "0x1C",
+                        "type":  "u16",
+                        "description":  ""
+                    },
+                    {
+                        "name":  "Camera",
+                        "offset":  "0x1E",
+                        "type":  "u16",
+                        "description":  "camera_setting (0x06 = door opening, 0x09 = triggers initial peach animation)"
+                    },
+                    {
+                        "name":  "Level area(s)",
+                        "offset":  "0x00",
+                        "type":  "u8",
+                        "description":  "Area ID"
+                    },
+                    {
+                        "name":  "Level area(s)",
+                        "offset":  "0x01",
+                        "type":  "u8",
+                        "description":  "is_current_area (1 if the player is in this area, else 0)"
+                    },
+                    {
+                        "name":  "Level area(s)",
+                        "offset":  "0x02",
+                        "type":  "s16",
+                        "description":  "terrain_type"
+                    },
+                    {
+                        "name":  "Level area(s)",
+                        "offset":  "0x04",
+                        "type":  "u32*",
+                        "description":  "geo_layout_ptr"
+                    },
+                    {
+                        "name":  "Level area(s)",
+                        "offset":  "0x08",
+                        "type":  "u32*",
+                        "description":  "collision_ptr"
+                    },
+                    {
+                        "name":  "Level area(s)",
+                        "offset":  "0x0C",
+                        "type":  "u32*",
+                        "description":  "surface_rooms_ptr (see: Level command 0x2F )"
+                    },
+                    {
+                        "name":  "Level area(s)",
+                        "offset":  "0x10",
+                        "type":  "u32*",
+                        "description":  "mini_objects_ptr (pointer to an array of objects defined by Level command 0x39 )"
+                    },
+                    {
+                        "name":  "Level area(s)",
+                        "offset":  "0x14",
+                        "type":  "u32*",
+                        "description":  "warp_links_ptr"
+                    },
+                    {
+                        "name":  "Level area(s)",
+                        "offset":  "0x18",
+                        "type":  "u32*",
+                        "description":  "painting_warp_links_ptr"
+                    },
+                    {
+                        "name":  "Level area(s)",
+                        "offset":  "0x1C",
+                        "type":  "u32*",
+                        "description":  "instant_warp_links_ptr"
+                    },
+                    {
+                        "name":  "Level area(s)",
+                        "offset":  "0x20",
+                        "type":  "u32*",
+                        "description":  "object_spawn_info_ptr (objects linked list head)"
+                    },
+                    {
+                        "name":  "Level area(s)",
+                        "offset":  "0x24",
+                        "type":  "u32*",
+                        "description":  "LevelCameraPointer (generated at run-time)"
+                    },
+                    {
+                        "name":  "Level area(s)",
+                        "offset":  "0x28",
+                        "type":  "u32",
+                        "description":  "unused"
+                    },
+                    {
+                        "name":  "Level area(s)",
+                        "offset":  "0x2C",
+                        "type":  "u32*",
+                        "description":  "Whirlpool_1_ptr"
+                    },
+                    {
+                        "name":  "Level area(s)",
+                        "offset":  "0x30",
+                        "type":  "u32*",
+                        "description":  "Whirlpool_2_ptr"
+                    },
+                    {
+                        "name":  "Level area(s)",
+                        "offset":  "0x34",
+                        "type":  "u8",
+                        "description":  "Level start dialog number (see: Level command 0x30 )"
+                    },
+                    {
+                        "name":  "Level area(s)",
+                        "offset":  "0x35",
+                        "type":  "u8",
+                        "description":  "Level start dialog 2 (unused?)"
+                    },
+                    {
+                        "name":  "Level area(s)",
+                        "offset":  "0x36",
+                        "type":  "s16",
+                        "description":  "music_param"
+                    },
+                    {
+                        "name":  "Level area(s)",
+                        "offset":  "0x38",
+                        "type":  "s16",
+                        "description":  "music_param2 (title screen,etc)"
+                    },
+                    {
+                        "name":  "Object",
+                        "offset":  "0x00",
+                        "type":  "u16",
+                        "description":  "graph_node_type"
+                    },
+                    {
+                        "name":  "Object",
+                        "offset":  "0x02",
+                        "type":  "u16",
+                        "description":  "graph_flags"
+                    },
+                    {
+                        "name":  "Object",
+                        "offset":  "0x04",
+                        "type":  "struct object*",
+                        "description":  "previous object"
+                    },
+                    {
+                        "name":  "Object",
+                        "offset":  "0x08",
+                        "type":  "struct object*",
+                        "description":  "next object"
+                    },
+                    {
+                        "name":  "Object",
+                        "offset":  "0x0C",
+                        "type":  "u32",
+                        "description":  "graph_parent"
+                    },
+                    {
+                        "name":  "Object",
+                        "offset":  "0x10",
+                        "type":  "u32",
+                        "description":  "graph_child"
+                    },
+                    {
+                        "name":  "Object",
+                        "offset":  "0x14",
+                        "type":  "u32",
+                        "description":  "geo_layout_ptr"
+                    },
+                    {
+                        "name":  "Object",
+                        "offset":  "0x18",
+                        "type":  "u16",
+                        "description":  ""
+                    },
+                    {
+                        "name":  "Object",
+                        "offset":  "0x1A",
+                        "type":  "u16",
+                        "description":  "x_rotation2"
+                    },
+                    {
+                        "name":  "Object",
+                        "offset":  "0x1C",
+                        "type":  "u16",
+                        "description":  "y_rotation2"
+                    },
+                    {
+                        "name":  "Object",
+                        "offset":  "0x1E",
+                        "type":  "u16",
+                        "description":  "z_rotation2"
+                    },
+                    {
+                        "name":  "Object",
+                        "offset":  "0x20",
+                        "type":  "float",
+                        "description":  "x_pos2"
+                    },
+                    {
+                        "name":  "Object",
+                        "offset":  "0x24",
+                        "type":  "float",
+                        "description":  "y_pos2"
+                    },
+                    {
+                        "name":  "Object",
+                        "offset":  "0x28",
+                        "type":  "float",
+                        "description":  "z_pos2"
+                    },
+                    {
+                        "name":  "Object",
+                        "offset":  "0x2C",
+                        "type":  "float",
+                        "description":  "x_scaling"
+                    },
+                    {
+                        "name":  "Object",
+                        "offset":  "0x30",
+                        "type":  "float",
+                        "description":  "y_scaling"
+                    },
+                    {
+                        "name":  "Object",
+                        "offset":  "0x34",
+                        "type":  "float",
+                        "description":  "z_scaling"
+                    },
+                    {
+                        "name":  "Object",
+                        "offset":  "0x38",
+                        "type":  "u16",
+                        "description":  "(animation related?)"
+                    },
+                    {
+                        "name":  "Object",
+                        "offset":  "0x3A",
+                        "type":  "u16",
+                        "description":  "(animation related?)"
+                    },
+                    {
+                        "name":  "Object",
+                        "offset":  "0x3C",
+                        "type":  "struct animation_data*",
+                        "description":  "animation_data_ptr"
+                    },
+                    {
+                        "name":  "Object",
+                        "offset":  "0x40",
+                        "type":  "u16",
+                        "description":  "animation_frame"
+                    },
+                    {
+                        "name":  "Object",
+                        "offset":  "0x42",
+                        "type":  "u16",
+                        "description":  "anim_timer"
+                    },
+                    {
+                        "name":  "Object",
+                        "offset":  "0x44",
+                        "type":  "u16",
+                        "description":  "anim_current_frame_copy"
+                    },
+                    {
+                        "name":  "Object",
+                        "offset":  "0x46",
+                        "type":  "u16",
+                        "description":  "animation_increment"
+                    },
+                    {
+                        "name":  "Object",
+                        "offset":  "0x48",
+                        "type":  "u32",
+                        "description":  "animation accel"
+                    },
+                    {
+                        "name":  "Object",
+                        "offset":  "0x4C",
+                        "type":  "struct",
+                        "description":  "Spawn Info"
+                    },
+                    {
+                        "name":  "Object",
+                        "offset":  "0x50",
+                        "type":  "struct matrix*",
+                        "description":  "transform_matrix_ptr (4×4 affine)"
+                    },
+                    {
+                        "name":  "Object",
+                        "offset":  "0x54",
+                        "type":  "float",
+                        "description":  "Cam to Obj X"
+                    },
+                    {
+                        "name":  "Object",
+                        "offset":  "0x58",
+                        "type":  "float",
+                        "description":  "Cam to Obj Y"
+                    },
+                    {
+                        "name":  "Object",
+                        "offset":  "0x5C",
+                        "type":  "float",
+                        "description":  "Cam to Obj Z"
+                    },
+                    {
+                        "name":  "Object",
+                        "offset":  "0x60",
+                        "type":  "struct object*",
+                        "description":  "next_object_ptr"
+                    },
+                    {
+                        "name":  "Object",
+                        "offset":  "0x64",
+                        "type":  "struct object*",
+                        "description":  "prev_object_ptr"
+                    },
+                    {
+                        "name":  "Object",
+                        "offset":  "0x68",
+                        "type":  "struct object*",
+                        "description":  "parent_object_ptr"
+                    },
+                    {
+                        "name":  "Object",
+                        "offset":  "0x6C",
+                        "type":  "struct object*",
+                        "description":  "prev object"
+                    },
+                    {
+                        "name":  "Object",
+                        "offset":  "0x70",
+                        "type":  "u32",
+                        "description":  "Collided Obj Interact Type"
+                    },
+                    {
+                        "name":  "Object",
+                        "offset":  "0x74",
+                        "type":  "u16",
+                        "description":  "active (0x0000 = inactive, 0x0101 = active, 0x20 move in time stop)"
+                    },
+                    {
+                        "name":  "Object",
+                        "offset":  "0x76",
+                        "type":  "u16",
+                        "description":  "num_collided_obj"
+                    },
+                    {
+                        "name":  "Object",
+                        "offset":  "0x78",
+                        "type":  "struct object*",
+                        "description":  "collided_obj_ptr1 (according to YE, pointer to object collided with)"
+                    },
+                    {
+                        "name":  "Object",
+                        "offset":  "0x7C",
+                        "type":  "struct object*",
+                        "description":  "collided_obj_ptr2"
+                    },
+                    {
+                        "name":  "Object",
+                        "offset":  "0x80",
+                        "type":  "struct object*",
+                        "description":  "collided_obj_ptr3"
+                    },
+                    {
+                        "name":  "Object",
+                        "offset":  "0x84",
+                        "type":  "struct object*",
+                        "description":  "collided_obj_ptr4"
+                    },
+                    {
+                        "name":  "Object",
+                        "offset":  "0x88",
+                        "type":  "u32",
+                        "description":  ""
+                    },
+                    {
+                        "name":  "Object",
+                        "offset":  "0x8C",
+                        "type":  "u32",
+                        "description":  "obj_flags"
+                    },
+                    {
+                        "name":  "Object",
+                        "offset":  "0x90",
+                        "type":  "s16",
+                        "description":  "dialog response"
+                    },
+                    {
+                        "name":  "Object",
+                        "offset":  "0x92",
+                        "type":  "s16",
+                        "description":  "dialog state"
+                    },
+                    {
+                        "name":  "Object",
+                        "offset":  "0x94",
+                        "type":  "u32",
+                        "description":  "unused"
+                    },
+                    {
+                        "name":  "Object",
+                        "offset":  "0x98",
+                        "type":  "u32",
+                        "description":  "unused"
+                    },
+                    {
+                        "name":  "Object",
+                        "offset":  "0x9C",
+                        "type":  "u32",
+                        "description":  "collision_timer"
+                    },
+                    {
+                        "name":  "Object",
+                        "offset":  "0xA0",
+                        "type":  "float",
+                        "description":  "x_pos"
+                    },
+                    {
+                        "name":  "Object",
+                        "offset":  "0xA4",
+                        "type":  "float",
+                        "description":  "y_pos"
+                    },
+                    {
+                        "name":  "Object",
+                        "offset":  "0xA8",
+                        "type":  "float",
+                        "description":  "z_pos"
+                    },
+                    {
+                        "name":  "Object",
+                        "offset":  "0xAC",
+                        "type":  "float",
+                        "description":  "x_speed"
+                    },
+                    {
+                        "name":  "Object",
+                        "offset":  "0xB0",
+                        "type":  "float",
+                        "description":  "y_speed"
+                    },
+                    {
+                        "name":  "Object",
+                        "offset":  "0xB4",
+                        "type":  "float",
+                        "description":  "z_speed"
+                    },
+                    {
+                        "name":  "Object",
+                        "offset":  "0xB8",
+                        "type":  "float",
+                        "description":  "h_speed"
+                    },
+                    {
+                        "name":  "Object",
+                        "offset":  "0xBC",
+                        "type":  "u32",
+                        "description":  ""
+                    },
+                    {
+                        "name":  "Object",
+                        "offset":  "0xC0",
+                        "type":  "u32",
+                        "description":  ""
+                    },
+                    {
+                        "name":  "Object",
+                        "offset":  "0xC4",
+                        "type":  "u32",
+                        "description":  "x_rotation"
+                    },
+                    {
+                        "name":  "Object",
+                        "offset":  "0xC8",
+                        "type":  "u32",
+                        "description":  "y_rotation"
+                    },
+                    {
+                        "name":  "Object",
+                        "offset":  "0xCC",
+                        "type":  "u32",
+                        "description":  "z_rotation"
+                    },
+                    {
+                        "name":  "Object",
+                        "offset":  "0xD0",
+                        "type":  "u32",
+                        "description":  "x_rotation2"
+                    },
+                    {
+                        "name":  "Object",
+                        "offset":  "0xD4",
+                        "type":  "u32",
+                        "description":  "y_rotation2"
+                    },
+                    {
+                        "name":  "Object",
+                        "offset":  "0xD8",
+                        "type":  "u32",
+                        "description":  "z_rotation2"
+                    },
+                    {
+                        "name":  "Object",
+                        "offset":  "0xDC",
+                        "type":  "u32",
+                        "description":  "Graph Y Offset"
+                    },
+                    {
+                        "name":  "Object",
+                        "offset":  "0xE0",
+                        "type":  "u32",
+                        "description":  "Active Particle Flags"
+                    },
+                    {
+                        "name":  "Object",
+                        "offset":  "0xE4",
+                        "type":  "float",
+                        "description":  "gravity"
+                    },
+                    {
+                        "name":  "Object",
+                        "offset":  "0xE8",
+                        "type":  "u32",
+                        "description":  "floor_height"
+                    },
+                    {
+                        "name":  "Object",
+                        "offset":  "0xEC",
+                        "type":  "u32",
+                        "description":  "move_flags ( 11: over lava; 10: couldn\u0027t move; 9: hit wall or floor; 7: above floor; 6: bottom of water; 5: in water, not bottom; 4: over water; 3:just hit water"
+                    },
+                    {
+                        "name":  "Object",
+                        "offset":  "0xF0",
+                        "type":  "u32",
+                        "description":  "used to switch case for geo layout 0x0E cmd with function 8029DB48"
+                    },
+                    {
+                        "name":  "Object",
+                        "offset":  "0xF4",
+                        "type":  "u32",
+                        "description":  "obj type for some behaviors (ie, ice bully), for AMPS, radius of rotation"
+                    },
+                    {
+                        "name":  "Object",
+                        "offset":  "0xF8",
+                        "type":  "u32",
+                        "description":  ""
+                    },
+                    {
+                        "name":  "Object",
+                        "offset":  "0xFC",
+                        "type":  "u32",
+                        "description":  ""
+                    },
+                    {
+                        "name":  "Object",
+                        "offset":  "0x100",
+                        "type":  "u32",
+                        "description":  ""
+                    },
+                    {
+                        "name":  "Object",
+                        "offset":  "0x104",
+                        "type":  "u32",
+                        "description":  ""
+                    },
+                    {
+                        "name":  "Object",
+                        "offset":  "0x108",
+                        "type":  "u32",
+                        "description":  ""
+                    },
+                    {
+                        "name":  "Object",
+                        "offset":  "0x10C",
+                        "type":  "u32",
+                        "description":  ""
+                    },
+                    {
+                        "name":  "Object",
+                        "offset":  "0x110",
+                        "type":  "u32",
+                        "description":  ""
+                    },
+                    {
+                        "name":  "Object",
+                        "offset":  "0x114",
+                        "type":  "s32",
+                        "description":  "Moves Mario\u0027s pitch while ontop of the object"
+                    },
+                    {
+                        "name":  "Object",
+                        "offset":  "0x118",
+                        "type":  "s32",
+                        "description":  "Spins Mario around while ontop of the object"
+                    },
+                    {
+                        "name":  "Object",
+                        "offset":  "0x11C",
+                        "type":  "s32",
+                        "description":  "Moves Mario\u0027s roll while ontop of the object"
+                    },
+                    {
+                        "name":  "Object",
+                        "offset":  "0x120",
+                        "type":  "u32",
+                        "description":  "animation_list_ptr (set by 0x27 26 behavior command)"
+                    },
+                    {
+                        "name":  "Object",
+                        "offset":  "0x124",
+                        "type":  "u32",
+                        "description":  "Held State"
+                    },
+                    {
+                        "name":  "Object",
+                        "offset":  "0x128",
+                        "type":  "float",
+                        "description":  "min_wall_dist"
+                    },
+                    {
+                        "name":  "Object",
+                        "offset":  "0x12C",
+                        "type":  "float",
+                        "description":  "drag_coeff"
+                    },
+                    {
+                        "name":  "Object",
+                        "offset":  "0x130",
+                        "type":  "u32",
+                        "description":  "interaction (collision_type)"
+                    },
+                    {
+                        "name":  "Object",
+                        "offset":  "0x134",
+                        "type":  "u32",
+                        "description":  "interaction status"
+                    },
+                    {
+                        "name":  "Object",
+                        "offset":  "0x138",
+                        "type":  "u32",
+                        "description":  "Parent relative X pos"
+                    },
+                    {
+                        "name":  "Object",
+                        "offset":  "0x13C",
+                        "type":  "u32",
+                        "description":  "Parent relative Y pos"
+                    },
+                    {
+                        "name":  "Object",
+                        "offset":  "0x140",
+                        "type":  "u32",
+                        "description":  "Parent relative Z pos"
+                    },
+                    {
+                        "name":  "Object",
+                        "offset":  "0x144",
+                        "type":  "u32",
+                        "description":  "behav_param (sub_type)"
+                    },
+                    {
+                        "name":  "Object",
+                        "offset":  "0x148",
+                        "type":  "u32",
+                        "description":  "unused"
+                    },
+                    {
+                        "name":  "Object",
+                        "offset":  "0x14C",
+                        "type":  "u32",
+                        "description":  "action"
+                    },
+                    {
+                        "name":  "Object",
+                        "offset":  "0x150",
+                        "type":  "u32",
+                        "description":  "sub action (resets when action changes)"
+                    },
+                    {
+                        "name":  "Object",
+                        "offset":  "0x154",
+                        "type":  "u32",
+                        "description":  "timer (always incremented)"
+                    },
+                    {
+                        "name":  "Object",
+                        "offset":  "0x158",
+                        "type":  "float",
+                        "description":  "bounce"
+                    },
+                    {
+                        "name":  "Object",
+                        "offset":  "0x15C",
+                        "type":  "float",
+                        "description":  "distance_from_mario"
+                    },
+                    {
+                        "name":  "Object",
+                        "offset":  "0x160",
+                        "type":  "u32",
+                        "description":  "angle_to_mario"
+                    },
+                    {
+                        "name":  "Object",
+                        "offset":  "0x164",
+                        "type":  "float",
+                        "description":  "spawn_x (or â€śhomeâ€ť)"
+                    },
+                    {
+                        "name":  "Object",
+                        "offset":  "0x168",
+                        "type":  "float",
+                        "description":  "spawn_y"
+                    },
+                    {
+                        "name":  "Object",
+                        "offset":  "0x16C",
+                        "type":  "float",
+                        "description":  "spanw_z"
+                    },
+                    {
+                        "name":  "Object",
+                        "offset":  "0x170",
+                        "type":  "float",
+                        "description":  "friction"
+                    },
+                    {
+                        "name":  "Object",
+                        "offset":  "0x174",
+                        "type":  "float",
+                        "description":  "buoyancy"
+                    },
+                    {
+                        "name":  "Object",
+                        "offset":  "0x178",
+                        "type":  "u32",
+                        "description":  "sound state ID"
+                    },
+                    {
+                        "name":  "Object",
+                        "offset":  "0x17C",
+                        "type":  "u32",
+                        "description":  "transparency"
+                    },
+                    {
+                        "name":  "Object",
+                        "offset":  "0x180",
+                        "type":  "u32",
+                        "description":  "damage_to_mario"
+                    },
+                    {
+                        "name":  "Object",
+                        "offset":  "0x184",
+                        "type":  "u32",
+                        "description":  "health"
+                    },
+                    {
+                        "name":  "Object",
+                        "offset":  "0x188",
+                        "type":  "u32",
+                        "description":  "behav_param"
+                    },
+                    {
+                        "name":  "Object",
+                        "offset":  "0x18C",
+                        "type":  "u32",
+                        "description":  "previous_action"
+                    },
+                    {
+                        "name":  "Object",
+                        "offset":  "0x190",
+                        "type":  "u32",
+                        "description":  "Interaction Sub Type"
+                    },
+                    {
+                        "name":  "Object",
+                        "offset":  "0x194",
+                        "type":  "float",
+                        "description":  "collision_distance"
+                    },
+                    {
+                        "name":  "Object",
+                        "offset":  "0x198",
+                        "type":  "u32",
+                        "description":  "Num Loot Coins"
+                    },
+                    {
+                        "name":  "Object",
+                        "offset":  "0x19C",
+                        "type":  "float",
+                        "description":  "drawing_distance"
+                    },
+                    {
+                        "name":  "Object",
+                        "offset":  "0x1A0",
+                        "type":  "u32",
+                        "description":  "Room"
+                    },
+                    {
+                        "name":  "Object",
+                        "offset":  "0x1A4",
+                        "type":  "u32",
+                        "description":  "Unused"
+                    },
+                    {
+                        "name":  "Object",
+                        "offset":  "0x1A8",
+                        "type":  "u32",
+                        "description":  ""
+                    },
+                    {
+                        "name":  "Object",
+                        "offset":  "0x1AC",
+                        "type":  "u32",
+                        "description":  ""
+                    },
+                    {
+                        "name":  "Object",
+                        "offset":  "0x1B0",
+                        "type":  "u32",
+                        "description":  ""
+                    },
+                    {
+                        "name":  "Object",
+                        "offset":  "0x1B4",
+                        "type":  "u32",
+                        "description":  "Wall Angle"
+                    },
+                    {
+                        "name":  "Object",
+                        "offset":  "0x1B8",
+                        "type":  "s16",
+                        "description":  "Floor Type"
+                    },
+                    {
+                        "name":  "Object",
+                        "offset":  "0x1BA",
+                        "type":  "s16",
+                        "description":  "Floor Room"
+                    },
+                    {
+                        "name":  "Object",
+                        "offset":  "0x1BC",
+                        "type":  "s32",
+                        "description":  ""
+                    },
+                    {
+                        "name":  "Object",
+                        "offset":  "0x1C0",
+                        "type":  "u32",
+                        "description":  "Floor"
+                    },
+                    {
+                        "name":  "Object",
+                        "offset":  "0x1C4",
+                        "type":  "s32",
+                        "description":  "Death Sound"
+                    },
+                    {
+                        "name":  "Object",
+                        "offset":  "0x1C8",
+                        "type":  "u32",
+                        "description":  "Unused"
+                    },
+                    {
+                        "name":  "Object",
+                        "offset":  "0x1CC",
+                        "type":  "u32",
+                        "description":  "Behav script_entry_ptr"
+                    },
+                    {
+                        "name":  "Object",
+                        "offset":  "0x1D0",
+                        "type":  "u32",
+                        "description":  "stack_index"
+                    },
+                    {
+                        "name":  "Object",
+                        "offset":  "0x1D4",
+                        "type":  "u32",
+                        "description":  "stack [8]"
+                    },
+                    {
+                        "name":  "Object",
+                        "offset":  "0x1F4",
+                        "type":  "s16",
+                        "description":  "unk14"
+                    },
+                    {
+                        "name":  "Object",
+                        "offset":  "0x1F6",
+                        "type":  "s16",
+                        "description":  "respawn info type"
+                    },
+                    {
+                        "name":  "Object",
+                        "offset":  "0x1F8",
+                        "type":  "float",
+                        "description":  "col_cylinder_radius"
+                    },
+                    {
+                        "name":  "Object",
+                        "offset":  "0x1FC",
+                        "type":  "float",
+                        "description":  "col_cylinder_height"
+                    },
+                    {
+                        "name":  "Object",
+                        "offset":  "0x200",
+                        "type":  "float",
+                        "description":  "hurtbox radius"
+                    },
+                    {
+                        "name":  "Object",
+                        "offset":  "0x204",
+                        "type":  "float",
+                        "description":  "hurtbox height"
+                    },
+                    {
+                        "name":  "Object",
+                        "offset":  "0x208",
+                        "type":  "float",
+                        "description":  "col_cylinder_downward_offset"
+                    },
+                    {
+                        "name":  "Object",
+                        "offset":  "0x20C",
+                        "type":  "u32",
+                        "description":  "script_start_ptr (Behavior ID)"
+                    },
+                    {
+                        "name":  "Object",
+                        "offset":  "0x210",
+                        "type":  "u32",
+                        "description":  "unused"
+                    },
+                    {
+                        "name":  "Object",
+                        "offset":  "0x214",
+                        "type":  "struct",
+                        "description":  "*collide_obj_ptr(platform)"
+                    },
+                    {
+                        "name":  "Object",
+                        "offset":  "0x218",
+                        "type":  "u32",
+                        "description":  "collision_ptr"
+                    },
+                    {
+                        "name":  "Object",
+                        "offset":  "0x21C",
+                        "type":  "float",
+                        "description":  "matrix[0][0] (transform matrix)"
+                    },
+                    {
+                        "name":  "Object",
+                        "offset":  "0x220",
+                        "type":  "float",
+                        "description":  "matrix[0][1]"
+                    },
+                    {
+                        "name":  "Object",
+                        "offset":  "0x224",
+                        "type":  "float",
+                        "description":  "matrix[0][2]"
+                    },
+                    {
+                        "name":  "Object",
+                        "offset":  "0x228",
+                        "type":  "float",
+                        "description":  "matrix[0][3]"
+                    },
+                    {
+                        "name":  "Object",
+                        "offset":  "0x22C",
+                        "type":  "float",
+                        "description":  "matrix[1][0]"
+                    },
+                    {
+                        "name":  "Object",
+                        "offset":  "0x230",
+                        "type":  "float",
+                        "description":  "matrix[1][1]"
+                    },
+                    {
+                        "name":  "Object",
+                        "offset":  "0x234",
+                        "type":  "float",
+                        "description":  "matrix[1][2]"
+                    },
+                    {
+                        "name":  "Object",
+                        "offset":  "0x238",
+                        "type":  "float",
+                        "description":  "matrix[1][3]"
+                    },
+                    {
+                        "name":  "Object",
+                        "offset":  "0x23C",
+                        "type":  "float",
+                        "description":  "matrix[2][0]"
+                    },
+                    {
+                        "name":  "Object",
+                        "offset":  "0x240",
+                        "type":  "float",
+                        "description":  "matrix[2][1]"
+                    },
+                    {
+                        "name":  "Object",
+                        "offset":  "0x244",
+                        "type":  "float",
+                        "description":  "matrix[2][2]"
+                    },
+                    {
+                        "name":  "Object",
+                        "offset":  "0x248",
+                        "type":  "float",
+                        "description":  "matrix[2][3]"
+                    },
+                    {
+                        "name":  "Object",
+                        "offset":  "0x24C",
+                        "type":  "float",
+                        "description":  "matrix[3][0]"
+                    },
+                    {
+                        "name":  "Object",
+                        "offset":  "0x250",
+                        "type":  "float",
+                        "description":  "matrix[3][1]"
+                    },
+                    {
+                        "name":  "Object",
+                        "offset":  "0x254",
+                        "type":  "float",
+                        "description":  "matrix[3][2]"
+                    },
+                    {
+                        "name":  "Object",
+                        "offset":  "0x258",
+                        "type":  "float",
+                        "description":  "matrix[3][3]"
+                    },
+                    {
+                        "name":  "Object",
+                        "offset":  "0x25C",
+                        "type":  "u32",
+                        "description":  "respawn info (behav_param_copy_ptr)"
+                    },
+                    {
+                        "name":  "Mario",
+                        "offset":  "0x00",
+                        "type":  "u16",
+                        "description":  "status"
+                    },
+                    {
+                        "name":  "Mario",
+                        "offset":  "0x02",
+                        "type":  "u16",
+                        "description":  "input (15: Z pressed; 14: Z down; 13: B pressed; 9: \u003e10 below water; 7: A down; 6: \u003c150 ceiling; 5: no A; no analog 3: steep; 2: \u003e100 over floor; 1: A pressed)"
+                    },
+                    {
+                        "name":  "Mario",
+                        "offset":  "0x04",
+                        "type":  "u32",
+                        "description":  "flags (0x80000000 pushing against wall; 0x40000000 wallkicking; 0x400000 tripping ; 0x200000 kicking; 0x100000 punching; 0x80 teleporting; 0x20 hat in hand; 0x10 hat on head; 0x8 wing cap; 0x4 metal cap; 0x2 vanish cap; 0x1 should have cap)"
+                    },
+                    {
+                        "name":  "Mario",
+                        "offset":  "0x08",
+                        "type":  "u32",
+                        "description":  "more flags? (0x01 when emitting smoke, 0x08 when emitting sparkles, 0x20 when underwater, 0x80 when near the top of water)"
+                    },
+                    {
+                        "name":  "Mario",
+                        "offset":  "0x0C",
+                        "type":  "u32",
+                        "description":  "action (see: Mario\u0027s Actions )"
+                    },
+                    {
+                        "name":  "Mario",
+                        "offset":  "0x10",
+                        "type":  "u32",
+                        "description":  "previous_action"
+                    },
+                    {
+                        "name":  "Mario",
+                        "offset":  "0x14",
+                        "type":  "u32",
+                        "description":  "groundType"
+                    },
+                    {
+                        "name":  "Mario",
+                        "offset":  "0x18",
+                        "type":  "u16",
+                        "description":  "action variable (different uses based on Marioâ†’0x0C)"
+                    },
+                    {
+                        "name":  "Mario",
+                        "offset":  "0x1A",
+                        "type":  "u16",
+                        "description":  "action variable (different uses based on Marioâ†’0x0C)"
+                    },
+                    {
+                        "name":  "Mario",
+                        "offset":  "0x1C",
+                        "type":  "u16",
+                        "description":  "Front tilt (just visuals?)"
+                    },
+                    {
+                        "name":  "Mario",
+                        "offset":  "0x1E",
+                        "type":  "u16",
+                        "description":  "squish_timer"
+                    },
+                    {
+                        "name":  "Mario",
+                        "offset":  "0x20",
+                        "type":  "float",
+                        "description":  "analogTilt"
+                    },
+                    {
+                        "name":  "Mario",
+                        "offset":  "0x24",
+                        "type":  "s16",
+                        "description":  "Yaw (Facing) rotation"
+                    },
+                    {
+                        "name":  "Mario",
+                        "offset":  "0x26",
+                        "type":  "s16",
+                        "description":  "hitstun"
+                    },
+                    {
+                        "name":  "Mario",
+                        "offset":  "0x28",
+                        "type":  "u8",
+                        "description":  "number of frames since the A button was pressed. (Up to 255)"
+                    },
+                    {
+                        "name":  "Mario",
+                        "offset":  "0x29",
+                        "type":  "u8",
+                        "description":  "number of frames since the B button was pressed. (Up to 255)"
+                    },
+                    {
+                        "name":  "Mario",
+                        "offset":  "0x2A",
+                        "type":  "u8",
+                        "description":  "set to 5 when Mario collides with the wall, but only works with some of Mario\u0027s actions. Value decrements every frame if it is greater than 0."
+                    },
+                    {
+                        "name":  "Mario",
+                        "offset":  "0x2B",
+                        "type":  "u8",
+                        "description":  "set to 5 when Mario collides with the floor, but only works with some of Mario\u0027s actions. Value decrements every frame if it is greater than 0."
+                    },
+                    {
+                        "name":  "Mario",
+                        "offset":  "0x2C",
+                        "type":  "s16",
+                        "description":  "Pitch rotation (only used when flying or swimming?)"
+                    },
+                    {
+                        "name":  "Mario",
+                        "offset":  "0x2E",
+                        "type":  "s16",
+                        "description":  "Yaw (Intended) rotation"
+                    },
+                    {
+                        "name":  "Mario",
+                        "offset":  "0x30",
+                        "type":  "s16",
+                        "description":  "Roll rotation"
+                    },
+                    {
+                        "name":  "Mario",
+                        "offset":  "0x32",
+                        "type":  "s16",
+                        "description":  "Flying Pull Back"
+                    },
+                    {
+                        "name":  "Mario",
+                        "offset":  "0x34",
+                        "type":  "s16",
+                        "description":  "Roll rotation when flying or swimming? Also acts as the speed at which Mario spins bowser while he has grabbed his tail."
+                    },
+                    {
+                        "name":  "Mario",
+                        "offset":  "0x36",
+                        "type":  "u16",
+                        "description":  ""
+                    },
+                    {
+                        "name":  "Mario",
+                        "offset":  "0x38",
+                        "type":  "u32",
+                        "description":  "Sliding angle"
+                    },
+                    {
+                        "name":  "Mario",
+                        "offset":  "0x3C",
+                        "type":  "float",
+                        "description":  "x_pos"
+                    },
+                    {
+                        "name":  "Mario",
+                        "offset":  "0x40",
+                        "type":  "float",
+                        "description":  "y_pos"
+                    },
+                    {
+                        "name":  "Mario",
+                        "offset":  "0x44",
+                        "type":  "float",
+                        "description":  "z_pos"
+                    },
+                    {
+                        "name":  "Mario",
+                        "offset":  "0x48",
+                        "type":  "float",
+                        "description":  "x_speed"
+                    },
+                    {
+                        "name":  "Mario",
+                        "offset":  "0x4C",
+                        "type":  "float",
+                        "description":  "y_speed"
+                    },
+                    {
+                        "name":  "Mario",
+                        "offset":  "0x50",
+                        "type":  "float",
+                        "description":  "z_speed"
+                    },
+                    {
+                        "name":  "Mario",
+                        "offset":  "0x54",
+                        "type":  "float",
+                        "description":  "speed"
+                    },
+                    {
+                        "name":  "Mario",
+                        "offset":  "0x58",
+                        "type":  "float",
+                        "description":  "x_sliding_speed"
+                    },
+                    {
+                        "name":  "Mario",
+                        "offset":  "0x5C",
+                        "type":  "float",
+                        "description":  "z_sliding_speed"
+                    },
+                    {
+                        "name":  "Mario",
+                        "offset":  "0x60",
+                        "type":  "struct collisionTriangle*",
+                        "description":  "current wall collision triangle Mario is up against."
+                    },
+                    {
+                        "name":  "Mario",
+                        "offset":  "0x64",
+                        "type":  "struct collisionTriangle*",
+                        "description":  "current ceiling collision triangle Mario is under."
+                    },
+                    {
+                        "name":  "Mario",
+                        "offset":  "0x68",
+                        "type":  "struct collisionTriangle*",
+                        "description":  "current floor collision triangle Mario is on/above."
+                    },
+                    {
+                        "name":  "Mario",
+                        "offset":  "0x6C",
+                        "type":  "float",
+                        "description":  "ceiling_y"
+                    },
+                    {
+                        "name":  "Mario",
+                        "offset":  "0x70",
+                        "type":  "float",
+                        "description":  "ground_y"
+                    },
+                    {
+                        "name":  "Mario",
+                        "offset":  "0x74",
+                        "type":  "s16",
+                        "description":  "downHillAngle"
+                    },
+                    {
+                        "name":  "Mario",
+                        "offset":  "0x76",
+                        "type":  "s16",
+                        "description":  "waterHeight"
+                    },
+                    {
+                        "name":  "Mario",
+                        "offset":  "0x78",
+                        "type":  "struct object*",
+                        "description":  "pointer to last object Mario interacted with (only with some specific objects?)"
+                    },
+                    {
+                        "name":  "Mario",
+                        "offset":  "0x7C",
+                        "type":  "struct object*",
+                        "description":  "pointer to object being carried by Mario"
+                    },
+                    {
+                        "name":  "Mario",
+                        "offset":  "0x80",
+                        "type":  "struct object*",
+                        "description":  "pointer to last object Mario interacted with (all objects?)"
+                    },
+                    {
+                        "name":  "Mario",
+                        "offset":  "0x84",
+                        "type":  "struct object*",
+                        "description":  "pointer to the koopa shell object when Mario is riding on top of it."
+                    },
+                    {
+                        "name":  "Mario",
+                        "offset":  "0x88",
+                        "type":  "struct object*",
+                        "description":  "Mario object"
+                    },
+                    {
+                        "name":  "Mario",
+                        "offset":  "0x8C",
+                        "type":  "u32*",
+                        "description":  "ptr to 0x8033B4B0"
+                    },
+                    {
+                        "name":  "Mario",
+                        "offset":  "0x90",
+                        "type":  "struct LevelArea*",
+                        "description":  "current level area info"
+                    },
+                    {
+                        "name":  "Mario",
+                        "offset":  "0x94",
+                        "type":  "struct camera*",
+                        "description":  "Camera"
+                    },
+                    {
+                        "name":  "Mario",
+                        "offset":  "0x98",
+                        "type":  "u32*",
+                        "description":  "ptr to 0x8033B3B0"
+                    },
+                    {
+                        "name":  "Mario",
+                        "offset":  "0x9C",
+                        "type":  "struct controller*",
+                        "description":  "controller 1 = 0x8033AF90,controller2 = 0x8033AFAC"
+                    },
+                    {
+                        "name":  "Mario",
+                        "offset":  "0xA0",
+                        "type":  "struct MarioAnimation*",
+                        "description":  "MarioAnimationStruct (0x8033B080)"
+                    },
+                    {
+                        "name":  "Mario",
+                        "offset":  "0xA4",
+                        "type":  "u32",
+                        "description":  "behavior interaction flag ID (see: Behavior command 0x2F )"
+                    },
+                    {
+                        "name":  "Mario",
+                        "offset":  "0xA8",
+                        "type":  "s16",
+                        "description":  "coins"
+                    },
+                    {
+                        "name":  "Mario",
+                        "offset":  "0xAA",
+                        "type":  "s16",
+                        "description":  "stars"
+                    },
+                    {
+                        "name":  "Mario",
+                        "offset":  "0xAC",
+                        "type":  "s16",
+                        "description":  "lives"
+                    },
+                    {
+                        "name":  "Mario",
+                        "offset":  "0xAE",
+                        "type":  "s16",
+                        "description":  "power"
+                    },
+                    {
+                        "name":  "Mario",
+                        "offset":  "0xB0",
+                        "type":  "u16",
+                        "description":  "constant_ground_distance (usually 0xBD)"
+                    },
+                    {
+                        "name":  "Mario",
+                        "offset":  "0xB2",
+                        "type":  "u16",
+                        "description":  "misc_timer (on any value other than zero it will decrease until zero)"
+                    },
+                    {
+                        "name":  "Mario",
+                        "offset":  "0xB4",
+                        "type":  "u16",
+                        "description":  "unsquish_timer"
+                    },
+                    {
+                        "name":  "Mario",
+                        "offset":  "0xB6",
+                        "type":  "u16",
+                        "description":  "cap_timer"
+                    },
+                    {
+                        "name":  "Mario",
+                        "offset":  "0xB8",
+                        "type":  "s16",
+                        "description":  "stars (copy of Marioâ†’0xAA). Used to trigger the special dialog messages once you\u0027ve got a star and jumped out of a painting."
+                    },
+                    {
+                        "name":  "Mario",
+                        "offset":  "0xBA",
+                        "type":  "u16",
+                        "description":  "unused?"
+                    },
+                    {
+                        "name":  "Mario",
+                        "offset":  "0xBC",
+                        "type":  "float",
+                        "description":  "highest y_pos achieved while gaining height"
+                    },
+                    {
+                        "name":  "Mario",
+                        "offset":  "0xC0",
+                        "type":  "float",
+                        "description":  "y_pos offset (modified while in quicksand or cutscenes, otherwise 0.0f)"
+                    }
+                ]
+}
