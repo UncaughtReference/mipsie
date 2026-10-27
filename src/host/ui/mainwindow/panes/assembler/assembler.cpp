@@ -75,6 +75,21 @@ void Assembler::setRomFilePath(const QString &filePath)
     romLabel->setText(QStringLiteral("ROM: %1").arg(filePath));
 }
 
+void Assembler::setCreateTemporaryAsmFile(bool enabled)
+{
+    createTemporaryAsmFile = enabled;
+}
+
+void Assembler::setUseArmipsRootOption(bool enabled)
+{
+    useArmipsRootOption = enabled;
+}
+
+void Assembler::setAdditionalArmipsArguments(const QString &arguments)
+{
+    additionalArmipsArguments = arguments;
+}
+
 bool Assembler::isBusy() const
 {
     return stage != ProcessStage::Idle;
@@ -120,39 +135,57 @@ void Assembler::assemble(bool openProject64OnSuccess)
     const QString rootDirectory = originalFilePath.isEmpty()
         ? QDir::currentPath()
         : QFileInfo(originalFilePath).absolutePath();
+    if (!createTemporaryAsmFile) {
+        if (originalFilePath.isEmpty() || !QFileInfo(originalFilePath).isFile()) {
+            appendOutputLine(tr("Save the current ASM file before assembling without a temporary file."), true);
+            return;
+        }
+        if (sourceBuffer->document()->isModified() && !editor->saveCurrentFile()) {
+            appendOutputLine(tr("Assembly cancelled because the ASM file could not be saved."), true);
+            return;
+        }
+    }
     startArmips(editor->currentEditor()->toPlainText(), rootDirectory);
 }
 
 void Assembler::startArmips(const QString &assemblyText, const QString &rootDirectory)
 {
-    QTemporaryFile temporaryFile(QDir::tempPath() + QStringLiteral("/mipsie-XXXXXX.asm"));
-    temporaryFile.setAutoRemove(false);
-    if (!temporaryFile.open()) {
-        appendOutputLine(tr("Could not create temporary ASM file: %1")
-                             .arg(temporaryFile.errorString()), true);
-        return;
-    }
+    QString asmFilePath;
+    sourceLineOffset = 0;
+    temporaryAsmPath.clear();
+    if (createTemporaryAsmFile) {
+        QTemporaryFile temporaryFile(QDir::tempPath() + QStringLiteral("/mipsie-XXXXXX.asm"));
+        temporaryFile.setAutoRemove(false);
+        if (!temporaryFile.open()) {
+            appendOutputLine(tr("Could not create temporary ASM file: %1")
+                                 .arg(temporaryFile.errorString()), true);
+            return;
+        }
 
-    temporaryAsmPath = temporaryFile.fileName();
-    const QString sourcePrefix = QStringLiteral(
-        "MIPSIE_ROM_FILENAME equ \"%1\"\n"
-        "MIPSIE_FILE_POS equ 0x00000000\n"
-        "\n"
-        ".open MIPSIE_ROM_FILENAME, MIPSIE_FILE_POS\n"
-        "\n"
-        ".n64\n")
-        .arg(QDir::toNativeSeparators(activeRomFilePath));
-    sourceLineOffset = sourcePrefix.count(QLatin1Char('\n'));
-    const QString temporarySource = sourcePrefix + assemblyText + QStringLiteral("\n.close\n");
-    const QByteArray encodedSource = temporarySource.toUtf8();
-    if (temporaryFile.write(encodedSource) != encodedSource.size()) {
-        appendOutputLine(tr("Could not write temporary ASM file: %1")
-                             .arg(temporaryFile.errorString()), true);
+        temporaryAsmPath = temporaryFile.fileName();
+        const QString sourcePrefix = QStringLiteral(
+            "MIPSIE_ROM_FILENAME equ \"%1\"\n"
+            "MIPSIE_FILE_POS equ 0x00000000\n"
+            "\n"
+            ".open MIPSIE_ROM_FILENAME, MIPSIE_FILE_POS\n"
+            "\n"
+            ".n64\n")
+            .arg(QDir::toNativeSeparators(activeRomFilePath));
+        sourceLineOffset = sourcePrefix.count(QLatin1Char('\n'));
+        const QString temporarySource = sourcePrefix + assemblyText + QStringLiteral("\n.close\n");
+        const QByteArray encodedSource = temporarySource.toUtf8();
+        if (temporaryFile.write(encodedSource) != encodedSource.size()) {
+            appendOutputLine(tr("Could not write temporary ASM file: %1")
+                                 .arg(temporaryFile.errorString()), true);
+            temporaryFile.close();
+            removeTemporaryAsm();
+            return;
+        }
         temporaryFile.close();
-        removeTemporaryAsm();
-        return;
+        asmFilePath = temporaryAsmPath;
+    } else {
+        asmFilePath = originalSourcePath;
     }
-    temporaryFile.close();
 
     standardOutputBuffer.clear();
     standardErrorBuffer.clear();
@@ -160,7 +193,11 @@ void Assembler::startArmips(const QString &assemblyText, const QString &rootDire
     appendOutputLine(tr("Running armips..."));
     process->setWorkingDirectory(QDir::currentPath());
     process->setProgram(QDir::current().filePath(QStringLiteral("tools/armips.exe")));
-    process->setArguments({temporaryAsmPath, QStringLiteral("-root"), rootDirectory});
+    QStringList arguments{asmFilePath};
+    if (useArmipsRootOption)
+        arguments << QStringLiteral("-root") << rootDirectory;
+    arguments.append(QProcess::splitCommand(additionalArmipsArguments));
+    process->setArguments(arguments);
     process->start();
 }
 

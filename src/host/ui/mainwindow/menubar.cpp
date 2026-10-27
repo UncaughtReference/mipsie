@@ -2,10 +2,41 @@
 #include "ui_mainwindow.h"
 
 #include <QAction>
+#include <QDialog>
+#include <QFile>
+#include <QMessageBox>
 #include <QList>
 #include <QMenu>
 #include <QKeySequence>
 #include <QObject>
+#include <QTextBrowser>
+#include <QVBoxLayout>
+
+namespace {
+
+void openMarkdownWindow(MainWindow *parent, const QString &title,
+                        const QString &resourcePath) {
+    QFile document(resourcePath);
+    if (!document.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        QMessageBox::warning(parent, QObject::tr("Documentation unavailable"),
+                             QObject::tr("Could not open %1.").arg(title));
+        return;
+    }
+
+    auto *window = new QDialog(parent, Qt::Window);
+    window->setAttribute(Qt::WA_DeleteOnClose);
+    window->setWindowTitle(title);
+    window->resize(900, 700);
+
+    auto *layout = new QVBoxLayout(window);
+    auto *viewer = new QTextBrowser(window);
+    viewer->setOpenExternalLinks(true);
+    viewer->setMarkdown(QString::fromUtf8(document.readAll()));
+    layout->addWidget(viewer);
+    window->show();
+}
+
+} // namespace
 
 
 MenuBar::MenuBar(Ui::MainWindow *ui, MainWindow *window)
@@ -146,6 +177,26 @@ void MenuBar::initialize() {
     ui->menubar->addMenu(settingsMenu);
 
     QMenu *helpMenu = new QMenu(QObject::tr("Help"), ui->menubar);
+    const auto addDocumentationAction = [helpMenu, mainWindow](const QString &text,
+                                                                const QString &resource,
+                                                                const QString &objectName) {
+        QAction *action = helpMenu->addAction(text);
+        action->setObjectName(objectName);
+        QObject::connect(action, &QAction::triggered, mainWindow,
+                         [mainWindow, text, resource] {
+            openMarkdownWindow(mainWindow, text, resource);
+        });
+    };
+    addDocumentationAction(QObject::tr("LLM Use"),
+                           QStringLiteral(":/docs/llmUse.md"),
+                           QStringLiteral("llmUseHelpAction"));
+    addDocumentationAction(QObject::tr("Lua API"),
+                           QStringLiteral(":/docs/lua.md"),
+                           QStringLiteral("luaApiHelpAction"));
+    addDocumentationAction(QObject::tr("Source Code"),
+                           QStringLiteral(":/docs/source.md"),
+                           QStringLiteral("sourceCodeHelpAction"));
+    helpMenu->addSeparator();
     QAction *checkForUpdates = helpMenu->addAction(QObject::tr("Check for Updates..."));
     checkForUpdates->setObjectName(QStringLiteral("checkForUpdatesAction"));
     QObject::connect(checkForUpdates, &QAction::triggered,

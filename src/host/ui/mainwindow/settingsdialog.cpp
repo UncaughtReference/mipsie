@@ -1,5 +1,6 @@
 #include "settingsdialog.h"
 
+#include <QCheckBox>
 #include <QColorDialog>
 #include <QComboBox>
 #include <QDialogButtonBox>
@@ -112,6 +113,30 @@ SettingsDialog::SettingsDialog(const QString &projectFolder,
     tabWidthSpinBox->setValue(generalSettings.value(QStringLiteral("tabWidth")).toInt(4));
     generalForm->addRow(tr("Editor tab width:"), tabWidthSpinBox);
 
+    createTemporaryAsmCheckBox = new QCheckBox(
+        tr("Create a temporary ASM file during assembly"), generalPage);
+    createTemporaryAsmCheckBox->setToolTip(
+        tr("When unchecked, armips runs on the saved ASM file directly. The file must contain its own ROM open/close setup; unsaved changes are saved first."));
+    createTemporaryAsmCheckBox->setChecked(generalSettings.value(
+        QStringLiteral("createTemporaryAsmFile")).toBool(true));
+    generalForm->addRow(createTemporaryAsmCheckBox);
+
+    useArmipsRootOptionCheckBox = new QCheckBox(
+        tr("Use the -root option during armips assembly"), generalPage);
+    useArmipsRootOptionCheckBox->setToolTip(
+        tr("Passes the current ASM file's directory to armips as its root directory."));
+    useArmipsRootOptionCheckBox->setChecked(generalSettings.value(
+        QStringLiteral("useArmipsRootOption")).toBool(true));
+    generalForm->addRow(useArmipsRootOptionCheckBox);
+
+    additionalArmipsArgumentsEdit = new QLineEdit(generalPage);
+    additionalArmipsArgumentsEdit->setPlaceholderText(tr("For example: -sym \"symbols.sym\""));
+    additionalArmipsArgumentsEdit->setText(generalSettings.value(
+        QStringLiteral("additionalArmipsArguments")).toString());
+    additionalArmipsArgumentsEdit->setToolTip(
+        tr("Additional armips command-line arguments. Quote values that contain spaces."));
+    generalForm->addRow(tr("Additional armips arguments:"), additionalArmipsArgumentsEdit);
+
     themeComboBox = new QComboBox(generalPage);
     themeComboBox->addItem(tr("System"), QStringLiteral("System"));
     themeComboBox->addItem(tr("Light"), QStringLiteral("Light"));
@@ -221,6 +246,12 @@ QJsonObject SettingsDialog::generalSettings() const
     settings.insert(QStringLiteral("editorFontFamily"), editorFontComboBox->currentFont().family());
     settings.insert(QStringLiteral("editorFontSize"), editorFontSizeSpinBox->value());
     settings.insert(QStringLiteral("tabWidth"), tabWidthSpinBox->value());
+    settings.insert(QStringLiteral("createTemporaryAsmFile"),
+                    createTemporaryAsmCheckBox->isChecked());
+    settings.insert(QStringLiteral("useArmipsRootOption"),
+                    useArmipsRootOptionCheckBox->isChecked());
+    settings.insert(QStringLiteral("additionalArmipsArguments"),
+                    additionalArmipsArgumentsEdit->text().trimmed());
     settings.insert(QStringLiteral("theme"), themeComboBox->currentData().toString());
     settings.insert(QStringLiteral("accentColor"), accentColor.name(QColor::HexRgb));
 

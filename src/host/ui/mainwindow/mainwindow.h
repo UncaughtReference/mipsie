@@ -96,6 +96,7 @@ private:
     bool configureAssemblerRom(Assembler *assembler);
     void applyGeneralAppearance();
     void applyEditorPreferences();
+    void applyAssemblerPreferences();
     void applyKeyboardShortcuts();
     void applyMacros();
     void startUpdateCheck(bool manual);

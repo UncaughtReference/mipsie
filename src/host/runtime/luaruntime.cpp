@@ -6,12 +6,16 @@
 
 #include <QThread>
 #include <QDebug>
+#include <QAction>
+#include <QMainWindow>
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
+#include <QPointer>
 
 class LuaRuntime::Private {
 public:
     sol::state lua;
+    QPointer<QMainWindow> mainWindow;
     QNetworkAccessManager *networkManager = nullptr;
     bool initialized = false;
     bool shuttingDown = false;
@@ -52,6 +56,7 @@ bool LuaRuntime::initialize(QMainWindow* mainWindow)
         // Register all generic host APIs.
         const auto output = [this](const QString &line) { emit scriptOutput(line); };
         d->networkManager = new QNetworkAccessManager(this);
+        d->mainWindow = mainWindow;
         BindingRegistry::registerAll(d->lua, mainWindow, d->networkManager, output);
 
         d->lua["mipsie"]["_output"] = [output](const std::string &line) {
@@ -163,6 +168,17 @@ void LuaRuntime::shutdown() {
         }
         delete d->networkManager;
         d->networkManager = nullptr;
+    }
+
+    if (d->mainWindow) {
+        const auto actions = d->mainWindow->findChildren<QAction *>();
+        for (QAction *action : actions) {
+            if (!action->property("mipsieLuaKeymapAction").toBool())
+                continue;
+            d->mainWindow->removeAction(action);
+            delete action;
+        }
+        d->mainWindow.clear();
     }
 
     d->initialized = false;

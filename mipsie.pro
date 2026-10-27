@@ -13,6 +13,7 @@ SOURCES += \
     src/host/bindings/bindingregistry.cpp \
     src/host/bindings/bindlogging.cpp \
     src/host/bindings/bindui.cpp \
+    src/host/bindings/bindkeymap.cpp \
     src/host/main.cpp \
     src/host/ui/mainwindow/mainwindow.cpp \
     src/host/ui/mainwindow/settingsdialog.cpp \
@@ -43,6 +44,7 @@ HEADERS += \
     src/host/bindings/bindingregistry.h \
     src/host/bindings/bindlogging.h \
     src/host/bindings/bindui.h \
+    src/host/bindings/bindkeymap.h \
     src/host/bindings/pathresolver.h \
     src/host/ui/mainwindow/mainwindow.h \
     src/host/ui/mainwindow/settingsdialog.h \
@@ -72,6 +74,7 @@ FORMS += \
 
 RESOURCES += \
     resources/logo.qrc \
+    docs/docs.qrc \
     src/host/ui/mainwindow/panes/functionview/functionview.qrc \
     src/host/ui/mainwindow/panes/ramaddressview/ramaddressview.qrc \
     src/host/ui/mainwindow/panes/structview/structview.qrc \

@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/docs">
+        <file alias="llmUse.md">llmUse.md</file>
+        <file alias="lua.md">lua.md</file>
+        <file alias="source.md">source.md</file>
+    </qresource>
+</RCC>

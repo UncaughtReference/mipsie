@@ -20,6 +20,9 @@ class Assembler : public QWidget
 public:
     explicit Assembler(QWidget *parent = nullptr);
     void setRomFilePath(const QString &filePath);
+    void setCreateTemporaryAsmFile(bool enabled);
+    void setUseArmipsRootOption(bool enabled);
+    void setAdditionalArmipsArguments(const QString &arguments);
     void assemble(bool openProject64OnSuccess = false);
     bool isBusy() const;
 
@@ -36,7 +39,10 @@ private:
     QProcess *process;
     ProcessStage stage = ProcessStage::Idle;
     bool openProject64OnSuccess = false;
+    bool createTemporaryAsmFile = true;
+    bool useArmipsRootOption = true;
     QString configuredRomFilePath;
+    QString additionalArmipsArguments;
     QString activeRomFilePath;
     QString temporaryAsmPath;
     int sourceLineOffset = 0;

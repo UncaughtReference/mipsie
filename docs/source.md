@@ -33,8 +33,8 @@ the executable.
 
 `BindingRegistry::registerAll(lua, mainWindow, networkManager, output)` creates
 the global `mipsie` table, then installs logging, application, filesystem, UI,
-and HTTP APIs. The supplied output callback is how bindings send log and HTTP
-callback errors to the Lua console.
+HTTP, and keymap APIs. The supplied output callback is how bindings send log,
+HTTP callback, and Lua keymap callback errors to the Lua console.
 
 ### `src/host/bindings/bindapplication.h` and `bindapplication.cpp`
 
@@ -115,7 +115,12 @@ Lua functions registered by `bindUI`:
 - `mipsie.ui.trigger_action(name)` finds and triggers the first matching enabled, visible action; it returns a boolean.
 - `mipsie.editor.current_line()` returns the current line in the first Editor widget's selected buffer, or `nil` if none is available. It does not choose an Editor pane by keyboard focus.
 
-### `src/host/bindings/bindingregistry.h`, `bindapplication.h`, `bindfilesystem.h`, `bindhttp.h`, `bindlogging.h`, and `bindui.h`
+### `src/host/bindings/bindkeymap.h` and `bindkeymap.cpp`
+
+- `bindKeymap(lua, mainWindow, output)` installs the `mipsie.keymap` table.
+- `mipsie.keymap.set(shortcut, callback)` validates a Qt portable-text shortcut, creates a main-window shortcut action, and invokes the Lua callback through a protected call when pressed. Reusing a shortcut replaces its old Lua action. Callback errors are sent to `output`.
+
+### `src/host/bindings/bindingregistry.h`, `bindapplication.h`, `bindfilesystem.h`, `bindhttp.h`, `bindlogging.h`, `bindui.h`, and `bindkeymap.h`
 
 These headers declare the registration entry points and their dependencies. The
 binding APIs and behavior are described with their implementations above.
@@ -133,7 +138,7 @@ runtime lifecycle state. It must be initialized and used on its owner thread.
 - `executeFile(path)` safely executes a Lua source file; it returns `false` if the runtime is unavailable or the script fails, emitting `scriptError` with the path and error text.
 - `executeString(source, chunkName)` safely executes a Lua chunk with the same error reporting. The default chunk name is `=runtime`.
 - `isInitialized()` reports whether setup completed and shutdown has not reset it.
-- `shutdown()` emits `shuttingDown`, disconnects and aborts outstanding HTTP replies, deletes the network manager, and marks the runtime uninitialized. Repeated shutdown calls are ignored.
+- `shutdown()` emits `shuttingDown`, disconnects and aborts outstanding HTTP replies, deletes the network manager and Lua keymap actions while Lua callbacks are still valid, and marks the runtime uninitialized. Repeated shutdown calls are ignored.
 - Signals: `scriptError(source, message)`, `scriptOutput(line)`, `initialized()`, and `shuttingDown()` report script results and lifecycle events.
 
 ### `src/host/runtime/luaerror.h` and `luaerror.cpp`
@@ -165,7 +170,7 @@ Anonymous-namespace helpers:
 - `macrosFilePath()` returns the neighboring `macros.json` path.
 - `defaultMacros()` constructs the built-in F1/F2/F3 code macros.
 - `loadMacros()` reads and validates the macros JSON array or falls back to the built-ins.
-- `defaultGeneralSettings()` builds appearance and keybind defaults.
+- `defaultGeneralSettings()` builds appearance, assembly-mode, armips-option, and keybind defaults; temporary ASM generation and `-root` default to `true`, and extra armips arguments default to an empty string.
 - `loadGeneralSettings()` overlays saved settings and migrates legacy tab-shortcut spellings.
 - `writeJsonObjectAtomically(path, object, errorMessage)` writes a JSON object with QSaveFile; it reports an error and returns `false` on failure.
 - `writeJsonArrayAtomically(path, array, errorMessage)` does the same for arrays.
@@ -185,6 +190,7 @@ Anonymous-namespace helpers:
 - `toggleCommentOutSelection()` delegates comment toggling to the active Editor only when a text editor is the current edit target.
 - `applyGeneralAppearance()` applies the app font, theme palette, accent color, and pane repaint.
 - `applyEditorPreferences()` sends font size, tab width, theme, and font family to all Editor panes.
+- `applyAssemblerPreferences()` sends the saved temporary-ASM setting to every Assembler pane.
 - `applyKeyboardShortcuts()` applies saved key sequences to matching QAction object names and refreshes Edit-action state.
 - `applyMacros()` refreshes macro shortcuts in all Editor panes.
 - `updateEditActionStates()` enables Edit actions when an edit target exists.
@@ -210,7 +216,7 @@ Anonymous-namespace helpers:
 - `showAboutDialog()` displays the application version and credits.
 - `openAppDataFolder()` creates and opens the application settings directory.
 - `startUpdateCheck(manual)` rate-limits automatic requests, performs the remote version check, and reports updates/errors.
-- `backupRom()` creates a timestamped ROM backup, including its companion config when available.
+- `backupRom()` lets the user choose between configured standalone and project ROMs (or skips the chooser when only one is configured), then creates a timestamped backup of the selected ROM and its matching `.config` file.
 - `restoreRomVersion()` presents available backups and restores the selected ROM/config with rollback handling.
 - `saveCurrentFile()` saves the active editor document.
 - `saveCurrentFileAs()` opens Save As for the active editor.
@@ -229,16 +235,21 @@ C++ rather than defined in this form.
 ### `src/host/ui/mainwindow/menubar.h` and `menubar.cpp`
 
 - `MenuBar(ui, window)` stores pointers to the generated UI and owning MainWindow.
-- `initialize()` creates File, Edit, Assemble, Settings, and related actions, assigns object names and shortcuts, and connects them to MainWindow slots or edit actions. Its local `addEditAction` helper creates a QAction, registers it with the Edit menu, and routes it through `performEditAction`.
+- `openMarkdownWindow(parent, title, resourcePath)` reads an embedded Markdown document and opens it in its own delete-on-close `QDialog` containing a scrollable `QTextBrowser`; external links open in the system browser. If the document cannot be read, it shows a warning.
+- `initialize()` creates File, Edit, Assemble, Settings, and Help actions, assigns object names and shortcuts, and connects them to MainWindow slots or edit actions. Its local `addEditAction` helper creates a QAction, registers it with the Edit menu, and routes it through `performEditAction`.
+- The local `addDocumentationAction(text, resource, objectName)` helper in `initialize()` adds a Help menu item and connects it to `openMarkdownWindow`. It is used for LLM Use, Lua API, and Source Code.
+- The `docs/docs.qrc` resource collection embeds `docs/llmUse.md`, `docs/lua.md`, and `docs/source.md` at `:/docs/llmUse.md`, `:/docs/lua.md`, and `:/docs/source.md` so the viewer works in packaged builds.
 
 ### `src/host/ui/mainwindow/settingsdialog.h` and `settingsdialog.cpp`
 
 `SettingsDialog(projectFolder, romFilePath, projectSettings, generalSettings,
 macros, parent)` builds General, Macros, and Current Project tabs. Its key-sequence
 editors correspond to the keybind JSON names; macro rows contain a shortcut and
-multiline text; project settings expose the ROM path.
+multiline text; project settings expose the ROM path. The General tab includes
+checkboxes for temporary ASM generation and the armips `-root` option, plus a
+line edit for additional armips arguments.
 
-- `generalSettings()` overlays selected fonts, sizes, tab width, theme, accent, and edited keybinds on the original object.
+- `generalSettings()` overlays selected fonts, sizes, tab width, theme, accent, temporary-ASM and `-root` choices, additional armips arguments, and edited keybinds on the original object.
 - `projectSettings()` returns original settings with a normalized absolute ROM path when the project page is active.
 - `macros()` serializes current macro rows to a JSON array.
 - `addMacroEditor(shortcut, text)` adds one editable macro row and its Remove callback.
@@ -306,9 +317,12 @@ Project64 after success.
 
 - `Assembler(parent)` builds the output view, ROM label, process, and signal connections.
 - `setRomFilePath(filePath)` updates the configured ROM path and label.
+- `setCreateTemporaryAsmFile(enabled)` selects temporary wrapped-source assembly or direct assembly from the saved source file.
+- `setUseArmipsRootOption(enabled)` controls whether the source directory is passed using armips's `-root` option.
+- `setAdditionalArmipsArguments(arguments)` stores extra command-line arguments for armips; `startArmips()` tokenizes them with `QProcess::splitCommand` and appends them to the process arguments.
 - `isBusy()` reports whether an external process stage is active.
-- `assemble(openProject64OnSuccess)` captures the current source buffer/path, validates state, and starts the assembly stage.
-- `startArmips(assemblyText, rootDirectory)` writes a temporary assembly file and launches armips with the configured ROM/root paths.
+- `assemble(openProject64OnSuccess)` captures the current source buffer/path, validates state, saves modified source before direct assembly, and starts the assembly stage.
+- `startArmips(assemblyText, rootDirectory)` either writes the wrapped temporary source or uses the original ASM path, then launches armips with the source, optional `-root` path, and configured extra arguments.
 - `startChecksumUpdate()` launches the checksum tool for the active ROM.
 - `appendProcessOutput(standardError)` reads available process bytes into the appropriate output buffer.
 - `flushProcessOutput()` converts complete buffered lines into output rows.
@@ -544,6 +558,8 @@ above, the referenced section explains their classes and functions in detail.
 - `src/host/bindings/bindlogging.cpp` — registers the Lua info, warning, and error logging functions.
 - `src/host/bindings/bindui.h` — declaration of the UI Lua binding registrar.
 - `src/host/bindings/bindui.cpp` — widget/action lookup helpers and `mipsie.ui`/`mipsie.editor` functions.
+- `src/host/bindings/bindkeymap.h` — declaration of the keymap Lua binding registrar.
+- `src/host/bindings/bindkeymap.cpp` — registers `mipsie.keymap.set` and connects Lua callbacks to main-window shortcuts.
 - `src/host/bindings/pathresolver.h` — inline helpers for application, project, base, and working paths.
 - `src/host/runtime/luaconfig.h` — currently empty guarded header reserved for Lua configuration.
 - `src/host/runtime/luaerror.h` — declaration of the currently empty `LuaError` placeholder.

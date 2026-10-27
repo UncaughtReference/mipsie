@@ -10,6 +10,7 @@
 #include <QString>
 
 class QComboBox;
+class QCheckBox;
 class QFontComboBox;
 class QKeySequenceEdit;
 class QLineEdit;
@@ -52,9 +53,12 @@ private:
     QSpinBox *applicationFontSizeSpinBox = nullptr;
     QSpinBox *editorFontSizeSpinBox = nullptr;
     QSpinBox *tabWidthSpinBox = nullptr;
+    QCheckBox *createTemporaryAsmCheckBox = nullptr;
+    QCheckBox *useArmipsRootOptionCheckBox = nullptr;
     QComboBox *themeComboBox = nullptr;
     QPushButton *accentColorButton = nullptr;
     QLineEdit *romPathEdit = nullptr;
+    QLineEdit *additionalArmipsArgumentsEdit = nullptr;
     QMap<QString, QKeySequenceEdit *> keySequenceEdits;
     QList<MacroEditorRow> macroEditorRows;
     QVBoxLayout *macroListLayout = nullptr;

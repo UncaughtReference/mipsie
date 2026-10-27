@@ -136,6 +136,25 @@ mipsie.http.get("https://romhacking.com/Bowsers-Dank-Rave-12/data.json", functio
 end)
 ```
 
+## Keyboard Shortcuts: `mipsie.keymap`
+
+`mipsie.keymap.set(shortcut, callback)` registers a Lua callback on a Qt
+portable-text shortcut such as `Ctrl+P`. The callback runs when the shortcut is
+pressed while the Mipsie main window is active. Calling `set` again with the
+same shortcut replaces its previous Lua callback. The function returns no
+value; an empty or invalid shortcut or a non-function callback raises a Lua
+error. Errors raised by a callback are reported in the Lua Console.
+
+```lua
+mipsie.keymap.set("Ctrl+P", function()
+    print("Lua shortcut pressed")
+end)
+```
+
+Shortcuts are active for the current app session and are not saved to Settings.
+If a shortcut is already assigned to another enabled action, Qt may treat it as
+ambiguous; choose a shortcut that is not already in use.
+
 ## User Interface: `mipsie.ui`
 
 The UI API lists and locates widgets and actions in mipsie's main window. Widget

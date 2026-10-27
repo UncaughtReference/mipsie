@@ -34,6 +34,7 @@
 #include <QFileInfo>
 #include <QFont>
 #include <QHBoxLayout>
+#include <QInputDialog>
 #include <QKeySequence>
 #include <QJsonDocument>
 #include <QJsonArray>
@@ -176,6 +177,9 @@ QJsonObject defaultGeneralSettings()
     settings.insert(QStringLiteral("editorFontFamily"), QStringLiteral("JetBrainsMono Nerd Font"));
     settings.insert(QStringLiteral("editorFontSize"), 12);
     settings.insert(QStringLiteral("tabWidth"), 4);
+    settings.insert(QStringLiteral("createTemporaryAsmFile"), true);
+    settings.insert(QStringLiteral("useArmipsRootOption"), true);
+    settings.insert(QStringLiteral("additionalArmipsArguments"), QString());
     settings.insert(QStringLiteral("theme"), QStringLiteral("System"));
     settings.insert(QStringLiteral("accentColor"), QStringLiteral("#ff4da6"));
     settings.insert(QStringLiteral("keybinds"), keybinds);
@@ -201,7 +205,10 @@ QJsonObject loadGeneralSettings()
                                 QStringLiteral("editorFontFamily"),
                                 QStringLiteral("editorFontSize"),
                                 QStringLiteral("tabWidth"), QStringLiteral("theme"),
-                                QStringLiteral("accentColor")}) {
+                                QStringLiteral("accentColor"),
+                                QStringLiteral("createTemporaryAsmFile"),
+                                QStringLiteral("useArmipsRootOption"),
+                                QStringLiteral("additionalArmipsArguments")}) {
         if (saved.contains(key))
             settings.insert(key, saved.value(key));
     }
@@ -441,6 +448,12 @@ MainWindow::MainWindow(QWidget *parent)
 
     auto *assemblerPane = new Pane;
     auto *assembler = new Assembler(assemblerPane);
+    assembler->setCreateTemporaryAsmFile(generalSettings.value(
+        QStringLiteral("createTemporaryAsmFile")).toBool(true));
+    assembler->setUseArmipsRootOption(generalSettings.value(
+        QStringLiteral("useArmipsRootOption")).toBool(true));
+    assembler->setAdditionalArmipsArguments(generalSettings.value(
+        QStringLiteral("additionalArmipsArguments")).toString());
     assembler->setRomFilePath(projectRomFilePath.isEmpty()
                                   ? standaloneRomFilePath : projectRomFilePath);
     assemblerPane->setContent(assembler, PaneKind::Assembler);
@@ -656,6 +669,25 @@ void MainWindow::applyEditorPreferences()
     for (Editor *editor : editors)
         editor->setEditorPreferences(fontSize, tabWidth, theme, fontFamily);
 
+}
+
+void MainWindow::applyAssemblerPreferences()
+{
+    if (!splitter)
+        return;
+
+    const bool createTemporaryAsmFile = generalSettings.value(
+        QStringLiteral("createTemporaryAsmFile")).toBool(true);
+    const bool useArmipsRootOption = generalSettings.value(
+        QStringLiteral("useArmipsRootOption")).toBool(true);
+    const QString additionalArmipsArguments = generalSettings.value(
+        QStringLiteral("additionalArmipsArguments")).toString();
+    const auto assemblers = splitter->findChildren<Assembler *>();
+    for (Assembler *assembler : assemblers) {
+        assembler->setCreateTemporaryAsmFile(createTemporaryAsmFile);
+        assembler->setUseArmipsRootOption(useArmipsRootOption);
+        assembler->setAdditionalArmipsArguments(additionalArmipsArguments);
+    }
 }
 
 void MainWindow::applyKeyboardShortcuts()
@@ -880,6 +912,12 @@ void MainWindow::createPaneContent(Pane *pane, PaneKind kind)
     }
     case PaneKind::Assembler: {
         auto *assembler = new Assembler(pane);
+        assembler->setCreateTemporaryAsmFile(
+            generalSettings.value(QStringLiteral("createTemporaryAsmFile")).toBool(true));
+        assembler->setUseArmipsRootOption(generalSettings.value(
+            QStringLiteral("useArmipsRootOption")).toBool(true));
+        assembler->setAdditionalArmipsArguments(generalSettings.value(
+            QStringLiteral("additionalArmipsArguments")).toString());
         assembler->setRomFilePath(projectRomFilePath.isEmpty()
                                       ? standaloneRomFilePath : projectRomFilePath);
         pane->setContent(assembler, PaneKind::Assembler);
@@ -1357,6 +1395,7 @@ void MainWindow::openSettings()
     generalSettings = updatedGeneralSettings;
     applyGeneralAppearance();
     applyEditorPreferences();
+    applyAssemblerPreferences();
     applyKeyboardShortcuts();
 
     if (!writeJsonArrayAtomically(macrosFilePath(), updatedMacros, &errorMessage)) {
@@ -1572,10 +1611,44 @@ void MainWindow::backupRom()
 {
     if (shuttingDown)
         return;
-    if (projectRomFilePath.isEmpty()) {
-        QMessageBox::warning(this, tr("No Project ROM"),
-                             tr("Open a project with a configured ROM before creating a backup."));
+
+    QStringList romChoices;
+    QStringList romPaths;
+    const auto addRomChoice = [&romChoices, &romPaths](const QString &label,
+                                                       const QString &configuredPath) {
+        if (configuredPath.isEmpty())
+            return;
+
+        const QString path = QFileInfo(configuredPath).absoluteFilePath();
+        for (const QString &existingPath : romPaths) {
+            if (existingPath.compare(path, Qt::CaseInsensitive) == 0)
+                return;
+        }
+
+        romChoices.append(QStringLiteral("%1 — %2")
+                              .arg(label, QDir::toNativeSeparators(path)));
+        romPaths.append(path);
+    };
+    addRomChoice(tr("Standalone ROM"), standaloneRomFilePath);
+    addRomChoice(tr("Project ROM"), projectRomFilePath);
+
+    if (romPaths.isEmpty()) {
+        QMessageBox::warning(this, tr("No ROM Configured"),
+                             tr("Configure a standalone ROM or open a project with a configured ROM before creating a backup."));
         return;
+    }
+
+    int selectedRomIndex = 0;
+    if (romPaths.size() > 1) {
+        bool accepted = false;
+        const QString selection = QInputDialog::getItem(
+            this, tr("Back Up ROM"), tr("Choose the configured ROM to back up:"),
+            romChoices, 0, false, &accepted);
+        if (!accepted)
+            return;
+        selectedRomIndex = romChoices.indexOf(selection);
+        if (selectedRomIndex < 0)
+            return;
     }
 
     if (splitter) {
@@ -1589,7 +1662,7 @@ void MainWindow::backupRom()
         }
     }
 
-    const QFileInfo romInfo(projectRomFilePath);
+    const QFileInfo romInfo(romPaths.at(selectedRomIndex));
     const QString romPath = romInfo.absoluteFilePath();
     const QString configPath = configFilePathForRom(romPath);
     if (!QFileInfo(romPath).isFile() || !QFileInfo(configPath).isFile()) {

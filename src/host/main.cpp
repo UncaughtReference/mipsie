@@ -105,7 +105,7 @@ int main(int argc, char *argv[])
 
     // App info!!
     QCoreApplication::setApplicationName("mipsie");
-    QCoreApplication::setApplicationVersion("1.0.0");
+    QCoreApplication::setApplicationVersion("0.1.0");
     QCoreApplication::setOrganizationName("mipsie");
 
     // Set up the CLI

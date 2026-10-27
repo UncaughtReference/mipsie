@@ -5,6 +5,7 @@
 #include "bindlogging.h"
 #include "bindui.h"
 #include "bindhttp.h"
+#include "bindkeymap.h"
 
 void BindingRegistry::registerAll(sol::state &lua, QMainWindow *mainWindow,
                                   QNetworkAccessManager *networkManager,
@@ -17,4 +18,5 @@ void BindingRegistry::registerAll(sol::state &lua, QMainWindow *mainWindow,
     bindFilesystem(lua);
     bindUI(lua, mainWindow);
     bindHttp(lua, networkManager, output);
+    bindKeymap(lua, mainWindow, output);
 }
