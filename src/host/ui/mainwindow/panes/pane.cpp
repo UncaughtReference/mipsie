@@ -2,18 +2,23 @@
 
 #include <QAction>
 #include <QApplication>
+#include <QColor>
 #include <QLabel>
+#include <QKeySequence>
 #include <QMenu>
 #include <QMenuBar>
 #include <QPaintEvent>
 #include <QPainter>
 #include <QPen>
+#include <QTextEdit>
+#include <QTreeView>
 #include <QVBoxLayout>
 
 Pane::Pane(QWidget *parent)
     : QWidget(parent),
       rootLayout(new QVBoxLayout(this))
 {
+    setFocusPolicy(Qt::StrongFocus);
     rootLayout->setContentsMargins(1, 1, 1, 1);
     rootLayout->setSpacing(0);
 
@@ -65,11 +70,51 @@ Pane::Pane(QWidget *parent)
         emit deleteRequested(this);
     });
 
+    shortcutLabelAction = paneMenuBar->addAction(QString());
+    shortcutLabelAction->setObjectName(QStringLiteral("paneShortcutLabelAction"));
+    shortcutLabelAction->setEnabled(false);
+
+    focusShortcutAction = new QAction(this);
+    focusShortcutAction->setObjectName(QStringLiteral("focusPaneAction"));
+    focusShortcutAction->setShortcutContext(Qt::ApplicationShortcut);
+    connect(focusShortcutAction, &QAction::triggered, this, [this] {
+        if (auto *treeView = contentWidget->findChild<QTreeView *>()) {
+            treeView->setFocus(Qt::ShortcutFocusReason);
+            return;
+        }
+        if (auto *textEditor = contentWidget->findChild<QTextEdit *>()) {
+            textEditor->setFocus(Qt::ShortcutFocusReason);
+            return;
+        }
+        QWidget *focusTarget = contentWidget;
+        if (focusTarget && focusTarget->focusPolicy() == Qt::NoFocus) {
+            const auto children = focusTarget->findChildren<QWidget *>();
+            for (QWidget *child : children) {
+                if (child->focusPolicy() != Qt::NoFocus) {
+                    focusTarget = child;
+                    break;
+                }
+            }
+        }
+        if (!focusTarget || focusTarget->focusPolicy() == Qt::NoFocus)
+            focusTarget = this;
+        focusTarget->setFocus(Qt::ShortcutFocusReason);
+    });
+
     auto *placeholder = new QLabel(tr("Empty pane - choose a pane type above!"), this);
     placeholder->setAlignment(Qt::AlignCenter);
     rootLayout->addWidget(paneMenuBar);
     rootLayout->addWidget(placeholder, 1);
     contentWidget = placeholder;
+}
+
+void Pane::setPaneShortcut(const QKeySequence &shortcut)
+{
+    focusShortcutAction->setShortcut(shortcut);
+    shortcutLabelAction->setText(shortcut.toString(QKeySequence::NativeText));
+    shortcutLabelAction->setVisible(!shortcut.isEmpty());
+    if (QWidget *windowWidget = window())
+        windowWidget->addAction(focusShortcutAction);
 }
 
 void Pane::setContent(QWidget *widget, PaneKind kind)
@@ -103,7 +148,10 @@ void Pane::paintEvent(QPaintEvent *event)
     QWidget::paintEvent(event);
 
     QPainter painter(this);
-    painter.setPen(QPen(paneFocused ? QColor("#ff4da6") : QColor("#454545"), 1));
+    QColor focusColor = qApp->property("mipsieAccentColor").value<QColor>();
+    if (!focusColor.isValid())
+        focusColor = QColor(QStringLiteral("#ff4da6"));
+    painter.setPen(QPen(paneFocused ? focusColor : QColor("#454545"), 1));
     painter.setBrush(Qt::NoBrush);
     painter.drawRect(rect().adjusted(0, 0, -1, -1));
 }

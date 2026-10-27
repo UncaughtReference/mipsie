@@ -7,6 +7,7 @@
 class QAction;
 class QVBoxLayout;
 class QPaintEvent;
+class QKeySequence;
 
 enum class PaneKind
 {
@@ -30,6 +31,7 @@ class Pane : public QWidget
 public:
     explicit Pane(QWidget *parent = nullptr);
     void setContent(QWidget *widget, PaneKind kind);
+    void setPaneShortcut(const QKeySequence &shortcut);
     PaneKind kind() const;
 
 protected:
@@ -44,6 +46,8 @@ private:
     QVBoxLayout *rootLayout;
     QWidget *contentWidget = nullptr;
     QList<QAction *> paneChoiceActions;
+    QAction *focusShortcutAction = nullptr;
+    QAction *shortcutLabelAction = nullptr;
     PaneKind paneKind = PaneKind::Empty;
     bool paneFocused = false;
 

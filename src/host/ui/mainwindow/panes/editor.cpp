@@ -10,8 +10,11 @@
 #include <QFileInfo>
 #include <QFile>
 #include <QFileDialog>
+#include <QFontMetricsF>
 #include <QIcon>
 #include <QHBoxLayout>
+#include <QItemSelectionModel>
+#include <QKeyEvent>
 #include <QKeySequence>
 #include <QLabel>
 #include <QLineEdit>
@@ -50,7 +53,7 @@ Editor::Editor(QWidget *parent) :
 void Editor::initialize()
 {
     editorFont = font();
-    editorFont.setPointSize(12);
+    editorFont.setPointSize(editorFontSize);
 
     tabs->setTabsClosable(true);
     connect(tabs, &QTabWidget::tabCloseRequested,
@@ -61,6 +64,8 @@ void Editor::initialize()
     });
 
     auto *closeTabAction = new QAction(this);
+    closeTabAction->setText(tr("Close Tab"));
+    closeTabAction->setObjectName(QStringLiteral("closeTabAction"));
     closeTabAction->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_W));
     closeTabAction->setShortcutContext(Qt::WidgetWithChildrenShortcut);
     addAction(closeTabAction);
@@ -68,9 +73,46 @@ void Editor::initialize()
         closeTab(tabs->currentIndex());
     });
 
+    auto *previousTabAction = new QAction(this);
+    previousTabAction->setText(tr("Previous Tab"));
+    previousTabAction->setObjectName(QStringLiteral("previousTabAction"));
+    previousTabAction->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_PageUp));
+    previousTabAction->setShortcutContext(Qt::WidgetWithChildrenShortcut);
+    addAction(previousTabAction);
+    connect(previousTabAction, &QAction::triggered, this, [this] {
+        const int count = tabs->count();
+        if (count > 1)
+            tabs->setCurrentIndex((tabs->currentIndex() + count - 1) % count);
+    });
+
+    auto *nextTabAction = new QAction(this);
+    nextTabAction->setText(tr("Next Tab"));
+    nextTabAction->setObjectName(QStringLiteral("nextTabAction"));
+    nextTabAction->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_PageDown));
+    nextTabAction->setShortcutContext(Qt::WidgetWithChildrenShortcut);
+    addAction(nextTabAction);
+    connect(nextTabAction, &QAction::triggered, this, [this] {
+        const int count = tabs->count();
+        if (count > 1)
+            tabs->setCurrentIndex((tabs->currentIndex() + 1) % count);
+    });
+
+    auto *newTabAction = new QAction(this);
+    newTabAction->setText(tr("New Tab"));
+    newTabAction->setObjectName(QStringLiteral("newTabAction"));
+    newTabAction->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_T));
+    newTabAction->setShortcutContext(Qt::WidgetWithChildrenShortcut);
+    addAction(newTabAction);
+    connect(newTabAction, &QAction::triggered, this, [this] {
+        newTab(tr("new"));
+        if (QTextEdit *editor = currentEditor())
+            editor->setFocus();
+    });
+
     newTab("new");
 
     labelSearch->setPlaceholderText(tr("Search labels"));
+    labelSearch->installEventFilter(this);
     labelFilterModel->setSourceModel(labelModel);
     labelFilterModel->setFilterCaseSensitivity(Qt::CaseInsensitive);
     labelFilterModel->setFilterKeyColumn(0);
@@ -89,7 +131,7 @@ void Editor::initialize()
     editorSplitter->setStretchFactor(0, 0);
     editorSplitter->setStretchFactor(1, 1);
     editorSplitter->setSizes({180, 820});
-    connect(labelList, &QListView::doubleClicked, this, &Editor::goToLabel);
+    connect(labelList, &QListView::activated, this, &Editor::goToLabel);
     connect(labelSearch, &QLineEdit::textChanged, labelFilterModel,
             &QSortFilterProxyModel::setFilterFixedString);
 
@@ -140,18 +182,21 @@ void Editor::initialize()
     connect(replaceField, &QLineEdit::returnPressed, this, &Editor::replaceCurrentMatch);
 
     auto *findAction = new QAction(tr("Find"), this);
+    findAction->setObjectName(QStringLiteral("findAction"));
     findAction->setShortcut(QKeySequence::Find);
     findAction->setShortcutContext(Qt::WidgetWithChildrenShortcut);
     addAction(findAction);
     connect(findAction, &QAction::triggered, this, [this] { showFindReplace(false); });
 
     auto *replaceAction = new QAction(tr("Find and Replace"), this);
+    replaceAction->setObjectName(QStringLiteral("replaceAction"));
     replaceAction->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_H));
     replaceAction->setShortcutContext(Qt::WidgetWithChildrenShortcut);
     addAction(replaceAction);
     connect(replaceAction, &QAction::triggered, this, [this] { showFindReplace(true); });
 
     auto *searchLabelsAction = new QAction(tr("Search Labels"), this);
+    searchLabelsAction->setObjectName(QStringLiteral("searchLabelsAction"));
     searchLabelsAction->setShortcut(QKeySequence(Qt::CTRL | Qt::SHIFT | Qt::Key_L));
     searchLabelsAction->setShortcutContext(Qt::WindowShortcut);
     addAction(searchLabelsAction);
@@ -161,6 +206,32 @@ void Editor::initialize()
     });
 
     refreshLabels();
+}
+
+void Editor::setEditorPreferences(int fontSize, int tabWidth, const QString &theme,
+                                  const QString &fontFamily)
+{
+    editorFontSize = qBound(8, fontSize, 40);
+    editorTabWidth = qBound(1, tabWidth, 16);
+    editorTheme = theme;
+    editorFont = font();
+    if (!fontFamily.isEmpty())
+        editorFont.setFamily(fontFamily);
+    editorFont.setPointSize(editorFontSize);
+
+    for (auto it = highlighters.begin(); it != highlighters.end();) {
+        if (it->isNull()) {
+            it = highlighters.erase(it);
+            continue;
+        }
+        it->data()->setTheme(editorTheme);
+        ++it;
+    }
+
+    for (int i = 0; i < tabs->count(); ++i) {
+        if (auto *textEditor = qobject_cast<QTextEdit *>(tabs->widget(i)))
+            applyTextEditorPreferences(textEditor);
+    }
 }
 
 bool Editor::openFile(const QString &filePath) {
@@ -175,6 +246,19 @@ bool Editor::openFile(const QString &filePath) {
         }
     }
 
+    constexpr qint64 largeFileSizeThreshold = 20 * 1024;
+    const QFileInfo fileInfo(absolutePath);
+    if (fileInfo.size() > largeFileSizeThreshold) {
+        QMessageBox prompt(QMessageBox::Warning,
+                           tr("Large File"),
+                           tr("This file is larger than 20 KB and may affect editor performance. Open it anyway?"),
+                           QMessageBox::Open | QMessageBox::Cancel,
+                           this);
+        prompt.setDefaultButton(QMessageBox::Cancel);
+        if (prompt.exec() != QMessageBox::Open)
+            return false;
+    }
+
     QFile file(absolutePath);
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
         QMessageBox::critical(this, tr("Open Failed"),
@@ -184,8 +268,8 @@ bool Editor::openFile(const QString &filePath) {
     }
 
     const QString contents = QString::fromUtf8(file.readAll());
-    QTextEdit *textEditor = createEditorTab(QFileInfo(absolutePath).fileName(), absolutePath);
-    textEditor->setPlainText(contents);
+    QTextEdit *textEditor = createEditorTab(
+        QFileInfo(absolutePath).fileName(), absolutePath, &contents);
     textEditor->document()->setModified(false);
 
     return true;
@@ -225,6 +309,8 @@ bool Editor::closeTab(int index)
     QWidget *tab = tabs->widget(index);
     tabs->removeTab(index);
     delete tab;
+    if (QTextEdit *editor = currentEditor())
+        editor->setFocus();
     return true;
 }
 
@@ -527,12 +613,33 @@ void Editor::resizeEvent(QResizeEvent *event)
         positionFindReplacePopup();
 }
 
-QTextEdit *Editor::createEditorTab(const QString &name, const QString &filePath)
+bool Editor::eventFilter(QObject *watched, QEvent *event)
+{
+    if (watched == labelSearch && event->type() == QEvent::KeyPress) {
+        auto *keyEvent = static_cast<QKeyEvent *>(event);
+        if (keyEvent->key() == Qt::Key_Down) {
+            const QModelIndex firstItem = labelFilterModel->index(0, 0);
+            if (firstItem.isValid()) {
+                labelList->setCurrentIndex(firstItem);
+                labelList->selectionModel()->select(
+                    firstItem, QItemSelectionModel::ClearAndSelect | QItemSelectionModel::Rows);
+                labelList->scrollTo(firstItem);
+                labelList->setFocus(Qt::ShortcutFocusReason);
+            }
+            return true;
+        }
+    }
+    return QWidget::eventFilter(watched, event);
+}
+
+QTextEdit *Editor::createEditorTab(const QString &name, const QString &filePath,
+                                   const QString *initialContents)
 {
     auto *textEditor = new QTextEdit(tabs);
-    textEditor->setFont(editorFont);
-    textEditor->setStyleSheet("background-color: #1a1a1a; color: white;");
-    new MipsHighlighter(textEditor->document());
+    if (initialContents)
+        textEditor->setPlainText(*initialContents);
+    applyTextEditorPreferences(textEditor);
+    highlighters.append(new MipsHighlighter(textEditor->document()));
     new MipsCompleter(textEditor);
 
     const int index = tabs->addTab(textEditor, name);
@@ -544,7 +651,7 @@ QTextEdit *Editor::createEditorTab(const QString &name, const QString &filePath)
         if (tabIndex < 0)
             return;
         const QString baseTitle = textEditor->property("tabBaseTitle").toString();
-        tabs->setTabText(tabIndex, modified ? QStringLiteral("*") + baseTitle : baseTitle);
+        tabs->setTabText(tabIndex, modified ? QStringLiteral("•") + baseTitle : baseTitle);
     });
     connect(textEditor->document(), &QTextDocument::contentsChanged,
             this, [this, textEditor] {
@@ -559,4 +666,18 @@ QTextEdit *Editor::createEditorTab(const QString &name, const QString &filePath)
     });
     tabs->setCurrentIndex(index);
     return textEditor;
+}
+
+void Editor::applyTextEditorPreferences(QTextEdit *textEditor)
+{
+    if (!textEditor)
+        return;
+
+    textEditor->setFont(editorFont);
+    const qreal spaceWidth = QFontMetricsF(editorFont).horizontalAdvance(QLatin1Char(' '));
+    textEditor->setTabStopDistance(spaceWidth * editorTabWidth);
+    if (editorTheme == QStringLiteral("Light"))
+        textEditor->setStyleSheet(QStringLiteral("background-color: #ffffff; color: #202124;"));
+    else
+        textEditor->setStyleSheet(QStringLiteral("background-color: #1a1a1a; color: white;"));
 }

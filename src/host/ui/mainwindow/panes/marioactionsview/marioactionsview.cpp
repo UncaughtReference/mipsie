@@ -9,7 +9,7 @@ MarioActionsView::MarioActionsView(QWidget *parent)
            {QStringLiteral("handler"), tr("Handler Function"), 22},
            {QStringLiteral("description"), tr("Description"), 40}},
           [](const QStringList &values) {
-              return QStringLiteral("jal ") + values.value(3);
+              return values.value(1);
           }, parent)
 {
 }

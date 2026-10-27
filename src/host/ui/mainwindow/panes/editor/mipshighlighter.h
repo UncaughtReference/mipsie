@@ -26,6 +26,7 @@ class MipsHighlighter : public QSyntaxHighlighter
 {
 public:
     explicit MipsHighlighter(QTextDocument *document);
+    void setTheme(const QString &theme);
     static QVector<MipsCompletionItem> completionItems();
     static QStringList completionKeywords();
 

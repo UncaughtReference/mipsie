@@ -13,7 +13,6 @@
 #include <QMessageBox>
 #include <QModelIndex>
 #include <QProcess>
-#include <QPushButton>
 #include <QRegularExpression>
 #include <QStandardItem>
 #include <QStandardItemModel>
@@ -22,6 +21,14 @@
 #include <QTemporaryFile>
 #include <QVBoxLayout>
 
+#ifdef Q_OS_WIN
+#ifndef NOMINMAX
+#define NOMINMAX
+#endif
+#include <windows.h>
+#include <tlhelp32.h>
+#endif
+
 namespace
 {
 constexpr int SourceLineRole = Qt::UserRole + 1;
@@ -29,22 +36,18 @@ constexpr int SourceLineRole = Qt::UserRole + 1;
 
 Assembler::Assembler(QWidget *parent)
     : QWidget(parent),
-      assembleButton(new QPushButton(tr("Assemble and Update Checksum"), this)),
       ArmipsOutputView(new QListView(this)),
       outputModel(new QStandardItemModel(this)),
       process(new QProcess(this))
 {
-    assembleButton->setObjectName(QStringLiteral("AssembleAndUpdateChecksumButton"));
     ArmipsOutputView->setObjectName(QStringLiteral("ArmipsOutputView"));
     ArmipsOutputView->setEditTriggers(QAbstractItemView::NoEditTriggers);
     ArmipsOutputView->setModel(outputModel);
 
     auto *layout = new QVBoxLayout(this);
     layout->setContentsMargins(0, 0, 0, 0);
-    layout->addWidget(assembleButton);
     layout->addWidget(ArmipsOutputView, 1);
 
-    connect(assembleButton, &QPushButton::clicked, this, &Assembler::assemble);
     connect(ArmipsOutputView, &QListView::doubleClicked,
             this, &Assembler::navigateToOutputLine);
     connect(process, &QProcess::readyReadStandardOutput, this, [this] {
@@ -76,10 +79,12 @@ bool Assembler::isBusy() const
     return stage != ProcessStage::Idle;
 }
 
-void Assembler::assemble()
+void Assembler::assemble(bool openProject64OnSuccess)
 {
     if (stage != ProcessStage::Idle)
         return;
+
+    this->openProject64OnSuccess = openProject64OnSuccess;
 
     outputModel->clear();
     sourceEditor.clear();
@@ -110,7 +115,6 @@ void Assembler::assemble()
     originalSourceLabel = originalSourcePath.isEmpty()
         ? editor->currentFileTitle()
         : originalSourcePath;
-    assembleButton->setEnabled(false);
     const QString originalFilePath = editor->currentFilePath();
     const QString rootDirectory = originalFilePath.isEmpty()
         ? QDir::currentPath()
@@ -125,7 +129,6 @@ void Assembler::startArmips(const QString &assemblyText, const QString &rootDire
     if (!temporaryFile.open()) {
         appendOutputLine(tr("Could not create temporary ASM file: %1")
                              .arg(temporaryFile.errorString()), true);
-        assembleButton->setEnabled(true);
         return;
     }
 
@@ -146,7 +149,6 @@ void Assembler::startArmips(const QString &assemblyText, const QString &rootDire
                              .arg(temporaryFile.errorString()), true);
         temporaryFile.close();
         removeTemporaryAsm();
-        assembleButton->setEnabled(true);
         return;
     }
     temporaryFile.close();
@@ -330,13 +332,15 @@ void Assembler::finishProcess(int exitCode, bool crashed)
         } else {
             appendOutputLine(tr("Checksum update skipped because armips failed."));
             stage = ProcessStage::Idle;
-            assembleButton->setEnabled(true);
+            openProject64OnSuccess = false;
         }
         return;
     }
 
     stage = ProcessStage::Idle;
-    assembleButton->setEnabled(true);
+    if (succeeded && openProject64OnSuccess)
+        focusProject64();
+    openProject64OnSuccess = false;
 }
 
 void Assembler::handleFailedToStart()
@@ -346,7 +350,70 @@ void Assembler::handleFailedToStart()
                          .arg(QFileInfo(process->program()).fileName(), process->errorString()), true);
     removeTemporaryAsm();
     stage = ProcessStage::Idle;
-    assembleButton->setEnabled(true);
+    openProject64OnSuccess = false;
+}
+
+bool Assembler::focusProject64()
+{
+#ifdef Q_OS_WIN
+    struct WindowSearch
+    {
+        DWORD processId = 0;
+        HWND window = nullptr;
+    };
+
+    const auto findWindow = [](HWND window, LPARAM parameter) -> BOOL {
+        auto *search = reinterpret_cast<WindowSearch *>(parameter);
+        DWORD processId = 0;
+        GetWindowThreadProcessId(window, &processId);
+        if (processId == search->processId && IsWindowVisible(window)
+            && GetWindow(window, GW_OWNER) == nullptr) {
+            search->window = window;
+            return FALSE;
+        }
+        return TRUE;
+    };
+
+    HANDLE snapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
+    if (snapshot == INVALID_HANDLE_VALUE) {
+        appendOutputLine(tr("Could not search for Project64.exe."), true);
+        return false;
+    }
+
+    PROCESSENTRY32W entry{};
+    entry.dwSize = sizeof(entry);
+    WindowSearch search;
+    if (Process32FirstW(snapshot, &entry)) {
+        do {
+            if (QString::fromWCharArray(entry.szExeFile).compare(
+                    QStringLiteral("Project64.exe"), Qt::CaseInsensitive) != 0)
+                continue;
+            search.processId = entry.th32ProcessID;
+            EnumWindows(findWindow, reinterpret_cast<LPARAM>(&search));
+            if (search.window)
+                break;
+        } while (Process32NextW(snapshot, &entry));
+    }
+    CloseHandle(snapshot);
+
+    if (!search.window) {
+        appendOutputLine(tr("Project64.exe is not running or has no visible window."), true);
+        return false;
+    }
+
+    ShowWindow(search.window, SW_RESTORE);
+    if (SetForegroundWindow(search.window)) {
+        appendOutputLine(tr("Focused Project64."));
+        return true;
+    }
+
+    FlashWindow(search.window, TRUE);
+    appendOutputLine(tr("Windows did not allow Project64 to take focus."), true);
+    return false;
+#else
+    appendOutputLine(tr("Focusing Project64 is supported only on Windows."), true);
+    return false;
+#endif
 }
 
 void Assembler::removeTemporaryAsm()

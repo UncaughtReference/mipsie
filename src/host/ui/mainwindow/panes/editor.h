@@ -5,10 +5,14 @@
 #include <QTextEdit>
 #include <QTabWidget>
 #include <QFont>
+#include <QList>
+#include <QPointer>
 #include <QSplitter>
 #include <QStandardItemModel>
+#include "editor/mipshighlighter.h"
 
 class QFrame;
+class QEvent;
 class QLineEdit;
 class QListView;
 class QModelIndex;
@@ -24,6 +28,8 @@ public:
     explicit Editor(QWidget *parent = nullptr);
 
     void initialize();
+    void setEditorPreferences(int fontSize, int tabWidth, const QString &theme,
+                              const QString &fontFamily = QString());
     bool openFile(const QString &filePath);
     bool newTab(const QString &name);
     bool saveCurrentFile();
@@ -39,6 +45,7 @@ signals:
 
 protected:
     void resizeEvent(QResizeEvent *event) override;
+    bool eventFilter(QObject *watched, QEvent *event) override;
 
 private:
     QTabWidget *tabs;
@@ -52,10 +59,16 @@ private:
     QLineEdit *findField;
     QLineEdit *replaceField;
     QFont editorFont;
+    int editorFontSize = 12;
+    int editorTabWidth = 4;
+    QString editorTheme = QStringLiteral("System");
     QString lastInstruction;
+    QList<QPointer<MipsHighlighter>> highlighters;
 
     bool closeTab(int index);
-    QTextEdit *createEditorTab(const QString &name, const QString &filePath = QString());
+    QTextEdit *createEditorTab(const QString &name,
+                               const QString &filePath = QString(),
+                               const QString *initialContents = nullptr);
     bool saveCurrentFileToPath(const QString &filePath);
     void showFindReplace(bool showReplaceField);
     void positionFindReplacePopup();
@@ -65,6 +78,7 @@ private:
     void refreshLabels();
     void goToLabel(const QModelIndex &index);
     void emitCurrentInstruction();
+    void applyTextEditorPreferences(QTextEdit *textEditor);
 };
 
 #endif // EDITOR_H

@@ -3,6 +3,7 @@
 
 #include <QApplication>
 #include <QFont>
+#include <QIcon>
 #include <QMainWindow>
 
 int main(int argc, char *argv[])
@@ -12,6 +13,8 @@ int main(int argc, char *argv[])
     QCoreApplication::setApplicationName("mipsie");
     QCoreApplication::setApplicationVersion("0.0.0");
     QCoreApplication::setOrganizationName("mipsie");
+
+    a.setWindowIcon(QIcon(QStringLiteral(":/mipsie/logo.png")));
 
     a.setStyle("Fusion");
     QFont applicationFont = a.font();

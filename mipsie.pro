@@ -14,6 +14,7 @@ SOURCES += \
     src/host/bindings/bindui.cpp \
     src/host/main.cpp \
     src/host/ui/mainwindow/mainwindow.cpp \
+    src/host/ui/mainwindow/settingsdialog.cpp \
     src/host/runtime/luaerror.cpp \
     src/host/runtime/luaruntime.cpp \
     src/host/ui/mainwindow/menubar.cpp \
@@ -41,6 +42,7 @@ HEADERS += \
     src/host/bindings/bindui.h \
     src/host/bindings/pathresolver.h \
     src/host/ui/mainwindow/mainwindow.h \
+    src/host/ui/mainwindow/settingsdialog.h \
     src/host/runtime/luaconfig.h \
     src/host/runtime/luaerror.h \
     src/host/runtime/luaruntime.h \
@@ -65,6 +67,7 @@ FORMS += \
     src/host/ui/mainwindow/mainwindow.ui
 
 RESOURCES += \
+    resources/logo.qrc \
     src/host/ui/mainwindow/panes/functionview/functionview.qrc \
     src/host/ui/mainwindow/panes/ramaddressview/ramaddressview.qrc \
     src/host/ui/mainwindow/panes/structview/structview.qrc \
@@ -79,6 +82,8 @@ CONFIG(debug, debug|release) {
 }
 
 include(third_party/lua/lua.pri)
+
+win32:RC_FILE = src/iconBS.rc
 
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin

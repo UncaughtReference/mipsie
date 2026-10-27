@@ -2,6 +2,7 @@
 #include "panes/pane.h"
 
 #include <QShowEvent>
+#include <QKeySequence>
 #include <QTimer>
 
 Splitter::Splitter(Qt::Orientation orientation, QWidget *parent)
@@ -38,6 +39,7 @@ void Splitter::showEvent(QShowEvent *event)
 
 void Splitter::registerPane(Pane *pane)
 {
+    rootSplitter()->addPaneShortcut(pane);
     connect(pane, &Pane::splitRequested, this, &Splitter::splitPane);
     connect(pane, &Pane::contentRequested, this, &Splitter::contentRequested);
     connect(pane, &Pane::deleteRequested, this, [this](Pane *paneToDelete) {
@@ -49,6 +51,7 @@ void Splitter::registerPane(Pane *pane)
         if (paneIndex < 0)
             return;
 
+        rootSplitter()->removePaneShortcut(paneToDelete);
         parentSplitter->widget(paneIndex)->hide();
         parentSplitter->widget(paneIndex)->setParent(nullptr);
         delete paneToDelete;
@@ -70,6 +73,42 @@ void Splitter::registerPane(Pane *pane)
         grandparentSplitter->replaceWidget(splitterIndex, remainingWidget);
         delete parentSplitter;
     });
+}
+
+Splitter *Splitter::rootSplitter()
+{
+    Splitter *root = this;
+    QWidget *ancestor = parentWidget();
+    while (ancestor) {
+        if (auto *splitter = qobject_cast<Splitter *>(ancestor))
+            root = splitter;
+        ancestor = ancestor->parentWidget();
+    }
+    return root;
+}
+
+void Splitter::addPaneShortcut(Pane *pane)
+{
+    if (shortcutPanes.contains(pane))
+        return;
+    shortcutPanes.append(pane);
+    refreshPaneShortcuts();
+}
+
+void Splitter::removePaneShortcut(Pane *pane)
+{
+    shortcutPanes.removeAll(pane);
+    refreshPaneShortcuts();
+}
+
+void Splitter::refreshPaneShortcuts()
+{
+    for (int index = 0; index < shortcutPanes.size(); ++index) {
+        const QKeySequence shortcut = index < 9
+            ? QKeySequence(Qt::CTRL | (Qt::Key_1 + index))
+            : QKeySequence();
+        shortcutPanes.at(index)->setPaneShortcut(shortcut);
+    }
 }
 
 void Splitter::splitPane(Pane *pane, Qt::Orientation orientation)

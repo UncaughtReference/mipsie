@@ -8,7 +8,6 @@
 #include "../editor.h"
 
 class QListView;
-class QPushButton;
 class QProcess;
 class QStandardItemModel;
 class QModelIndex;
@@ -20,7 +19,7 @@ class Assembler : public QWidget
 public:
     explicit Assembler(QWidget *parent = nullptr);
     void setRomFilePath(const QString &filePath);
-    void assemble();
+    void assemble(bool openProject64OnSuccess = false);
     bool isBusy() const;
 
 private:
@@ -31,11 +30,11 @@ private:
         Checksum
     };
 
-    QPushButton *assembleButton;
     QListView *ArmipsOutputView;
     QStandardItemModel *outputModel;
     QProcess *process;
     ProcessStage stage = ProcessStage::Idle;
+    bool openProject64OnSuccess = false;
     QString configuredRomFilePath;
     QString activeRomFilePath;
     QString temporaryAsmPath;
@@ -57,6 +56,7 @@ private:
     void finishProcess(int exitCode, bool crashed);
     void handleFailedToStart();
     void removeTemporaryAsm();
+    bool focusProject64();
 };
 
 #endif // ASSEMBLER_H

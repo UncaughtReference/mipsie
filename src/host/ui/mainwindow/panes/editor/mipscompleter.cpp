@@ -288,13 +288,14 @@ QVector<MipsCompletionItem> MipsCompleter::dynamicCompletionCandidates() const
 {
     QVector<MipsCompletionItem> candidates;
     QSet<QString> seen;
+    const QString source = editor->toPlainText();
     for (const MipsCompletionItem &keyword : MipsHighlighter::completionItems())
         seen.insert(keyword.text.toCaseFolded());
 
     const QRegularExpression equDefinition(
         QStringLiteral(R"(^\s*([@A-Za-z_][@A-Za-z0-9_.$]*)\s+equ\b)"),
         QRegularExpression::CaseInsensitiveOption | QRegularExpression::MultilineOption);
-    QRegularExpressionMatchIterator matches = equDefinition.globalMatch(editor->toPlainText());
+    QRegularExpressionMatchIterator matches = equDefinition.globalMatch(source);
     while (matches.hasNext()) {
         const QString constant = matches.next().captured(1);
         const QString folded = constant.toCaseFolded();
@@ -307,7 +308,7 @@ QVector<MipsCompletionItem> MipsCompleter::dynamicCompletionCandidates() const
     const QRegularExpression labelDefinition(
         QStringLiteral(R"((?:^|::)[ \t]*([@A-Za-z_.$][@A-Za-z0-9_.$]*)[ \t]*:)"),
         QRegularExpression::MultilineOption);
-    QRegularExpressionMatchIterator labels = labelDefinition.globalMatch(editor->toPlainText());
+    QRegularExpressionMatchIterator labels = labelDefinition.globalMatch(source);
     while (labels.hasNext()) {
         const QString label = labels.next().captured(1);
         const QString folded = label.toCaseFolded();

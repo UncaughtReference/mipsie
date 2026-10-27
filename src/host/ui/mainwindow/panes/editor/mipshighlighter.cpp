@@ -1,6 +1,7 @@
 #include "mipshighlighter.h"
 
 #include <QColor>
+#include <QApplication>
 #include <QSet>
 #include <QTextDocument>
 
@@ -88,14 +89,23 @@ const QString &registerPattern()
 MipsHighlighter::MipsHighlighter(QTextDocument *document)
     : QSyntaxHighlighter(document)
 {
-    const QTextCharFormat directiveFormat = makeFormat(QColor("#569cd6"), true);
-    const QTextCharFormat instructionFormat = makeFormat(QColor("#dcdcaa"), true);
-    const QTextCharFormat registerFormat = makeFormat(QColor("#9cdcfe"));
-    const QTextCharFormat numberFormat = makeFormat(QColor("#b5cea8"));
-    const QTextCharFormat stringFormat = makeFormat(QColor("#ce9178"));
-    const QTextCharFormat labelFormat = makeFormat(QColor("#4ec9b0"));
-    const QTextCharFormat symbolFormat = makeFormat(QColor("#c586c0"));
-    const QTextCharFormat commentFormat = makeFormat(QColor("#6a9955"), false, true);
+    setTheme(qApp ? qApp->property("mipsieTheme").toString() : QString());
+}
+
+void MipsHighlighter::setTheme(const QString &theme)
+{
+    const bool light = theme == QStringLiteral("Light");
+    const QTextCharFormat directiveFormat = makeFormat(QColor(light ? "#0000ff" : "#569cd6"), true);
+    const QTextCharFormat instructionFormat = makeFormat(QColor(light ? "#795e26" : "#dcdcaa"), true);
+    const QTextCharFormat registerFormat = makeFormat(QColor(light ? "#001080" : "#9cdcfe"));
+    const QTextCharFormat numberFormat = makeFormat(QColor(light ? "#098658" : "#b5cea8"));
+    const QTextCharFormat stringFormat = makeFormat(QColor(light ? "#a31515" : "#ce9178"));
+    const QTextCharFormat labelFormat = makeFormat(QColor(light ? "#267f99" : "#4ec9b0"));
+    const QTextCharFormat symbolFormat = makeFormat(QColor(light ? "#af00db" : "#c586c0"));
+    const QTextCharFormat commentFormat = makeFormat(
+        QColor(light ? "#008000" : "#6a9955"), false, true);
+
+    rules.clear();
 
     rules.append({QRegularExpression(QStringLiteral(R"(\b[A-Za-z_.$][A-Za-z0-9_.$]*\b)")), symbolFormat});
 
@@ -114,6 +124,7 @@ MipsHighlighter::MipsHighlighter(QTextDocument *document)
     // armips accepts both semicolon and // line comments, as well as /* */ blocks.
     rules.append({QRegularExpression(QStringLiteral(R"(;.*$|//.*$)")), commentFormat});
     blockCommentFormat = commentFormat;
+    rehighlight();
 }
 
 QVector<MipsCompletionItem> MipsHighlighter::completionItems()

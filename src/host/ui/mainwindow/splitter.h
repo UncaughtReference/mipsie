@@ -27,9 +27,14 @@ protected:
 
 private:
     QList<int> initialSizes;
+    QList<Pane *> shortcutPanes;
     bool initialSizesApplied = false;
 
     void splitPane(Pane *pane, Qt::Orientation orientation);
+    Splitter *rootSplitter();
+    void addPaneShortcut(Pane *pane);
+    void removePaneShortcut(Pane *pane);
+    void refreshPaneShortcuts();
 };
 
 #endif // SPLITTER_H

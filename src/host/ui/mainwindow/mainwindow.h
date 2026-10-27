@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QJsonObject>
 #include <QPointer>
 #include <QStringList>
 #include "panes/pane.h"
@@ -46,7 +47,10 @@ public:
 public slots:
     void openFileDialog();
     void openProjectFolder();
+    void openProject();
+    void openSettings();
     void assembleAndUpdateChecksum();
+    void assembleUpdateChecksumAndOpenProject64();
     void backupRom();
     void restoreRomVersion();
     void saveCurrentFile();
@@ -65,9 +69,17 @@ private:
     QStringList luaOutputHistory;
     QString projectRootPath;
     QString projectRomFilePath;
+    QJsonObject generalSettings;
     bool shuttingDown = false;
 
     Editor *findActiveEditor() const;
+    void applyGeneralAppearance();
+    void applyEditorPreferences();
+    void applyKeyboardShortcuts();
+    void updateEditActionStates();
+    QStringList recentProjectPaths() const;
+    void rememberRecentProject(const QString &folderPath);
+    void openProjectFolderPath(const QString &folderPath);
     void registerEditor(Editor *editor);
     void updateSnippetViews(const QString &instruction);
     void createPaneContent(Pane *pane, PaneKind kind);

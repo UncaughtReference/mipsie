@@ -192,7 +192,6 @@ RamAddressView::RamAddressView(QWidget *parent)
     });
     connect(addressList, &QListView::doubleClicked, this,
             [](const QModelIndex &index) {
-        QApplication::clipboard()->setText(
-            QStringLiteral("jal 0x%1").arg(index.data(AddressRole).toString()));
+        QApplication::clipboard()->setText(index.data(AddressRole).toString());
     });
 }
