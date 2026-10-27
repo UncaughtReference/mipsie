@@ -1,5 +1,5 @@
 #include "pane.h"
-#include "editor.h"
+#include "editor/editor.h"
 
 #include <QAction>
 #include <QApplication>

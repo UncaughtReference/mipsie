@@ -1,7 +1,7 @@
 #include "editor.h"
 
-#include "editor/mipscompleter.h"
-#include "editor/mipshighlighter.h"
+#include "mipscompleter.h"
+#include "mipshighlighter.h"
 
 #include <QBoxLayout>
 #include <QAction>

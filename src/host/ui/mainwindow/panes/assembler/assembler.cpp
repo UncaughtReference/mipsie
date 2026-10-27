@@ -1,6 +1,6 @@
 #include "assembler.h"
 
-#include "../editor.h"
+#include "../editor/editor.h"
 
 #include <QApplication>
 #include <QAbstractItemView>

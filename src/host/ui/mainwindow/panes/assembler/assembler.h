@@ -6,7 +6,7 @@
 #include <QString>
 #include <QTextEdit>
 #include <QLabel>
-#include "../editor.h"
+#include "../editor/editor.h"
 
 class QListView;
 class QProcess;

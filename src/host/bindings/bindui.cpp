@@ -1,5 +1,5 @@
 #include "bindui.h"
-#include "../ui/mainwindow/panes/editor.h"
+#include "../ui/mainwindow/panes/editor/editor.h"
 
 #include <sol/sol.hpp>
 

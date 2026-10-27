@@ -10,7 +10,7 @@
 #include <QPointer>
 #include <QSplitter>
 #include <QStandardItemModel>
-#include "editor/mipshighlighter.h"
+#include "mipshighlighter.h"
 
 class QFrame;
 class QAction;

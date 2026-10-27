@@ -19,11 +19,11 @@ SOURCES += \
     src/host/runtime/luaerror.cpp \
     src/host/runtime/luaruntime.cpp \
     src/host/ui/mainwindow/menubar.cpp \
-    src/host/ui/mainwindow/panes/editor.cpp \
+    src/host/ui/mainwindow/panes/editor/editor.cpp \
     src/host/ui/mainwindow/panes/cmdconsole/cmdconsole.cpp \
     src/host/ui/mainwindow/panes/editor/mipscompleter.cpp \
     src/host/ui/mainwindow/panes/editor/mipshighlighter.cpp \
-    src/host/ui/mainwindow/panes/filetree.cpp \
+    src/host/ui/mainwindow/panes/filetree/filetree.cpp \
     src/host/ui/mainwindow/panes/assembler/assembler.cpp \
     src/host/ui/mainwindow/panes/snippets/snippets.cpp \
     src/host/ui/mainwindow/panes/searchablelisttable.cpp \
@@ -50,11 +50,11 @@ HEADERS += \
     src/host/runtime/luaerror.h \
     src/host/runtime/luaruntime.h \
     src/host/ui/mainwindow/menubar.h \
-    src/host/ui/mainwindow/panes/editor.h \
+    src/host/ui/mainwindow/panes/editor/editor.h \
     src/host/ui/mainwindow/panes/cmdconsole/cmdconsole.h \
     src/host/ui/mainwindow/panes/editor/mipscompleter.h \
     src/host/ui/mainwindow/panes/editor/mipshighlighter.h \
-    src/host/ui/mainwindow/panes/filetree.h \
+    src/host/ui/mainwindow/panes/filetree/filetree.h \
     src/host/ui/mainwindow/panes/assembler/assembler.h \
     src/host/ui/mainwindow/panes/snippets/snippets.h \
     src/host/ui/mainwindow/panes/searchablelisttable.h \
@@ -91,4 +91,5 @@ RC_FILE = src/iconBS.rc
 LIBS += -ladvapi32
 
 DISTFILES += \
+    docs/lua.md \
     third_party/lua/lua.pri
