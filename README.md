@@ -75,6 +75,6 @@ The Lua API aims to make the IDE more customizable.
   - Source Code <br>
   Opens information on the source code.
 ## File Tree
-  Generic file tree, the root directory being the project directory. You can navigate    it using your keyboard or mouse.
+  Generic file tree, the root directory being the project directory. You can navigate    it using your keyboard or mouse. Use the search function to quickly find files.
 ## Editor
   
