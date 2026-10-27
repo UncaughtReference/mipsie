@@ -2,7 +2,7 @@
 
 mipsie embeds Lua for startup scripts and small automation tasks. This guide
 documents the Lua standard libraries and host functions currently exposed by
-mipsie.
+mipsie. I hope all this effort didn't go to waste :3
 
 ## Startup and the Lua Console
 
