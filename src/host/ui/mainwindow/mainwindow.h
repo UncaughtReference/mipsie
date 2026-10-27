@@ -2,14 +2,18 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QJsonArray>
 #include <QJsonObject>
 #include <QPointer>
 #include <QStringList>
 #include "panes/pane.h"
 
 class Editor;
+class Assembler;
 class Splitter;
 class QCloseEvent;
+class QNetworkAccessManager;
+class QNetworkReply;
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -42,17 +46,27 @@ public:
         );
 
     void performEditAction(EditAction action);
+    void toggleCommentOutSelection();
     bool hasEditTarget() const;
+    void openCommandLinePath(const QString &path);
+    void focusEditor();
+
+signals:
+    void luaFunctionRequested(const QString &functionName, const QString &arguments);
 
 public slots:
     void openFileDialog();
+    void openRomFile();
     void openProjectFolder();
     void openProject();
     void openSettings();
     void assembleAndUpdateChecksum();
     void assembleUpdateChecksumAndOpenProject64();
+    void checkForUpdates();
     void backupRom();
     void restoreRomVersion();
+    void showAboutDialog();
+    void openAppDataFolder();
     void saveCurrentFile();
     void saveCurrentFileAs();
     void appendLuaOutput(const QString &text);
@@ -60,6 +74,7 @@ public slots:
 
 protected:
     void closeEvent(QCloseEvent *event) override;
+    bool eventFilter(QObject *watched, QEvent *event) override;
 
 private:
     Ui::MainWindow *ui;
@@ -69,13 +84,21 @@ private:
     QStringList luaOutputHistory;
     QString projectRootPath;
     QString projectRomFilePath;
+    QString standaloneRomFilePath;
     QJsonObject generalSettings;
+    QJsonArray macros;
+    QNetworkAccessManager *updateNetworkManager = nullptr;
+    QNetworkReply *updateCheckReply = nullptr;
+    bool updateCheckWasManual = false;
     bool shuttingDown = false;
 
     Editor *findActiveEditor() const;
+    bool configureAssemblerRom(Assembler *assembler);
     void applyGeneralAppearance();
     void applyEditorPreferences();
     void applyKeyboardShortcuts();
+    void applyMacros();
+    void startUpdateCheck(bool manual);
     void updateEditActionStates();
     QStringList recentProjectPaths() const;
     void rememberRecentProject(const QString &folderPath);

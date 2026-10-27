@@ -5,6 +5,7 @@
 #include <QTextEdit>
 #include <QTabWidget>
 #include <QFont>
+#include <QJsonArray>
 #include <QList>
 #include <QPointer>
 #include <QSplitter>
@@ -12,12 +13,14 @@
 #include "editor/mipshighlighter.h"
 
 class QFrame;
+class QAction;
 class QEvent;
 class QLineEdit;
 class QListView;
 class QModelIndex;
 class QResizeEvent;
 class QSortFilterProxyModel;
+class QShortcut;
 class QWidget;
 
 class Editor : public QWidget
@@ -30,13 +33,17 @@ public:
     void initialize();
     void setEditorPreferences(int fontSize, int tabWidth, const QString &theme,
                               const QString &fontFamily = QString());
+    void setMacros(const QJsonArray &macros);
     bool openFile(const QString &filePath);
     bool newTab(const QString &name);
     bool saveCurrentFile();
     bool saveCurrentFileAs();
+    bool hasUnsavedFiles() const;
+    bool saveAllModifiedFiles();
     QTextEdit *currentEditor() const;
     QString currentFilePath() const;
     QString currentFileTitle() const;
+    void toggleCommentOut();
     bool goToLine(int line, QTextEdit *buffer = nullptr);
     QString currentInstruction() const;
 
@@ -55,6 +62,7 @@ private:
     QSortFilterProxyModel *labelFilterModel;
     QLineEdit *labelSearch;
     QFrame *findReplacePopup;
+    QAction *closeFindReplaceAction = nullptr;
     QWidget *replaceRowWidget;
     QLineEdit *findField;
     QLineEdit *replaceField;
@@ -64,6 +72,7 @@ private:
     QString editorTheme = QStringLiteral("System");
     QString lastInstruction;
     QList<QPointer<MipsHighlighter>> highlighters;
+    QList<QShortcut *> macroShortcuts;
 
     bool closeTab(int index);
     QTextEdit *createEditorTab(const QString &name,

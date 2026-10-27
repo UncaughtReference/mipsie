@@ -14,6 +14,7 @@
 #include "panes/eepromview/eepromview.h"
 #include "panes/assembler/assembler.h"
 #include "panes/snippets/snippets.h"
+#include "panes/cmdconsole/cmdconsole.h"
 #include "settingsdialog.h"
 
 #include <QAction>
@@ -22,6 +23,7 @@
 #include <QColor>
 #include <QCloseEvent>
 #include <QDateTime>
+#include <QDesktopServices>
 #include <QDialog>
 #include <QDialogButtonBox>
 #include <QDir>
@@ -38,19 +40,28 @@
 #include <QJsonObject>
 #include <QJsonParseError>
 #include <QJsonValue>
+#include <QKeyEvent>
 #include <QLabel>
 #include <QLineEdit>
 #include <QListView>
 #include <QMenu>
 #include <QMessageBox>
+#include <QNetworkAccessManager>
+#include <QNetworkReply>
+#include <QNetworkRequest>
 #include <QPalette>
 #include <QPushButton>
 #include <QSaveFile>
+#include <QSettings>
 #include <QStandardItem>
 #include <QStandardItemModel>
 #include <QStandardPaths>
 #include <QTimer>
+#include <QUrl>
+#include <QVersionNumber>
 #include <QVBoxLayout>
+
+#include <algorithm>
 
 namespace
 {
@@ -59,6 +70,7 @@ constexpr int BackupConfigPathRole = Qt::UserRole + 2;
 const QString backupTimestampFormat = QStringLiteral("yyyy-MM-dd_HH-mm-ss-zzz");
 constexpr int RecentProjectPathRole = Qt::UserRole + 1;
 
+// Returns the recent projects json
 QString recentProjectsFilePath()
 {
     QString settingsDirectory = QStandardPaths::writableLocation(
@@ -70,12 +82,64 @@ QString recentProjectsFilePath()
     return QDir(settingsDirectory).filePath(QStringLiteral("recent_projects.json"));
 }
 
+// Returns the general settings json
 QString generalSettingsFilePath()
 {
     const QFileInfo recentFile(recentProjectsFilePath());
     return recentFile.dir().filePath(QStringLiteral("general_settings.json"));
 }
 
+QString macrosFilePath()
+{
+    return QFileInfo(recentProjectsFilePath()).dir().filePath(QStringLiteral("macros.json"));
+}
+
+QJsonArray defaultMacros()
+{
+    QJsonObject macro1;
+    macro1.insert(QStringLiteral("shortcut"), QStringLiteral("F1"));
+    macro1.insert(QStringLiteral("text"), QStringLiteral(
+        "addiu sp, sp, -0x18\n"
+        "sw ra, 0x14(sp)\n"
+        "\n"
+        "\n"
+        "\n"
+        "lw ra, 0x14(sp)\n"
+        "jr ra\n"
+        "addiu sp, sp, 0x18"));
+    QJsonObject macro2;
+    macro2.insert(QStringLiteral("shortcut"), QStringLiteral("F2"));
+    macro2.insert(QStringLiteral("text"), QStringLiteral("lui t0, 0x8034\n"));
+    QJsonObject macro3;
+    macro3.insert(QStringLiteral("shortcut"), QStringLiteral("F3"));
+    macro3.insert(QStringLiteral("text"), QStringLiteral("lw t6, 0x80361160\n"));
+    QJsonArray macros;
+    macros.append(macro1);
+    macros.append(macro2);
+    macros.append(macro3);
+    return macros;
+}
+
+QJsonArray loadMacros()
+{
+    QFile file(macrosFilePath());
+    if (!file.open(QIODevice::ReadOnly))
+        return defaultMacros();
+
+    QJsonParseError parseError;
+    const QJsonDocument document = QJsonDocument::fromJson(file.readAll(), &parseError);
+    if (parseError.error != QJsonParseError::NoError || !document.isArray())
+        return defaultMacros();
+
+    QJsonArray macros;
+    for (const QJsonValue &value : document.array()) {
+        if (value.isObject())
+            macros.append(value);
+    }
+    return macros;
+}
+
+// Set the default settings (yanderedev)
 QJsonObject defaultGeneralSettings()
 {
     QJsonObject keybinds;
@@ -86,8 +150,8 @@ QJsonObject defaultGeneralSettings()
     keybinds.insert(QStringLiteral("saveFileAction"), QStringLiteral("Ctrl+S"));
     keybinds.insert(QStringLiteral("saveFileAsAction"), QStringLiteral("Ctrl+Shift+S"));
     keybinds.insert(QStringLiteral("closeTabAction"), QStringLiteral("Ctrl+W"));
-    keybinds.insert(QStringLiteral("previousTabAction"), QStringLiteral("Ctrl+PageUp"));
-    keybinds.insert(QStringLiteral("nextTabAction"), QStringLiteral("Ctrl+PageDown"));
+    keybinds.insert(QStringLiteral("previousTabAction"), QStringLiteral("Ctrl+PgUp"));
+    keybinds.insert(QStringLiteral("nextTabAction"), QStringLiteral("Ctrl+PgDown"));
     keybinds.insert(QStringLiteral("newTabAction"), QStringLiteral("Ctrl+T"));
     keybinds.insert(QStringLiteral("backupRomAction"), QStringLiteral("Ctrl+Alt+B"));
     keybinds.insert(QStringLiteral("restoreRomVersionAction"), QStringLiteral("Ctrl+Alt+R"));
@@ -104,6 +168,7 @@ QJsonObject defaultGeneralSettings()
     keybinds.insert(QStringLiteral("copyAction"), QStringLiteral("Ctrl+C"));
     keybinds.insert(QStringLiteral("pasteAction"), QStringLiteral("Ctrl+V"));
     keybinds.insert(QStringLiteral("selectAllAction"), QStringLiteral("Ctrl+A"));
+    keybinds.insert(QStringLiteral("commentOutAction"), QStringLiteral("Ctrl+Shift+C"));
 
     QJsonObject settings;
     settings.insert(QStringLiteral("applicationFontFamily"), QStringLiteral("JetBrainsMono Nerd Font"));
@@ -117,6 +182,7 @@ QJsonObject defaultGeneralSettings()
     return settings;
 }
 
+// Overwrite the initial settings
 QJsonObject loadGeneralSettings()
 {
     QJsonObject settings = defaultGeneralSettings();
@@ -152,10 +218,23 @@ QJsonObject loadGeneralSettings()
         if (it.value().isString() && keybinds.contains(it.key()))
             keybinds.insert(it.key(), it.value());
     }
+    const QString savedPreviousTab = savedKeybinds
+        .value(QStringLiteral("previousTabAction")).toString();
+    if (savedPreviousTab == QStringLiteral("Ctrl+PageUp")
+        || savedPreviousTab == QStringLiteral("Ctrl+PageDown")) {
+        keybinds.insert(QStringLiteral("previousTabAction"), QStringLiteral("Ctrl+PgUp"));
+    }
+    const QString savedNextTab = savedKeybinds
+        .value(QStringLiteral("nextTabAction")).toString();
+    if (savedNextTab == QStringLiteral("Ctrl+PageUp")
+        || savedNextTab == QStringLiteral("Ctrl+PageDown")) {
+        keybinds.insert(QStringLiteral("nextTabAction"), QStringLiteral("Ctrl+PgDown"));
+    }
     settings.insert(QStringLiteral("keybinds"), keybinds);
     return settings;
 }
 
+// Self explainatory
 bool writeJsonObjectAtomically(const QString &path,
                                const QJsonObject &object,
                                QString *errorMessage)
@@ -187,17 +266,51 @@ bool writeJsonObjectAtomically(const QString &path,
     return true;
 }
 
+bool writeJsonArrayAtomically(const QString &path,
+                              const QJsonArray &array,
+                              QString *errorMessage)
+{
+    if (!QDir().mkpath(QFileInfo(path).absolutePath())) {
+        if (errorMessage)
+            *errorMessage = QObject::tr("Could not create the settings directory.");
+        return false;
+    }
+
+    QSaveFile file(path);
+    if (!file.open(QIODevice::WriteOnly)) {
+        if (errorMessage)
+            *errorMessage = file.errorString();
+        return false;
+    }
+    const QByteArray json = QJsonDocument(array).toJson(QJsonDocument::Indented);
+    if (file.write(json) != json.size()) {
+        if (errorMessage)
+            *errorMessage = file.errorString();
+        file.cancelWriting();
+        return false;
+    }
+    if (!file.commit()) {
+        if (errorMessage)
+            *errorMessage = file.errorString();
+        return false;
+    }
+    return true;
+}
+
+// Returns the config file of a given ROM
 QString configFilePathForRom(const QString &romFilePath)
 {
     const QFileInfo romInfo(romFilePath);
     return romInfo.dir().filePath(romInfo.completeBaseName() + QStringLiteral(".config"));
 }
 
+// Returns the backup ROM filename using the current date and time
 QString backupRomFileName(const QString &stamp, const QString &romSuffix)
 {
     return romSuffix.isEmpty() ? stamp : stamp + QLatin1Char('.') + romSuffix;
 }
 
+// Make sure no file of the same name exists
 QString uniqueBackupStem(const QString &directoryPath, const QString &romSuffix)
 {
     const QString timestamp = QDateTime::currentDateTime().toString(backupTimestampFormat);
@@ -211,6 +324,7 @@ QString uniqueBackupStem(const QString &directoryPath, const QString &romSuffix)
     return candidate;
 }
 
+// Self explainatory
 bool copyFileAtomically(const QString &sourcePath,
                         const QString &destinationPath,
                         QString *errorMessage)
@@ -256,13 +370,16 @@ bool copyFileAtomically(const QString &sourcePath,
 }
 }
 
+// W constructor (TODO: clean up ts :sob:)
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
     generalSettings = loadGeneralSettings();
+    macros = loadMacros();
     applyGeneralAppearance();
     ui->setupUi(this);
+    updateNetworkManager = new QNetworkAccessManager(this);
 
     this->setWindowTitle("mipsie");
 
@@ -324,7 +441,8 @@ MainWindow::MainWindow(QWidget *parent)
 
     auto *assemblerPane = new Pane;
     auto *assembler = new Assembler(assemblerPane);
-    assembler->setRomFilePath(projectRomFilePath);
+    assembler->setRomFilePath(projectRomFilePath.isEmpty()
+                                  ? standaloneRomFilePath : projectRomFilePath);
     assemblerPane->setContent(assembler, PaneKind::Assembler);
     editorColumn->addWidget(assemblerPane);
     splitter->registerPane(assemblerPane);
@@ -340,12 +458,14 @@ MainWindow::MainWindow(QWidget *parent)
     snippetsColumn->addWidget(functionViewPane);
     splitter->registerPane(functionViewPane);
 
+    // Initial splits
     splitter->setInitialSizes({250, 1000});
     workspaceSplitter->setInitialSizes({650, 350});
     editorColumn->setInitialSizes({700, 300});
     snippetsColumn->setInitialSizes({550, 450});
 
     setCentralWidget(splitter);
+    qApp->installEventFilter(this);
 
     activeEditor = editor;
     registerEditor(editor);
@@ -390,11 +510,43 @@ MainWindow::MainWindow(QWidget *parent)
     });
 
     applyKeyboardShortcuts();
+    QTimer::singleShot(0, this, [this] { startUpdateCheck(false); });
 }
 
 bool MainWindow::hasEditTarget() const
 {
     return !lastEditTarget.isNull();
+}
+
+bool MainWindow::eventFilter(QObject *watched, QEvent *event)
+{
+    if (event->type() == QEvent::KeyPress && splitter) {
+        auto *keyEvent = static_cast<QKeyEvent *>(event);
+        const Qt::KeyboardModifiers modifiers = keyEvent->modifiers()
+                                                & (Qt::ShiftModifier | Qt::ControlModifier
+                                                   | Qt::AltModifier | Qt::MetaModifier);
+        if (modifiers == Qt::ControlModifier
+            && keyEvent->key() >= Qt::Key_1 && keyEvent->key() <= Qt::Key_9) {
+            const QKeySequence pressed(Qt::CTRL | keyEvent->key());
+            const QList<Pane *> panes = splitter->findChildren<Pane *>();
+            for (Pane *pane : panes) {
+                QAction *action = pane->findChild<QAction *>(QStringLiteral("focusPaneAction"));
+                if (action && action->shortcut() == pressed) {
+                    action->trigger();
+                    return true;
+                }
+            }
+        }
+    }
+    return QMainWindow::eventFilter(watched, event);
+}
+
+void MainWindow::focusEditor()
+{
+    if (Editor *editor = findActiveEditor()) {
+        if (QTextEdit *textEditor = editor->currentEditor())
+            textEditor->setFocus(Qt::OtherFocusReason);
+    }
 }
 
 void MainWindow::performEditAction(EditAction action)
@@ -425,6 +577,14 @@ void MainWindow::performEditAction(EditAction action)
         case EditAction::SelectAll: lineEdit->selectAll(); break;
         }
     }
+}
+
+void MainWindow::toggleCommentOutSelection()
+{
+    if (!qobject_cast<QTextEdit *>(lastEditTarget.data()))
+        return;
+    if (Editor *editor = findActiveEditor())
+        editor->toggleCommentOut();
 }
 
 void MainWindow::applyGeneralAppearance()
@@ -525,7 +685,8 @@ void MainWindow::applyKeyboardShortcuts()
         QStringLiteral("cutAction"),
         QStringLiteral("copyAction"),
         QStringLiteral("pasteAction"),
-        QStringLiteral("selectAllAction")
+        QStringLiteral("selectAllAction"),
+        QStringLiteral("commentOutAction")
     };
     for (const QString &objectName : actionNames) {
         if (!keybinds.contains(objectName))
@@ -539,6 +700,16 @@ void MainWindow::applyKeyboardShortcuts()
     updateEditActionStates();
 }
 
+void MainWindow::applyMacros()
+{
+    if (!splitter)
+        return;
+
+    const QList<Editor *> editors = splitter->findChildren<Editor *>();
+    for (Editor *editor : editors)
+        editor->setMacros(macros);
+}
+
 void MainWindow::updateEditActionStates()
 {
     const bool enabled = hasEditTarget();
@@ -548,7 +719,8 @@ void MainWindow::updateEditActionStates()
         QStringLiteral("cutAction"),
         QStringLiteral("copyAction"),
         QStringLiteral("pasteAction"),
-        QStringLiteral("selectAllAction")
+        QStringLiteral("selectAllAction"),
+        QStringLiteral("commentOutAction")
     };
     for (const QString &objectName : editActionNames) {
         if (QAction *action = findChild<QAction *>(objectName))
@@ -565,10 +737,43 @@ Editor *MainWindow::findActiveEditor() const
     return splitter ? splitter->findChild<Editor *>() : nullptr;
 }
 
+bool MainWindow::configureAssemblerRom(Assembler *assembler)
+{
+    if (!assembler)
+        return false;
+
+    QString romFilePath = projectRomFilePath;
+    if (romFilePath.isEmpty()) {
+        if (!QFileInfo(standaloneRomFilePath).isFile()) {
+            standaloneRomFilePath = QFileDialog::getOpenFileName(
+                this,
+                tr("Select ROM for Assembly"),
+                QString(),
+                tr("Nintendo 64 ROMs (*.z64 *.n64 *.v64);;All files (*)"));
+            if (standaloneRomFilePath.isEmpty())
+                return false;
+        }
+        standaloneRomFilePath = QFileInfo(standaloneRomFilePath).absoluteFilePath();
+        romFilePath = standaloneRomFilePath;
+    }
+
+    if (!QFileInfo(romFilePath).isFile()) {
+        QMessageBox::warning(this, tr("ROM File Not Found"),
+                             tr("The ROM file for assembly does not exist:\n%1")
+                                 .arg(QDir::toNativeSeparators(romFilePath)));
+        return false;
+    }
+
+    assembler->setRomFilePath(romFilePath);
+    return true;
+}
+
 void MainWindow::registerEditor(Editor *editor)
 {
     if (!editor)
         return;
+
+    editor->setMacros(macros);
 
     connect(editor, &Editor::currentInstructionChanged, this,
             [this, editor](const QString &instruction) {
@@ -675,7 +880,8 @@ void MainWindow::createPaneContent(Pane *pane, PaneKind kind)
     }
     case PaneKind::Assembler: {
         auto *assembler = new Assembler(pane);
-        assembler->setRomFilePath(projectRomFilePath);
+        assembler->setRomFilePath(projectRomFilePath.isEmpty()
+                                      ? standaloneRomFilePath : projectRomFilePath);
         pane->setContent(assembler, PaneKind::Assembler);
         break;
     }
@@ -687,9 +893,15 @@ void MainWindow::createPaneContent(Pane *pane, PaneKind kind)
     }
     case PaneKind::LuaConsole: {
         auto *console = new LuaConsole(pane);
+        connect(console, &LuaConsole::functionRequested,
+                this, &MainWindow::luaFunctionRequested);
         pane->setContent(console, PaneKind::LuaConsole);
         for (const QString &line : luaOutputHistory)
             console->appendOutput(line);
+        break;
+    }
+    case PaneKind::CmdConsole: {
+        pane->setContent(new CmdConsole(projectRootPath, pane), PaneKind::CmdConsole);
         break;
     }
     case PaneKind::Empty:
@@ -727,9 +939,40 @@ void MainWindow::openFileDialog()
         this,
         tr("Open Assembly File"),
         QString(),
-        tr("Assembly files (*.asm *.s *.inc);;All files (*)"));
+        tr("Assembly files (*.asm *.txt);;All files (*)"));
     if (!filePath.isEmpty())
         editor->openFile(filePath);
+}
+
+void MainWindow::openRomFile()
+{
+    if (shuttingDown)
+        return;
+
+    const QString initialPath = !standaloneRomFilePath.isEmpty()
+        ? QFileInfo(standaloneRomFilePath).absolutePath()
+        : (projectRootPath.isEmpty() ? QDir::homePath() : projectRootPath);
+    const QString selectedPath = QFileDialog::getOpenFileName(
+        this,
+        tr("Open ROM for Assembly"),
+        initialPath,
+        tr("Nintendo 64 ROMs (*.z64 *.n64 *.v64);;All files (*)"));
+    if (selectedPath.isEmpty())
+        return;
+
+    const QFileInfo romInfo(selectedPath);
+    if (!romInfo.isFile()) {
+        QMessageBox::warning(this, tr("ROM File Not Found"),
+                             tr("The selected ROM file does not exist."));
+        return;
+    }
+
+    standaloneRomFilePath = QDir::toNativeSeparators(romInfo.absoluteFilePath());
+    if (projectRomFilePath.isEmpty() && splitter) {
+        const auto assemblers = splitter->findChildren<Assembler *>();
+        for (Assembler *assembler : assemblers)
+            assembler->setRomFilePath(standaloneRomFilePath);
+    }
 }
 
 void MainWindow::openProjectFolder()
@@ -745,6 +988,29 @@ void MainWindow::openProjectFolder()
         return;
 
     openProjectFolderPath(selectedFolder);
+}
+
+void MainWindow::openCommandLinePath(const QString &path)
+{
+    if (shuttingDown)
+        return;
+
+    const QFileInfo pathInfo(path);
+    if (!pathInfo.exists()) {
+        QMessageBox::warning(this, tr("Path Not Found"),
+                             tr("The specified file or folder does not exist:\n%1")
+                                 .arg(QDir::toNativeSeparators(pathInfo.absoluteFilePath())));
+        return;
+    }
+
+    const QString absolutePath = pathInfo.absoluteFilePath();
+    if (pathInfo.isDir()) {
+        openProjectFolderPath(absolutePath);
+        return;
+    }
+
+    if (Editor *editor = findActiveEditor())
+        editor->openFile(absolutePath);
 }
 
 void MainWindow::openProject()
@@ -861,7 +1127,7 @@ void MainWindow::rememberRecentProject(const QString &folderPath)
     const QString settingsPath = recentProjectsFilePath();
     if (!QDir().mkpath(QFileInfo(settingsPath).absolutePath())) {
         QMessageBox::warning(this, tr("Could Not Save Recent Projects"),
-                             tr("Could not create the Mipsie settings directory."));
+                             tr("Could not create the mipsie settings directory."));
         return;
     }
 
@@ -884,7 +1150,6 @@ void MainWindow::openProjectFolderPath(const QString &selectedFolder)
     const QString folderPath = QDir(selectedFolder).absolutePath();
     const QString configPath = QDir(folderPath).filePath(QStringLiteral("mipsie.json"));
     QString romFilePath;
-
     if (QFileInfo::exists(configPath)) {
         if (!QFileInfo(configPath).isFile()) {
             QMessageBox::warning(this, tr("Invalid Project"),
@@ -1014,6 +1279,11 @@ void MainWindow::openProjectFolderPath(const QString &selectedFolder)
 
     projectRootPath = folderPath;
     projectRomFilePath = romFilePath;
+    if (splitter) {
+        const auto commandPrompts = splitter->findChildren<CmdConsole *>();
+        for (CmdConsole *commandPrompt : commandPrompts)
+            commandPrompt->setWorkingDirectory(projectRootPath);
+    }
     if (!splitter)
         return;
 
@@ -1068,12 +1338,14 @@ void MainWindow::openSettings()
                           projectRomFilePath,
                           projectSettings,
                           generalSettings,
+                          macros,
                           this);
     if (dialog.exec() != QDialog::Accepted)
         return;
 
     QString errorMessage;
     const QJsonObject updatedGeneralSettings = dialog.generalSettings();
+    const QJsonArray updatedMacros = dialog.macros();
     if (!writeJsonObjectAtomically(generalSettingsFilePath(),
                                    updatedGeneralSettings,
                                    &errorMessage)) {
@@ -1086,6 +1358,15 @@ void MainWindow::openSettings()
     applyGeneralAppearance();
     applyEditorPreferences();
     applyKeyboardShortcuts();
+
+    if (!writeJsonArrayAtomically(macrosFilePath(), updatedMacros, &errorMessage)) {
+        QMessageBox::warning(this, tr("Macros Not Saved"),
+                             tr("General settings were saved, but macros could not be saved: %1")
+                                 .arg(errorMessage));
+        return;
+    }
+    macros = updatedMacros;
+    applyMacros();
 
     if (!hasProjectSettings)
         return;
@@ -1125,6 +1406,9 @@ void MainWindow::assembleAndUpdateChecksum()
         return;
     }
 
+    if (!configureAssemblerRom(assembler))
+        return;
+
     assembler->assemble();
 }
 
@@ -1140,7 +1424,148 @@ void MainWindow::assembleUpdateChecksumAndOpenProject64()
         return;
     }
 
+    if (!configureAssemblerRom(assembler))
+        return;
+
     assembler->assemble(true);
+}
+
+void MainWindow::checkForUpdates()
+{
+    startUpdateCheck(true);
+}
+
+void MainWindow::showAboutDialog()
+{
+    const QString aboutText = tr("mipsie %1\n\nMade by UncaughtReference\nTesters: placeholder\nSources: hack64.net, asm-editor.specy.app")
+                                 .arg(QCoreApplication::applicationVersion());
+    QMessageBox::information(this, tr("About mipsie"), aboutText);
+}
+
+void MainWindow::openAppDataFolder()
+{
+    const QString appDataPath = QFileInfo(recentProjectsFilePath()).absolutePath();
+    if (!QDir().mkpath(appDataPath)) {
+        QMessageBox::warning(this, tr("Open App Data"),
+                             tr("Could not create the app data folder:\n%1")
+                                 .arg(QDir::toNativeSeparators(appDataPath)));
+        return;
+    }
+    if (!QDesktopServices::openUrl(QUrl::fromLocalFile(appDataPath))) {
+        QMessageBox::warning(this, tr("Open App Data"),
+                             tr("Could not open the app data folder:\n%1")
+                                 .arg(QDir::toNativeSeparators(appDataPath)));
+    }
+}
+
+void MainWindow::startUpdateCheck(bool manual)
+{
+    if (shuttingDown)
+        return;
+
+    if (updateCheckReply) {
+        updateCheckWasManual = updateCheckWasManual || manual;
+        return;
+    }
+
+    QSettings settings;
+    const QDateTime now = QDateTime::currentDateTimeUtc();
+    const QDateTime lastSuccessfulCheck = settings
+        .value(QStringLiteral("updates/lastSuccessfulCheckUtc")).toDateTime();
+    constexpr qint64 checkIntervalSeconds = 24 * 60 * 60;
+    if (!manual && lastSuccessfulCheck.isValid()
+        && lastSuccessfulCheck.secsTo(now) >= 0
+        && lastSuccessfulCheck.secsTo(now) < checkIntervalSeconds) {
+        return;
+    }
+
+    QNetworkRequest request(QUrl(QStringLiteral(
+        "https://api.github.com/repos/UncaughtReference/mipsie/releases/latest")));
+    request.setRawHeader("Accept", "application/vnd.github+json");
+    request.setRawHeader("X-GitHub-Api-Version", "2022-11-28");
+    request.setHeader(QNetworkRequest::UserAgentHeader,
+                      QStringLiteral("mipsie/%1").arg(QCoreApplication::applicationVersion()));
+    request.setTransferTimeout(10000);
+
+    updateCheckWasManual = manual;
+    QNetworkReply *reply = updateNetworkManager->get(request);
+    updateCheckReply = reply;
+    connect(reply, &QNetworkReply::finished, this, [this, reply] {
+        updateCheckReply = nullptr;
+        const bool manualCheck = updateCheckWasManual;
+        updateCheckWasManual = false;
+        const int statusCode = reply->attribute(
+            QNetworkRequest::HttpStatusCodeAttribute).toInt();
+        const QNetworkReply::NetworkError networkError = reply->error();
+        const QByteArray response = reply->readAll();
+        const QString networkErrorText = reply->errorString();
+        reply->deleteLater();
+
+        if (statusCode == 404) {
+            QSettings().setValue(QStringLiteral("updates/lastSuccessfulCheckUtc"),
+                                 QDateTime::currentDateTimeUtc());
+            if (manualCheck) {
+                QMessageBox::information(this, tr("Check for Updates"),
+                                         tr("No published releases were found."));
+            }
+            return;
+        }
+        if (networkError != QNetworkReply::NoError || statusCode < 200 || statusCode >= 300) {
+            if (manualCheck) {
+                QMessageBox::warning(this, tr("Check for Updates"),
+                                     tr("Could not check for updates: %1").arg(networkErrorText));
+            }
+            return;
+        }
+
+        QJsonParseError parseError;
+        const QJsonDocument document = QJsonDocument::fromJson(response, &parseError);
+        const QJsonObject release = document.object();
+        QString latestTag = release.value(QStringLiteral("tag_name")).toString().trimmed();
+        if (parseError.error != QJsonParseError::NoError || !document.isObject()
+            || latestTag.isEmpty()) {
+            if (manualCheck) {
+                QMessageBox::warning(this, tr("Check for Updates"),
+                                     tr("GitHub returned an invalid release response."));
+            }
+            return;
+        }
+
+        if (latestTag.startsWith(QLatin1Char('v'), Qt::CaseInsensitive))
+            latestTag.remove(0, 1);
+        const QVersionNumber latestVersion = QVersionNumber::fromString(latestTag);
+        const QVersionNumber currentVersion = QVersionNumber::fromString(
+            QCoreApplication::applicationVersion());
+        if (latestVersion.isNull() || currentVersion.isNull()) {
+            if (manualCheck) {
+                QMessageBox::warning(this, tr("Check for Updates"),
+                                     tr("Could not compare the installed and published versions."));
+            }
+            return;
+        }
+
+        QSettings().setValue(QStringLiteral("updates/lastSuccessfulCheckUtc"),
+                             QDateTime::currentDateTimeUtc());
+        const QUrl releaseUrl(release.value(QStringLiteral("html_url")).toString());
+        if (latestVersion > currentVersion) {
+            QMessageBox prompt(QMessageBox::Information,
+                               tr("Update Available"),
+                               tr("Mipsie %1 is available. You have version %2.")
+                                   .arg(latestTag, QCoreApplication::applicationVersion()),
+                               QMessageBox::NoButton,
+                               this);
+            QPushButton *viewReleaseButton = prompt.addButton(
+                tr("View Release"), QMessageBox::AcceptRole);
+            prompt.addButton(tr("Later"), QMessageBox::RejectRole);
+            prompt.exec();
+            if (prompt.clickedButton() == viewReleaseButton && releaseUrl.isValid())
+                QDesktopServices::openUrl(releaseUrl);
+        } else if (manualCheck) {
+            QMessageBox::information(this, tr("Check for Updates"),
+                                     tr("You are using the latest version of Mipsie (%1).")
+                                         .arg(QCoreApplication::applicationVersion()));
+        }
+    });
 }
 
 void MainWindow::backupRom()
@@ -1158,7 +1583,7 @@ void MainWindow::backupRom()
         for (Assembler *assembler : assemblers) {
             if (assembler->isBusy()) {
                 QMessageBox::warning(this, tr("Assembly In Progress"),
-                                     tr("Wait for assembly to finish before backing up the ROM."));
+                                     tr("Wait for the assembler to finish before backing up the ROM."));
                 return;
             }
         }
@@ -1220,7 +1645,7 @@ void MainWindow::restoreRomVersion()
         for (Assembler *assembler : assemblers) {
             if (assembler->isBusy()) {
                 QMessageBox::warning(this, tr("Assembly In Progress"),
-                                     tr("Wait for assembly to finish before restoring a ROM."));
+                                     tr("Wait for the assembler to finish before restoring a ROM."));
                 return;
             }
         }
@@ -1366,11 +1791,52 @@ void MainWindow::saveCurrentFileAs()
 MainWindow::~MainWindow()
 {
     shuttingDown = true;
+    if (qApp) {
+        qApp->removeEventFilter(this);
+        QObject::disconnect(qApp, nullptr, this, nullptr);
+        if (splitter) {
+            const QList<Pane *> panes = splitter->findChildren<Pane *>();
+            for (Pane *pane : panes)
+                QObject::disconnect(qApp, nullptr, pane, nullptr);
+        }
+    }
     delete ui;
 }
 
 void MainWindow::closeEvent(QCloseEvent *event)
 {
+    const auto editors = splitter ? splitter->findChildren<Editor *>() : QList<Editor *>();
+    const bool hasUnsavedFiles = std::any_of(
+        editors.cbegin(), editors.cend(), [](const Editor *editor) {
+            return editor->hasUnsavedFiles();
+        });
+
+    if (hasUnsavedFiles) {
+        QMessageBox prompt(this);
+        prompt.setIcon(QMessageBox::Warning);
+        prompt.setWindowTitle(tr("Unsaved Files"));
+        prompt.setText(tr("There are unsaved files. Save before closing Mipsie?"));
+        auto *saveAllButton = prompt.addButton(tr("Save All"), QMessageBox::AcceptRole);
+        auto *discardButton = prompt.addButton(tr("Discard"), QMessageBox::DestructiveRole);
+        auto *cancelButton = prompt.addButton(QMessageBox::Cancel);
+        prompt.setDefaultButton(cancelButton);
+        prompt.exec();
+
+        if (prompt.clickedButton() != saveAllButton
+            && prompt.clickedButton() != discardButton) {
+            event->ignore();
+            return;
+        }
+        if (prompt.clickedButton() == saveAllButton) {
+            for (Editor *editor : editors) {
+                if (!editor->saveAllModifiedFiles()) {
+                    event->ignore();
+                    return;
+                }
+            }
+        }
+    }
+
     shuttingDown = true;
     QMainWindow::closeEvent(event);
     if (!event->isAccepted())

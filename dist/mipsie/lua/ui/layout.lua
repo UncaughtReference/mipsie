@@ -1,1 +1,0 @@
-local layout = host.ui.vertical_layout()

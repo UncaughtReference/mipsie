@@ -35,7 +35,7 @@ std::string toStdString(const QString& value)
 
 void bindFilesystem(sol::state& lua)
 {
-    sol::table host = lua["host"];
+    sol::table mipsie = lua["mipsie"];
     sol::table fs = lua.create_table();
 
     // Check whether a file or directory exists.
@@ -143,6 +143,6 @@ void bindFilesystem(sol::state& lua)
                     }
                     );
 
-    host["fs"] = fs;
+    mipsie["fs"] = fs;
 }
 

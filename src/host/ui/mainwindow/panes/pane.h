@@ -8,6 +8,7 @@ class QAction;
 class QVBoxLayout;
 class QPaintEvent;
 class QKeySequence;
+class QWidget;
 
 enum class PaneKind
 {
@@ -21,7 +22,8 @@ enum class PaneKind
     EepromView,
     Assembler,
     Snippets,
-    LuaConsole
+    LuaConsole,
+    CmdConsole
 };
 
 class Pane : public QWidget
@@ -48,6 +50,7 @@ private:
     QList<QAction *> paneChoiceActions;
     QAction *focusShortcutAction = nullptr;
     QAction *shortcutLabelAction = nullptr;
+    QWidget *shortcutHost = nullptr;
     PaneKind paneKind = PaneKind::Empty;
     bool paneFocused = false;
 

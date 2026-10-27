@@ -1,4 +1,4 @@
-QT += widgets
+QT += widgets network
 
 CONFIG += c++17
 
@@ -9,6 +9,7 @@ INCLUDEPATH += \
 SOURCES += \
     src/host/bindings/bindapplication.cpp \
     src/host/bindings/bindfilesystem.cpp \
+    src/host/bindings/bindhttp.cpp \
     src/host/bindings/bindingregistry.cpp \
     src/host/bindings/bindlogging.cpp \
     src/host/bindings/bindui.cpp \
@@ -19,6 +20,7 @@ SOURCES += \
     src/host/runtime/luaruntime.cpp \
     src/host/ui/mainwindow/menubar.cpp \
     src/host/ui/mainwindow/panes/editor.cpp \
+    src/host/ui/mainwindow/panes/cmdconsole/cmdconsole.cpp \
     src/host/ui/mainwindow/panes/editor/mipscompleter.cpp \
     src/host/ui/mainwindow/panes/editor/mipshighlighter.cpp \
     src/host/ui/mainwindow/panes/filetree.cpp \
@@ -37,6 +39,7 @@ SOURCES += \
 HEADERS += \
     src/host/bindings/bindapplication.h \
     src/host/bindings/bindfilesystem.h \
+    src/host/bindings/bindhttp.h \
     src/host/bindings/bindingregistry.h \
     src/host/bindings/bindlogging.h \
     src/host/bindings/bindui.h \
@@ -48,6 +51,7 @@ HEADERS += \
     src/host/runtime/luaruntime.h \
     src/host/ui/mainwindow/menubar.h \
     src/host/ui/mainwindow/panes/editor.h \
+    src/host/ui/mainwindow/panes/cmdconsole/cmdconsole.h \
     src/host/ui/mainwindow/panes/editor/mipscompleter.h \
     src/host/ui/mainwindow/panes/editor/mipshighlighter.h \
     src/host/ui/mainwindow/panes/filetree.h \
@@ -83,16 +87,8 @@ CONFIG(debug, debug|release) {
 
 include(third_party/lua/lua.pri)
 
-win32:RC_FILE = src/iconBS.rc
-
-qnx: target.path = /tmp/$${TARGET}/bin
-else: unix:!android: target.path = /opt/$${TARGET}/bin
-!isEmpty(target.path): INSTALLS += target
+RC_FILE = src/iconBS.rc
+LIBS += -ladvapi32
 
 DISTFILES += \
-    lua/core/app.lua \
-    lua/ui/layout.lua \
-    lua/ui/main_window.lua \
-    lua/ui/menu_bar.lua \
-    lua/ui/panels/editor_panel.lua \
     third_party/lua/lua.pri

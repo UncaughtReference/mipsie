@@ -1,4 +1,5 @@
 #include "pane.h"
+#include "editor.h"
 
 #include <QAction>
 #include <QApplication>
@@ -11,6 +12,7 @@
 #include <QPainter>
 #include <QPen>
 #include <QTextEdit>
+#include <QTimer>
 #include <QTreeView>
 #include <QVBoxLayout>
 
@@ -64,6 +66,7 @@ Pane::Pane(QWidget *parent)
     addPaneChoice(tr("Assembler"), PaneKind::Assembler);
     addPaneChoice(tr("Snippets"), PaneKind::Snippets);
     addPaneChoice(tr("Lua Console"), PaneKind::LuaConsole);
+    addPaneChoice(tr("Command Prompt"), PaneKind::CmdConsole);
     contentMenu->addSeparator();
     QAction *deleteAction = contentMenu->addAction(tr("Delete Pane"));
     connect(deleteAction, &QAction::triggered, this, [this] {
@@ -78,9 +81,20 @@ Pane::Pane(QWidget *parent)
     focusShortcutAction->setObjectName(QStringLiteral("focusPaneAction"));
     focusShortcutAction->setShortcutContext(Qt::ApplicationShortcut);
     connect(focusShortcutAction, &QAction::triggered, this, [this] {
+        if (QWidget *paneFocusInput = contentWidget->findChild<QWidget *>(
+                QStringLiteral("paneFocusInput"))) {
+            paneFocusInput->setFocus(Qt::ShortcutFocusReason);
+            return;
+        }
         if (auto *treeView = contentWidget->findChild<QTreeView *>()) {
             treeView->setFocus(Qt::ShortcutFocusReason);
             return;
+        }
+        if (auto *editor = qobject_cast<Editor *>(contentWidget)) {
+            if (QTextEdit *textEditor = editor->currentEditor()) {
+                textEditor->setFocus(Qt::ShortcutFocusReason);
+                return;
+            }
         }
         if (auto *textEditor = contentWidget->findChild<QTextEdit *>()) {
             textEditor->setFocus(Qt::ShortcutFocusReason);
@@ -113,8 +127,15 @@ void Pane::setPaneShortcut(const QKeySequence &shortcut)
     focusShortcutAction->setShortcut(shortcut);
     shortcutLabelAction->setText(shortcut.toString(QKeySequence::NativeText));
     shortcutLabelAction->setVisible(!shortcut.isEmpty());
-    if (QWidget *windowWidget = window())
+    QTimer::singleShot(0, this, [this] {
+        QWidget *windowWidget = window();
+        if (!windowWidget)
+            return;
+        if (shortcutHost && shortcutHost != windowWidget)
+            shortcutHost->removeAction(focusShortcutAction);
         windowWidget->addAction(focusShortcutAction);
+        shortcutHost = windowWidget;
+    });
 }
 
 void Pane::setContent(QWidget *widget, PaneKind kind)

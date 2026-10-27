@@ -6,6 +6,8 @@
 #include <QBoxLayout>
 #include <QAction>
 #include <QAbstractItemView>
+#include <QApplication>
+#include <QColor>
 #include <QFrame>
 #include <QFileInfo>
 #include <QFile>
@@ -20,13 +22,19 @@
 #include <QLineEdit>
 #include <QListView>
 #include <QMessageBox>
+#include <QMimeData>
+#include <QPainter>
+#include <QPaintEvent>
 #include <QPushButton>
 #include <QRegularExpression>
 #include <QResizeEvent>
+#include <QtAlgorithms>
+#include <QJsonObject>
 #include <QSet>
 #include <QSortFilterProxyModel>
 #include <QSaveFile>
 #include <QScrollBar>
+#include <QShortcut>
 #include <QSplitter>
 #include <QStandardItem>
 #include <QStyle>
@@ -36,6 +44,123 @@
 #include <QTextDocument>
 #include <QToolButton>
 #include <QVBoxLayout>
+
+namespace
+{
+class CodeTextEdit final : public QTextEdit
+{
+public:
+    using QTextEdit::QTextEdit;
+
+protected:
+    void insertFromMimeData(const QMimeData *source) override
+    {
+        if (!source || !source->hasText())
+            return;
+
+        QString text = source->text();
+        text.replace(QStringLiteral("\r\n"), QStringLiteral("\n"));
+        text.replace(QLatin1Char('\r'), QLatin1Char('\n'));
+        insertPlainText(text);
+    }
+};
+
+class LineNumberArea final : public QWidget
+{
+public:
+    explicit LineNumberArea(QTextEdit *editor, QWidget *parent)
+        : QWidget(parent), editor(editor)
+    {
+        setFont(editor->font());
+        editor->viewport()->installEventFilter(this);
+        connect(editor->document(), &QTextDocument::blockCountChanged,
+                this, [this] { updateWidth(); });
+        connect(editor->document(), &QTextDocument::contentsChanged,
+                this, [this] {
+            updateWidth();
+            update();
+        });
+        connect(editor->verticalScrollBar(), &QScrollBar::valueChanged,
+                this, [this] { update(); });
+        connect(editor, &QTextEdit::cursorPositionChanged,
+                this, [this] { update(); });
+        updateWidth();
+    }
+
+    void setTheme(const QString &theme)
+    {
+        darkTheme = theme != QStringLiteral("Light");
+        update();
+    }
+
+    void setEditorFont(const QFont &font)
+    {
+        setFont(font);
+        updateWidth();
+        update();
+    }
+
+    void updateWidth()
+    {
+        if (!editor)
+            return;
+        const int digits = QString::number(qMax(1, editor->document()->blockCount())).size();
+        const int width = fontMetrics().horizontalAdvance(QLatin1Char('9')) * digits + 12;
+        setFixedWidth(width);
+        update();
+    }
+
+protected:
+    bool eventFilter(QObject *watched, QEvent *event) override
+    {
+        if (editor && watched == editor->viewport()
+            && (event->type() == QEvent::Resize || event->type() == QEvent::Paint))
+            update();
+        return QWidget::eventFilter(watched, event);
+    }
+
+    void paintEvent(QPaintEvent *) override
+    {
+        if (!editor)
+            return;
+
+        QPainter painter(this);
+        const QColor background = darkTheme ? QColor(QStringLiteral("#202124"))
+                                            : QColor(QStringLiteral("#f3f3f3"));
+        const QColor normalNumber = darkTheme ? QColor(QStringLiteral("#858585"))
+                                              : QColor(QStringLiteral("#858585"));
+        const QColor currentNumber = darkTheme ? QColor(QStringLiteral("#e0e0e0"))
+                                               : QColor(QStringLiteral("#202124"));
+        painter.fillRect(rect(), background);
+
+        QTextBlock block = editor->cursorForPosition(QPoint(0, 0)).block();
+        const int currentBlockNumber = editor->textCursor().blockNumber();
+        const int lineHeight = fontMetrics().height();
+        while (block.isValid()) {
+            const int top = editor->cursorRect(QTextCursor(block)).top();
+            if (top >= height())
+                break;
+            painter.setPen(block.blockNumber() == currentBlockNumber
+                               ? currentNumber : normalNumber);
+            painter.drawText(0, top, width() - 5, lineHeight,
+                             Qt::AlignRight | Qt::AlignVCenter,
+                             QString::number(block.blockNumber() + 1));
+            block = block.next();
+        }
+    }
+
+private:
+    QTextEdit *editor;
+    bool darkTheme = true;
+};
+
+QTextEdit *textEditorForTab(QWidget *tab)
+{
+    if (auto *textEditor = qobject_cast<QTextEdit *>(tab))
+        return textEditor;
+    return tab ? tab->findChild<QTextEdit *>() : nullptr;
+}
+}
 
 Editor::Editor(QWidget *parent) :
     QWidget(parent),
@@ -144,6 +269,18 @@ void Editor::initialize()
     findReplacePopup->setObjectName(QStringLiteral("findReplacePopup"));
     findReplacePopup->setFrameShape(QFrame::StyledPanel);
     findReplacePopup->setAutoFillBackground(true);
+    closeFindReplaceAction = new QAction(this);
+    closeFindReplaceAction->setObjectName(QStringLiteral("closeFindReplaceAction"));
+    closeFindReplaceAction->setShortcut(QKeySequence(Qt::Key_Escape));
+    closeFindReplaceAction->setShortcutContext(Qt::WidgetWithChildrenShortcut);
+    closeFindReplaceAction->setEnabled(false);
+    addAction(closeFindReplaceAction);
+    connect(closeFindReplaceAction, &QAction::triggered, this, [this] {
+        findReplacePopup->hide();
+        closeFindReplaceAction->setEnabled(false);
+        if (QTextEdit *editor = currentEditor())
+            editor->setFocus(Qt::ShortcutFocusReason);
+    });
     findField->setPlaceholderText(tr("Find"));
     replaceField->setPlaceholderText(tr("Replace with"));
     auto *findNextButton = new QPushButton(tr("Next"), findReplacePopup);
@@ -177,7 +314,8 @@ void Editor::initialize()
     connect(findPreviousButton, &QPushButton::clicked, this, [this] { findNext(true); });
     connect(replaceButton, &QPushButton::clicked, this, &Editor::replaceCurrentMatch);
     connect(replaceAllButton, &QPushButton::clicked, this, &Editor::replaceAllMatches);
-    connect(closeFindButton, &QToolButton::clicked, findReplacePopup, &QWidget::hide);
+    connect(closeFindButton, &QToolButton::clicked,
+            closeFindReplaceAction, &QAction::trigger);
     connect(findField, &QLineEdit::returnPressed, this, [this] { findNext(); });
     connect(replaceField, &QLineEdit::returnPressed, this, &Editor::replaceCurrentMatch);
 
@@ -229,8 +367,40 @@ void Editor::setEditorPreferences(int fontSize, int tabWidth, const QString &the
     }
 
     for (int i = 0; i < tabs->count(); ++i) {
-        if (auto *textEditor = qobject_cast<QTextEdit *>(tabs->widget(i)))
+        if (auto *textEditor = textEditorForTab(tabs->widget(i)))
             applyTextEditorPreferences(textEditor);
+    }
+}
+
+void Editor::setMacros(const QJsonArray &macros)
+{
+    qDeleteAll(macroShortcuts);
+    macroShortcuts.clear();
+
+    for (const QJsonValue &value : macros) {
+        const QJsonObject macro = value.toObject();
+        const QKeySequence shortcut = QKeySequence::fromString(
+            macro.value(QStringLiteral("shortcut")).toString(),
+            QKeySequence::PortableText);
+        const QString text = macro.value(QStringLiteral("text")).toString();
+        if (shortcut.isEmpty() || text.isEmpty())
+            continue;
+
+        auto *macroShortcut = new QShortcut(shortcut, this);
+        macroShortcut->setContext(Qt::WidgetWithChildrenShortcut);
+        macroShortcuts.append(macroShortcut);
+        connect(macroShortcut, &QShortcut::activated, this, [this, text] {
+            QTextEdit *textEditor = currentEditor();
+            QWidget *focusedWidget = QApplication::focusWidget();
+            if (!textEditor || !focusedWidget
+                || (focusedWidget != textEditor && !textEditor->isAncestorOf(focusedWidget)))
+                return;
+
+            QTextCursor cursor = textEditor->textCursor();
+            cursor.insertText(text);
+            textEditor->setTextCursor(cursor);
+            textEditor->setFocus(Qt::ShortcutFocusReason);
+        });
     }
 }
 
@@ -242,6 +412,8 @@ bool Editor::openFile(const QString &filePath) {
     for (int index = 0; index < tabs->count(); ++index) {
         if (tabs->tabBar()->tabData(index).toString().compare(absolutePath, Qt::CaseInsensitive) == 0) {
             tabs->setCurrentIndex(index);
+            if (QTextEdit *textEditor = currentEditor())
+                textEditor->setFocus(Qt::OtherFocusReason);
             return true;
         }
     }
@@ -271,6 +443,7 @@ bool Editor::openFile(const QString &filePath) {
     QTextEdit *textEditor = createEditorTab(
         QFileInfo(absolutePath).fileName(), absolutePath, &contents);
     textEditor->document()->setModified(false);
+    textEditor->setFocus(Qt::OtherFocusReason);
 
     return true;
 }
@@ -286,7 +459,7 @@ bool Editor::closeTab(int index)
     if (index < 0 || index >= tabs->count())
         return false;
 
-    auto *textEditor = qobject_cast<QTextEdit *>(tabs->widget(index));
+    auto *textEditor = textEditorForTab(tabs->widget(index));
     if (textEditor && textEditor->document()->isModified()) {
         QMessageBox prompt(this);
         prompt.setIcon(QMessageBox::Warning);
@@ -336,7 +509,7 @@ bool Editor::saveCurrentFileAs()
 
     const QString currentPath = tabs->tabBar()->tabData(index).toString();
     const QString suggestedName = currentPath.isEmpty()
-        ? tabs->tabText(index)
+        ? textEditor->property("tabBaseTitle").toString()
         : currentPath;
     const QString filePath = QFileDialog::getSaveFileName(
         this,
@@ -348,6 +521,30 @@ bool Editor::saveCurrentFileAs()
         return false;
 
     return saveCurrentFileToPath(filePath);
+}
+
+bool Editor::hasUnsavedFiles() const
+{
+    for (int index = 0; index < tabs->count(); ++index) {
+        auto *textEditor = textEditorForTab(tabs->widget(index));
+        if (textEditor && textEditor->document()->isModified())
+            return true;
+    }
+    return false;
+}
+
+bool Editor::saveAllModifiedFiles()
+{
+    for (int index = 0; index < tabs->count(); ++index) {
+        auto *textEditor = textEditorForTab(tabs->widget(index));
+        if (!textEditor || !textEditor->document()->isModified())
+            continue;
+
+        tabs->setCurrentIndex(index);
+        if (!saveCurrentFile())
+            return false;
+    }
+    return true;
 }
 
 bool Editor::saveCurrentFileToPath(const QString &filePath)
@@ -384,7 +581,7 @@ bool Editor::saveCurrentFileToPath(const QString &filePath)
 
 QTextEdit *Editor::currentEditor() const
 {
-    return qobject_cast<QTextEdit *>(tabs->currentWidget());
+    return textEditorForTab(tabs->currentWidget());
 }
 
 QString Editor::currentFilePath() const
@@ -423,7 +620,70 @@ bool Editor::goToLine(int line, QTextEdit *buffer)
     buffer->setTextCursor(cursor);
     buffer->setFocus();
     buffer->ensureCursorVisible();
+
+    QTextEdit *textEditor = currentEditor();
+    if (!textEditor)
+        return true;
+
+    const int cursorY = textEditor->cursorRect(textEditor->textCursor()).center().y();
+    const int viewportCenterY = textEditor->viewport()->height() / 2;
+    QScrollBar *verticalScrollBar = textEditor->verticalScrollBar();
+    verticalScrollBar->setValue(verticalScrollBar->value() + cursorY - viewportCenterY);
     return true;
+}
+
+void Editor::toggleCommentOut()
+{
+    QTextEdit *textEditor = currentEditor();
+    if (!textEditor)
+        return;
+
+    QTextCursor selection = textEditor->textCursor();
+    if (!selection.hasSelection())
+        return;
+
+    QTextDocument *document = textEditor->document();
+    const int selectionStart = selection.selectionStart();
+    const int selectionEnd = selection.selectionEnd();
+    QTextBlock firstBlock = document->findBlock(selectionStart);
+    QTextBlock lastBlock = document->findBlock(selectionEnd);
+    if (selectionEnd > selectionStart && lastBlock.position() == selectionEnd)
+        lastBlock = lastBlock.previous();
+    if (!firstBlock.isValid() || !lastBlock.isValid())
+        return;
+
+    // Edit from bottom to top so inserting/removing a marker does not move
+    // the positions of blocks that still need to be processed.
+    QList<QTextBlock> blocks;
+    for (QTextBlock block = firstBlock; block.isValid(); block = block.next()) {
+        blocks.append(block);
+        if (block == lastBlock)
+            break;
+    }
+
+    QTextCursor editBlock(document);
+    editBlock.beginEditBlock();
+    for (auto it = blocks.crbegin(); it != blocks.crend(); ++it) {
+        QTextCursor lineCursor(*it);
+        if (it->text().startsWith(QLatin1Char(';'))) {
+            lineCursor.deleteChar();
+        } else {
+            lineCursor.insertText(QStringLiteral(";"));
+        }
+    }
+    editBlock.endEditBlock();
+
+    const QTextBlock updatedFirst = document->findBlock(firstBlock.position());
+    const QTextBlock updatedLast = document->findBlock(lastBlock.position());
+    if (!updatedFirst.isValid() || !updatedLast.isValid())
+        return;
+
+    QTextCursor updatedSelection(document);
+    updatedSelection.setPosition(updatedFirst.position());
+    updatedSelection.setPosition(updatedLast.position() + updatedLast.text().size(),
+                                 QTextCursor::KeepAnchor);
+    textEditor->setTextCursor(updatedSelection);
+    textEditor->setFocus(Qt::ShortcutFocusReason);
 }
 
 QString Editor::currentInstruction() const
@@ -488,6 +748,7 @@ void Editor::showFindReplace(bool showReplaceField)
             findField->setText(selectedText);
     }
     replaceRowWidget->setVisible(showReplaceField);
+    closeFindReplaceAction->setEnabled(true);
     findReplacePopup->adjustSize();
     positionFindReplacePopup();
     findReplacePopup->show();
@@ -578,7 +839,9 @@ void Editor::refreshLabels()
         return;
 
     static const QRegularExpression labelPattern(
-        QStringLiteral("^\\s*([A-Za-z0-9_.$]+):\\s*(?:;.*)?$"));
+        // Treat the colon as the label delimiter and allow other non-space
+        // punctuation in the name (for example, @@, @name, or local symbols).
+        QStringLiteral("^\\s*([^\\s:;]+):\\s*(?:;.*)?$"));
     for (QTextBlock block = textEditor->document()->begin(); block.isValid(); block = block.next()) {
         const auto match = labelPattern.match(block.text());
         if (!match.hasMatch())
@@ -635,19 +898,29 @@ bool Editor::eventFilter(QObject *watched, QEvent *event)
 QTextEdit *Editor::createEditorTab(const QString &name, const QString &filePath,
                                    const QString *initialContents)
 {
-    auto *textEditor = new QTextEdit(tabs);
+    auto *tabPage = new QWidget(tabs);
+    auto *tabLayout = new QHBoxLayout(tabPage);
+    tabLayout->setContentsMargins(0, 0, 0, 0);
+    tabLayout->setSpacing(0);
+
+    auto *textEditor = new CodeTextEdit(tabPage);
     if (initialContents)
         textEditor->setPlainText(*initialContents);
     applyTextEditorPreferences(textEditor);
+    auto *lineNumberArea = new LineNumberArea(textEditor, tabPage);
+    lineNumberArea->setEditorFont(editorFont);
+    lineNumberArea->setTheme(editorTheme);
+    tabLayout->addWidget(lineNumberArea);
+    tabLayout->addWidget(textEditor, 1);
     highlighters.append(new MipsHighlighter(textEditor->document()));
     new MipsCompleter(textEditor);
 
-    const int index = tabs->addTab(textEditor, name);
+    const int index = tabs->addTab(tabPage, name);
     tabs->tabBar()->setTabData(index, filePath);
     textEditor->setProperty("tabBaseTitle", name);
     connect(textEditor->document(), &QTextDocument::modificationChanged,
             this, [this, textEditor](bool modified) {
-        const int tabIndex = tabs->indexOf(textEditor);
+        const int tabIndex = tabs->indexOf(textEditor->parentWidget());
         if (tabIndex < 0)
             return;
         const QString baseTitle = textEditor->property("tabBaseTitle").toString();
@@ -676,8 +949,21 @@ void Editor::applyTextEditorPreferences(QTextEdit *textEditor)
     textEditor->setFont(editorFont);
     const qreal spaceWidth = QFontMetricsF(editorFont).horizontalAdvance(QLatin1Char(' '));
     textEditor->setTabStopDistance(spaceWidth * editorTabWidth);
-    if (editorTheme == QStringLiteral("Light"))
-        textEditor->setStyleSheet(QStringLiteral("background-color: #ffffff; color: #202124;"));
-    else
-        textEditor->setStyleSheet(QStringLiteral("background-color: #1a1a1a; color: white;"));
+    if (textEditor->parentWidget()) {
+        if (auto *layout = qobject_cast<QHBoxLayout *>(textEditor->parentWidget()->layout())) {
+            auto *lineNumberArea = layout->count() > 0
+                ? dynamic_cast<LineNumberArea *>(layout->itemAt(0)->widget()) : nullptr;
+            if (lineNumberArea) {
+                lineNumberArea->setEditorFont(editorFont);
+                lineNumberArea->setTheme(editorTheme);
+            }
+        }
+    }
+    const bool lightTheme = editorTheme == QStringLiteral("Light");
+    QPalette palette = textEditor->palette();
+    palette.setColor(QPalette::Text, lightTheme ? QColor(Qt::black) : QColor(Qt::white));
+    textEditor->setPalette(palette);
+    textEditor->setStyleSheet(lightTheme
+        ? QStringLiteral("background-color: #ffffff;")
+        : QStringLiteral("background-color: #1a1a1a;"));
 }

@@ -20,7 +20,18 @@ QTextCharFormat makeFormat(const QColor &color, bool bold = false, bool italic =
 
 QString wordPattern(const QString &words)
 {
-    return QStringLiteral("\\b(?:%1)\\b").arg(words);
+    // MIPS mnemonics can contain dots (for example, add.s and cvt.s.w).
+    // Word boundaries treat '.' as punctuation, which would match only the
+    // prefix before the dot. Keep the full mnemonic as one token instead.
+    return QStringLiteral("(?<![A-Za-z0-9_.$])(?:%1)(?![A-Za-z0-9_.$])").arg(words);
+}
+
+QString directiveWordPattern(const QString &words)
+{
+    // Directives are commonly written with a leading dot, such as .orga
+    // and .asciiz. Include that dot in the match while requiring an exact
+    // directive token.
+    return QStringLiteral("(?<![A-Za-z0-9_.$])\\.?(?:%1)(?![A-Za-z0-9_.$])").arg(words);
 }
 
 const QString &directivePattern()
@@ -109,7 +120,7 @@ void MipsHighlighter::setTheme(const QString &theme)
 
     rules.append({QRegularExpression(QStringLiteral(R"(\b[A-Za-z_.$][A-Za-z0-9_.$]*\b)")), symbolFormat});
 
-    rules.append({QRegularExpression(wordPattern(directivePattern()), QRegularExpression::CaseInsensitiveOption), directiveFormat});
+    rules.append({QRegularExpression(directiveWordPattern(directivePattern()), QRegularExpression::CaseInsensitiveOption), directiveFormat});
     rules.append({QRegularExpression(wordPattern(instructionPattern()), QRegularExpression::CaseInsensitiveOption), instructionFormat});
     // Accept armips register names with or without '$', but only as complete
     // tokens. In particular, don't color aliases embedded in symbols like "wrap".

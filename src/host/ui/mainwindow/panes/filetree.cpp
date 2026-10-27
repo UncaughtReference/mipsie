@@ -79,6 +79,7 @@ void FileTree::initialize(const QString &rootPath)
     proxyModel->setSourceModel(model);
     fileTree->setModel(proxyModel);
     fileTree->setHeaderHidden(true);
+    fileTree->installEventFilter(this);
 
     // Hide size, type, and modification date columns
     for (int column = 1; column < model->columnCount(); ++column)
@@ -153,6 +154,20 @@ void FileTree::onItemActivated(const QModelIndex &index)
 
 bool FileTree::eventFilter(QObject *watched, QEvent *event)
 {
+    if (watched == fileTree && event->type() == QEvent::KeyPress) {
+        auto *keyEvent = static_cast<QKeyEvent *>(event);
+        if (keyEvent->key() == Qt::Key_Return || keyEvent->key() == Qt::Key_Enter) {
+            const QModelIndex index = fileTree->currentIndex();
+            if (index.isValid()) {
+                const QModelIndex sourceIndex = proxyModel->mapToSource(index);
+                if (model->fileInfo(sourceIndex).isDir()) {
+                    fileTree->setExpanded(index, !fileTree->isExpanded(index));
+                    return true;
+                }
+            }
+        }
+    }
+
     if (watched == searchField && event->type() == QEvent::KeyPress) {
         auto *keyEvent = static_cast<QKeyEvent *>(event);
         if (keyEvent->key() == Qt::Key_Down) {

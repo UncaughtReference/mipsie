@@ -11,6 +11,8 @@
 MenuBar::MenuBar(Ui::MainWindow *ui, MainWindow *window)
     : ui(ui), window(window) {}
 
+// FUCKING MESS LMFAOOO
+// HOW ELSE AM I SUPPOSED TO DO TS
 void MenuBar::initialize() {
     MainWindow *mainWindow = window;
     QMenu* fileMenu = new QMenu(QObject::tr("File"), ui->menubar);
@@ -22,6 +24,11 @@ void MenuBar::initialize() {
     openFile->setIcon(QIcon::fromTheme("document-open"));
     fileMenu->addAction(openFile);
     QObject::connect(openFile, &QAction::triggered, window, &MainWindow::openFileDialog);
+
+    QAction *openRom = new QAction(QObject::tr("Open ROM..."), fileMenu);
+    openRom->setObjectName(QStringLiteral("openRomAction"));
+    fileMenu->addAction(openRom);
+    QObject::connect(openRom, &QAction::triggered, window, &MainWindow::openRomFile);
 
     QAction* openFolder = new QAction(QObject::tr("Open Folder..."), fileMenu);
     openFolder->setObjectName(QStringLiteral("openFolderAction"));
@@ -80,6 +87,12 @@ void MenuBar::initialize() {
     editMenu->addSeparator();
     addEditAction(QObject::tr("Select All"), QKeySequence::SelectAll,
                   MainWindow::EditAction::SelectAll, QStringLiteral("selectAllAction"));
+    editMenu->addSeparator();
+    QAction *commentOutAction = editMenu->addAction(QObject::tr("Comment Out"));
+    commentOutAction->setObjectName(QStringLiteral("commentOutAction"));
+    editActions.append(commentOutAction);
+    QObject::connect(commentOutAction, &QAction::triggered,
+                     mainWindow, &MainWindow::toggleCommentOutSelection);
 
     QObject::connect(editMenu, &QMenu::aboutToShow, mainWindow, [mainWindow, editActions] {
         const bool enabled = mainWindow->hasEditTarget();
@@ -97,7 +110,7 @@ void MenuBar::initialize() {
     QObject::connect(assembleAction, &QAction::triggered,
                      window, &MainWindow::assembleAndUpdateChecksum);
     QAction *assembleAndOpenProject64Action = assembleMenu->addAction(
-        QObject::tr("Assemble, UC, Open PJ64"));
+        QObject::tr("Assemble, Update Checksum, Focus PJ64"));
     assembleAndOpenProject64Action->setObjectName(
         QStringLiteral("assembleUpdateChecksumOpenProject64Action"));
     assembleAndOpenProject64Action->setShortcut(
@@ -131,4 +144,18 @@ void MenuBar::initialize() {
     QObject::connect(openSettings, &QAction::triggered,
                      window, &MainWindow::openSettings);
     ui->menubar->addMenu(settingsMenu);
+
+    QMenu *helpMenu = new QMenu(QObject::tr("Help"), ui->menubar);
+    QAction *checkForUpdates = helpMenu->addAction(QObject::tr("Check for Updates..."));
+    checkForUpdates->setObjectName(QStringLiteral("checkForUpdatesAction"));
+    QObject::connect(checkForUpdates, &QAction::triggered,
+                     window, &MainWindow::checkForUpdates);
+    helpMenu->addSeparator();
+    QAction *aboutAction = helpMenu->addAction(QObject::tr("About"));
+    QObject::connect(aboutAction, &QAction::triggered,
+                     window, &MainWindow::showAboutDialog);
+    QAction *openAppDataAction = helpMenu->addAction(QObject::tr("Open App Data"));
+    QObject::connect(openAppDataAction, &QAction::triggered,
+                     window, &MainWindow::openAppDataFolder);
+    ui->menubar->addMenu(helpMenu);
 }

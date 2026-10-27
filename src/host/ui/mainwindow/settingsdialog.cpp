@@ -18,8 +18,12 @@
 #include <QMessageBox>
 #include <QPushButton>
 #include <QScrollArea>
+#include <QScrollBar>
 #include <QSpinBox>
+#include <QSet>
 #include <QTabWidget>
+#include <QTextEdit>
+#include <QTimer>
 #include <QVBoxLayout>
 
 namespace
@@ -48,13 +52,14 @@ const ShortcutDefinition shortcutDefinitions[] = {
     {"searchLabelsAction", QT_TR_NOOP("Search Labels")},
     {"fileTreeSearchAction", QT_TR_NOOP("Search File Tree")},
     {"assembleAction", QT_TR_NOOP("Assemble and Update Checksum")},
-    {"assembleUpdateChecksumOpenProject64Action", QT_TR_NOOP("Assemble, UC, Open PJ64")},
+    {"assembleUpdateChecksumOpenProject64Action", QT_TR_NOOP("Assemble, Update Checksum, Focus PJ64")},
     {"undoAction", QT_TR_NOOP("Undo")},
     {"redoAction", QT_TR_NOOP("Redo")},
     {"cutAction", QT_TR_NOOP("Cut")},
     {"copyAction", QT_TR_NOOP("Copy")},
     {"pasteAction", QT_TR_NOOP("Paste")},
-    {"selectAllAction", QT_TR_NOOP("Select All")}
+    {"selectAllAction", QT_TR_NOOP("Select All")},
+    {"commentOutAction", QT_TR_NOOP("Comment Out")}
 };
 }
 
@@ -62,6 +67,7 @@ SettingsDialog::SettingsDialog(const QString &projectFolder,
                                const QString &romFilePath,
                                const QJsonObject &projectSettings,
                                const QJsonObject &generalSettings,
+                               const QJsonArray &macros,
                                QWidget *parent)
     : QDialog(parent),
       projectFolder(projectFolder),
@@ -143,6 +149,34 @@ SettingsDialog::SettingsDialog(const QString &projectFolder,
     generalScrollArea->setWidget(generalPage);
     tabs->addTab(generalScrollArea, tr("General"));
 
+    auto *macroPage = new QWidget(tabs);
+    auto *macroPageLayout = new QVBoxLayout(macroPage);
+    macroScrollArea = new QScrollArea(macroPage);
+    macroScrollArea->setWidgetResizable(true);
+    macroListContainer = new QWidget(macroScrollArea);
+    macroListLayout = new QVBoxLayout(macroListContainer);
+    macroListLayout->setContentsMargins(4, 4, 4, 4);
+    macroListLayout->setAlignment(Qt::AlignTop);
+    macroScrollArea->setWidget(macroListContainer);
+    macroPageLayout->addWidget(macroScrollArea, 1);
+    auto *addMacroButton = new QPushButton(tr("Add Macro"), macroPage);
+    macroPageLayout->addWidget(addMacroButton);
+    connect(addMacroButton, &QPushButton::clicked, this, [this] {
+        addMacroEditor(QString(), QString());
+        QTimer::singleShot(0, this, [this] {
+            macroListLayout->activate();
+            macroListContainer->adjustSize();
+            QScrollBar *scrollBar = macroScrollArea->verticalScrollBar();
+            scrollBar->setValue(scrollBar->maximum());
+        });
+    });
+    for (const QJsonValue &value : macros) {
+        const QJsonObject macro = value.toObject();
+        addMacroEditor(macro.value(QStringLiteral("shortcut")).toString(),
+                       macro.value(QStringLiteral("text")).toString());
+    }
+    tabs->addTab(macroPage, tr("Macros"));
+
     auto *projectPage = new QWidget(tabs);
     auto *projectLayout = new QVBoxLayout(projectPage);
     if (projectFolder.isEmpty()) {
@@ -213,6 +247,53 @@ QJsonObject SettingsDialog::projectSettings() const
     return settings;
 }
 
+QJsonArray SettingsDialog::macros() const
+{
+    QJsonArray result;
+    for (const MacroEditorRow &row : macroEditorRows) {
+        QJsonObject macro;
+        macro.insert(QStringLiteral("shortcut"), row.shortcutEdit->keySequence()
+                         .toString(QKeySequence::PortableText));
+        macro.insert(QStringLiteral("text"), row.textEdit->toPlainText());
+        result.append(macro);
+    }
+    return result;
+}
+
+void SettingsDialog::addMacroEditor(const QString &shortcut, const QString &text)
+{
+    auto *group = new QGroupBox(tr("Macro"), macroListContainer);
+    auto *groupLayout = new QVBoxLayout(group);
+    auto *shortcutRow = new QHBoxLayout;
+    shortcutRow->addWidget(new QLabel(tr("Shortcut:"), group));
+    auto *shortcutEdit = new QKeySequenceEdit(group);
+    shortcutEdit->setKeySequence(
+        QKeySequence::fromString(shortcut, QKeySequence::PortableText));
+    shortcutRow->addWidget(shortcutEdit, 1);
+    auto *removeButton = new QPushButton(tr("Remove"), group);
+    shortcutRow->addWidget(removeButton);
+    groupLayout->addLayout(shortcutRow);
+
+    auto *textEdit = new QTextEdit(group);
+    textEdit->setPlaceholderText(tr("Text to insert into the Editor"));
+    textEdit->setMinimumHeight(120);
+    textEdit->setPlainText(text);
+    groupLayout->addWidget(textEdit);
+    macroListLayout->addWidget(group);
+
+    macroEditorRows.append({group, shortcutEdit, textEdit});
+    connect(removeButton, &QPushButton::clicked, this, [this, group] {
+        for (int index = 0; index < macroEditorRows.size(); ++index) {
+            if (macroEditorRows.at(index).container == group) {
+                macroEditorRows.removeAt(index);
+                break;
+            }
+        }
+        macroListLayout->removeWidget(group);
+        group->deleteLater();
+    });
+}
+
 void SettingsDialog::chooseAccentColor()
 {
     const QColor selectedColor = QColorDialog::getColor(
@@ -251,6 +332,20 @@ void SettingsDialog::updateAccentColorButton()
 
 void SettingsDialog::acceptSettings()
 {
+    QSet<QString> shortcuts;
+    for (const MacroEditorRow &row : macroEditorRows) {
+        const QString shortcut = row.shortcutEdit->keySequence()
+                                     .toString(QKeySequence::PortableText);
+        if (shortcut.isEmpty())
+            continue;
+        if (shortcuts.contains(shortcut)) {
+            QMessageBox::warning(this, tr("Duplicate Macro Shortcut"),
+                                 tr("Each macro must have a unique shortcut."));
+            return;
+        }
+        shortcuts.insert(shortcut);
+    }
+
     if (romPathEdit && romPathEdit->text().trimmed().isEmpty()) {
         QMessageBox::warning(this, tr("ROM Path Required"),
                              tr("Enter a ROM file path for the current project."));

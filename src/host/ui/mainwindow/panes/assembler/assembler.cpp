@@ -21,13 +21,11 @@
 #include <QTemporaryFile>
 #include <QVBoxLayout>
 
-#ifdef Q_OS_WIN
 #ifndef NOMINMAX
 #define NOMINMAX
 #endif
 #include <windows.h>
 #include <tlhelp32.h>
-#endif
 
 namespace
 {
@@ -38,7 +36,8 @@ Assembler::Assembler(QWidget *parent)
     : QWidget(parent),
       ArmipsOutputView(new QListView(this)),
       outputModel(new QStandardItemModel(this)),
-      process(new QProcess(this))
+      process(new QProcess(this)),
+      romLabel(new QLabel(this))
 {
     ArmipsOutputView->setObjectName(QStringLiteral("ArmipsOutputView"));
     ArmipsOutputView->setEditTriggers(QAbstractItemView::NoEditTriggers);
@@ -46,6 +45,7 @@ Assembler::Assembler(QWidget *parent)
 
     auto *layout = new QVBoxLayout(this);
     layout->setContentsMargins(0, 0, 0, 0);
+    layout->addWidget(romLabel, 0);
     layout->addWidget(ArmipsOutputView, 1);
 
     connect(ArmipsOutputView, &QListView::doubleClicked,
@@ -72,6 +72,7 @@ Assembler::Assembler(QWidget *parent)
 void Assembler::setRomFilePath(const QString &filePath)
 {
     configuredRomFilePath = filePath;
+    romLabel->setText(QStringLiteral("ROM: %1").arg(filePath));
 }
 
 bool Assembler::isBusy() const
@@ -355,7 +356,6 @@ void Assembler::handleFailedToStart()
 
 bool Assembler::focusProject64()
 {
-#ifdef Q_OS_WIN
     struct WindowSearch
     {
         DWORD processId = 0;
@@ -410,10 +410,6 @@ bool Assembler::focusProject64()
     FlashWindow(search.window, TRUE);
     appendOutputLine(tr("Windows did not allow Project64 to take focus."), true);
     return false;
-#else
-    appendOutputLine(tr("Focusing Project64 is supported only on Windows."), true);
-    return false;
-#endif
 }
 
 void Assembler::removeTemporaryAsm()

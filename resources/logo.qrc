@@ -1,5 +1,7 @@
 <RCC>
     <qresource prefix="/mipsie">
         <file>logo.png</file>
+        <file>fonts/JetBrainsMonoNerdFont-Regular.ttf</file>
+        <file alias="fonts/JetBrainsMonoNerdFont-OFL.txt">fonts/OFL.txt</file>
     </qresource>
 </RCC>

@@ -5,6 +5,7 @@
 #include <QPointer>
 #include <QString>
 #include <QTextEdit>
+#include <QLabel>
 #include "../editor.h"
 
 class QListView;
@@ -45,6 +46,7 @@ private:
     QPointer<QTextEdit> sourceBuffer;
     QString standardOutputBuffer;
     QString standardErrorBuffer;
+    QLabel* romLabel;
 
     void startArmips(const QString &assemblyText, const QString &rootDirectory);
     void startChecksumUpdate();

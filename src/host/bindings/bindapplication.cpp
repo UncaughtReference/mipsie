@@ -11,7 +11,7 @@
 
 void bindApplication(sol::state& lua)
 {
-    sol::table host = lua["host"];
+    sol::table mipsie = lua["mipsie"];
     sol::table app = lua.create_table();
 
     // Application metadata
@@ -55,5 +55,5 @@ void bindApplication(sol::state& lua)
         QCoreApplication::quit();
     });
 
-    host["app"] = app;
+    mipsie["app"] = app;
 }

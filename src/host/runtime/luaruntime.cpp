@@ -6,10 +6,13 @@
 
 #include <QThread>
 #include <QDebug>
+#include <QNetworkAccessManager>
+#include <QNetworkReply>
 
 class LuaRuntime::Private {
 public:
     sol::state lua;
+    QNetworkAccessManager *networkManager = nullptr;
     bool initialized = false;
     bool shuttingDown = false;
     QThread *ownerThread = nullptr;
@@ -48,13 +51,14 @@ bool LuaRuntime::initialize(QMainWindow* mainWindow)
 
         // Register all generic host APIs.
         const auto output = [this](const QString &line) { emit scriptOutput(line); };
-        BindingRegistry::registerAll(d->lua, mainWindow, output);
+        d->networkManager = new QNetworkAccessManager(this);
+        BindingRegistry::registerAll(d->lua, mainWindow, d->networkManager, output);
 
-        d->lua["host"]["_output"] = [output](const std::string &line) {
+        d->lua["mipsie"]["_output"] = [output](const std::string &line) {
             output(QString::fromStdString(line));
         };
         d->lua.script(R"(
-            local emit = host._output
+            local emit = mipsie._output
             print = function(...)
                 local values = {}
                 for i = 1, select("#", ...) do
@@ -64,11 +68,11 @@ bool LuaRuntime::initialize(QMainWindow* mainWindow)
             end
         )");
 
-        sol::table host = d->lua["host"];
-        sol::table fs = host["fs"];
+        sol::table mipsie = d->lua["mipsie"];
+        sol::table fs = mipsie["fs"];
 
-        qDebug() << "host.fs exists:" << host["fs"].valid();
-        qDebug() << "host.fs.current_dir exists:"
+        qDebug() << "mipsie.fs exists:" << mipsie["fs"].valid();
+        qDebug() << "mipsie.fs.current_dir exists:"
                  << fs["current_dir"].valid();
 
         d->initialized = true;
@@ -151,6 +155,15 @@ void LuaRuntime::shutdown() {
     d->shuttingDown = true;
     emit shuttingDown();
 
-    d->lua = sol::state();
+    if (d->networkManager) {
+        const auto replies = d->networkManager->findChildren<QNetworkReply *>();
+        for (QNetworkReply *reply : replies) {
+            QObject::disconnect(reply, nullptr, d->networkManager, nullptr);
+            reply->abort();
+        }
+        delete d->networkManager;
+        d->networkManager = nullptr;
+    }
+
     d->initialized = false;
 }

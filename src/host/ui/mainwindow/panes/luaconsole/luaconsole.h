@@ -4,6 +4,7 @@
 #include <QWidget>
 
 class QTextEdit;
+class QLineEdit;
 
 class LuaConsole : public QWidget
 {
@@ -13,8 +14,12 @@ public:
     explicit LuaConsole(QWidget *parent = nullptr);
     void appendOutput(const QString &text);
 
+signals:
+    void functionRequested(const QString &functionName, const QString &arguments);
+
 private:
     QTextEdit *console;
+    QLineEdit *functionInput;
 };
 
 #endif // LUACONSOLE_H

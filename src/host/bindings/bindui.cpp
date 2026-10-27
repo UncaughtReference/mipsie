@@ -1,862 +1,360 @@
-
 #include "bindui.h"
-#include "qmainwindow.h"
-#include "qmenubar.h"
+#include "../ui/mainwindow/panes/editor.h"
 
 #include <sol/sol.hpp>
 
-#include <QApplication>
-#include <QByteArray>
-#include <QBoxLayout>
-#include <QHBoxLayout>
+#include <QAbstractButton>
+#include <QAction>
+#include <QComboBox>
+#include <QGroupBox>
+#include <QKeySequence>
 #include <QLabel>
-#include <QLayout>
-#include <QMetaObject>
-#include <QObject>
-#include <QPlainTextEdit>
+#include <QLineEdit>
 #include <QPointer>
-#include <QPushButton>
-#include <QThread>
-#include <QVBoxLayout>
+#include <QTabWidget>
+#include <QTextEdit>
 #include <QWidget>
-#include <QDebug>
+#include <QStringList>
 
-#include <memory>
-#include <stdexcept>
 #include <string>
-#include <utility>
-#include <vector>
 
 namespace
 {
-class UiMenu;
-class UiMenuBar;
-
-// ------------------------------------------------------------
-// Utilities
-// ------------------------------------------------------------
-
-void requireGuiThread()
-{
-    if (!qApp || QThread::currentThread() != qApp->thread()) {
-        throw std::runtime_error(
-            "UI operations must run on the GUI thread"
-            );
-    }
-}
-
-std::string toStdString(const QString& value)
+std::string toStdString(const QString &value)
 {
     const QByteArray utf8 = value.toUtf8();
-
-    return std::string(
-        utf8.constData(),
-        static_cast<std::size_t>(utf8.size())
-        );
+    return std::string(utf8.constData(), static_cast<std::size_t>(utf8.size()));
 }
 
-QString toQString(const std::string& value)
+QString toQString(const std::string &value)
 {
-    return QString::fromUtf8(
-        value.data(),
-        static_cast<int>(value.size())
-        );
+    return QString::fromUtf8(value.data(), static_cast<qsizetype>(value.size()));
 }
 
-std::string getStringOption(
-    sol::table options,
-    const char* key,
-    const std::string& fallback = {})
+QList<QWidget *> directWidgets(QWidget *parent)
 {
-    sol::optional<std::string> value =
-        options.get<sol::optional<std::string>>(key);
-
-    return value.value_or(fallback);
+    return parent ? parent->findChildren<QWidget *>(QString(), Qt::FindDirectChildrenOnly)
+                  : QList<QWidget *>();
 }
 
-int getIntOption(
-    sol::table options,
-    const char* key,
-    int fallback)
+QString widgetId(QWidget *widget, QWidget *root)
 {
-    sol::optional<int> value =
-        options.get<sol::optional<int>>(key);
+    if (!widget || !root)
+        return QString();
 
-    return value.value_or(fallback);
+    QStringList segments;
+    QWidget *current = widget;
+    while (current && current != root) {
+        QWidget *parent = current->parentWidget();
+        if (!parent)
+            return QString();
+        const QList<QWidget *> siblings = directWidgets(parent);
+        const int index = siblings.indexOf(current);
+        QString segment = QString::fromLatin1(current->metaObject()->className());
+        segment += QLatin1Char('[') + QString::number(index) + QLatin1Char(']');
+        if (!current->objectName().isEmpty())
+            segment += QLatin1Char('{') + current->objectName() + QLatin1Char('}');
+        segments.prepend(segment);
+        current = parent;
+    }
+    if (current != root)
+        return QString();
+
+    QString rootName = QString::fromLatin1(root->metaObject()->className());
+    if (!root->objectName().isEmpty())
+        rootName += QLatin1Char('{') + root->objectName() + QLatin1Char('}');
+    segments.prepend(rootName);
+    return segments.join(QLatin1Char('/'));
 }
 
-// ------------------------------------------------------------
-// Widget wrapper
-// ------------------------------------------------------------
-
-class UiWidget
+void collectWidgets(QWidget *parent, QList<QWidget *> &widgets)
 {
-public:
-    explicit UiWidget(QWidget* widget)
-        : widget_(widget)
-    {
-        if (!widget)
-            throw std::runtime_error("Cannot wrap a null widget");
+    for (QWidget *child : directWidgets(parent)) {
+        widgets.append(child);
+        collectWidgets(child, widgets);
     }
+}
 
-    ~UiWidget()
-    {
-        clearCallback();
-
-        // Qt may already have destroyed this widget through
-        // its parent. QPointer becomes null in that case.
-        if (widget_)
-            delete widget_.data();
-    }
-
-    QWidget* get() const
-    {
-        if (!widget_)
-            throw std::runtime_error("Widget no longer exists");
-
-        return widget_.data();
-    }
-
-    void setText(const std::string& text)
-    {
-        requireGuiThread();
-
-        QWidget* widget = get();
-        const QString value = toQString(text);
-
-        if (auto* label = qobject_cast<QLabel*>(widget)) {
-            label->setText(value);
-            return;
-        }
-
-        if (auto* button = qobject_cast<QPushButton*>(widget)) {
-            button->setText(value);
-            return;
-        }
-
-        if (auto* editor =
-            qobject_cast<QPlainTextEdit*>(widget)) {
-            editor->setPlainText(value);
-            return;
-        }
-
-        throw std::runtime_error(
-            "set_text() is not supported by this widget"
-            );
-    }
-
-    std::string text() const
-    {
-        requireGuiThread();
-
-        QWidget* widget = get();
-
-        if (auto* label = qobject_cast<QLabel*>(widget))
-            return toStdString(label->text());
-
-        if (auto* button = qobject_cast<QPushButton*>(widget))
-            return toStdString(button->text());
-
-        if (auto* editor =
-            qobject_cast<QPlainTextEdit*>(widget)) {
-            return toStdString(editor->toPlainText());
-        }
-
-        return {};
-    }
-
-    void setPlaceholder(const std::string& text)
-    {
-        requireGuiThread();
-
-        auto* editor =
-            qobject_cast<QPlainTextEdit*>(get());
-
-        if (!editor) {
-            throw std::runtime_error(
-                "set_placeholder() requires a text editor"
-                );
-        }
-
-        editor->setPlaceholderText(toQString(text));
-    }
-
-    void onClick(sol::protected_function callback)
-    {
-        requireGuiThread();
-
-        auto* button =
-            qobject_cast<QPushButton*>(get());
-
-        if (!button) {
-            throw std::runtime_error(
-                "on_click() requires a button"
-                );
-        }
-
-        // Replace any previously registered callback.
-        clearCallback();
-
-        callback_ = std::move(callback);
-
-        clickConnection_ = QObject::connect(
-            button,
-            &QPushButton::clicked,
-            button,
-            [this]() {
-                if (!callback_.valid())
-                    return;
-
-                sol::protected_function_result result =
-                    callback_();
-
-                if (!result.valid()) {
-                    sol::error error = result;
-
-                    qWarning().noquote()
-                        << "Lua button callback failed:"
-                        << QString::fromUtf8(error.what());
-                }
-            }
-            );
-    }
-
-    void clearCallback()
-    {
-        QObject::disconnect(clickConnection_);
-        clickConnection_ = QMetaObject::Connection{};
-
-        // Release the Lua function while the Lua state is alive.
-        callback_ = sol::protected_function{};
-    }
-
-private:
-    QPointer<QWidget> widget_;
-    sol::protected_function callback_;
-    QMetaObject::Connection clickConnection_;
-};
-
-// ------------------------------------------------------------
-// Layout wrapper
-// ------------------------------------------------------------
-
-class UiLayout
+QWidget *findWidget(QWidget *root, const QString &id)
 {
-public:
-    explicit UiLayout(QLayout* layout)
-        : layout_(layout)
-    {
-        if (!layout)
-            throw std::runtime_error("Cannot wrap a null layout");
-    }
-
-    ~UiLayout()
-    {
-        // A window may already have deleted this layout.
-        if (layout_)
-            delete layout_.data();
-    }
-
-    QLayout* get() const
-    {
-        if (!layout_)
-            throw std::runtime_error("Layout no longer exists");
-
-        return layout_.data();
-    }
-
-    void add(const std::shared_ptr<UiWidget>& widget)
-    {
-        requireGuiThread();
-
-        if (!widget)
-            throw std::runtime_error("Cannot add a null widget");
-
-        auto* box = qobject_cast<QBoxLayout*>(get());
-
-        if (!box) {
-            throw std::runtime_error(
-                "Unsupported layout type"
-                );
-        }
-
-        box->addWidget(widget->get());
-
-        // Keep the wrapper alive while the layout uses the widget.
-        widgets_.push_back(widget);
-    }
-
-private:
-    QPointer<QLayout> layout_;
-    std::vector<std::shared_ptr<UiWidget>> widgets_;
-};
-
-// ------------------------------------------------------------
-// Window wrapper
-// ------------------------------------------------------------
-
-class UiWindow
-{
-public:
-    explicit UiWindow(const sol::table& options)
-    {
-        requireGuiThread();
-
-        window = new QMainWindow();
-
-        const std::string title =
-            getStringOption(options, "title", "Mipsie");
-
-        const int width =
-            getIntOption(options, "width", 1100);
-
-        const int height =
-            getIntOption(options, "height", 750);
-
-        window->setWindowTitle(toQString(title));
-        window->resize(width, height);
-
-        // Create the central content widget.
-        auto* centralWidget = new QWidget(window);
-        auto* layout = new QVBoxLayout(centralWidget);
-
-        centralWidget->setLayout(layout);
-        window->setCentralWidget(centralWidget);
-    }
-
-    ~UiWindow()
-    {
-        if (window) {
-            delete window;
-        }
-    }
-
-    QWidget* get() const
-    {
-        return window.data();
-    }
-
-    QMainWindow* getMainWindow() const
-    {
-        return window.data();
-    }
-
-    void setTitle(const std::string& title)
-    {
-        requireGuiThread();
-
-        if (window) {
-            window->setWindowTitle(toQString(title));
-        }
-    }
-
-    void setSize(int width, int height)
-    {
-        requireGuiThread();
-
-        if (window) {
-            window->resize(width, height);
-        }
-    }
-
-    void setLayout(const std::shared_ptr<UiLayout>& layout)
-    {
-        requireGuiThread();
-
-        if (!window || !layout || !layout->get()) {
-            return;
-        }
-
-        QWidget* central = window->centralWidget();
-
-        // Create a central widget if this is the first layout.
-        if (!central) {
-            central = new QWidget(window);
-            window->setCentralWidget(central);
-        }
-
-        QLayout* newLayout = layout->get();
-
-        // Don't replace the layout if it's already installed.
-        if (central->layout() == newLayout) {
-            return;
-        }
-
-        // A layout cannot be installed on two widgets.
-        if (newLayout->parent() && newLayout->parent() != central) {
-            newLayout->setParent(nullptr);
-        }
-
-        // Remove the existing layout, if any.
-        if (central->layout()) {
-            delete central->layout();
-        }
-
-        central->setLayout(newLayout);
-    }
-
-    void show()
-    {
-        requireGuiThread();
-
-        if (window) {
-            window->show();
-        }
-    }
-
-    void showMaximized()
-    {
-        requireGuiThread();
-
-        if (window) {
-            window->showMaximized();
-        }
-    }
-
-    void close()
-    {
-        requireGuiThread();
-
-        if (window) {
-            window->close();
-        }
-    }
-
-    std::shared_ptr<UiMenuBar> menuBar();
-
-private:
-    QPointer<QMainWindow> window;
-};
-
-std::shared_ptr<UiMenuBar> UiWindow::menuBar()
-{
-    requireGuiThread();
-
-    if (!window) {
+    if (!root || id.isEmpty())
         return nullptr;
+    if (root->objectName() == id || widgetId(root, root) == id)
+        return root;
+
+    QList<QWidget *> widgets;
+    collectWidgets(root, widgets);
+    for (QWidget *widget : widgets) {
+        if (widget->objectName() == id || widgetId(widget, root) == id)
+            return widget;
     }
-
-    QMenuBar* bar = window->menuBar();
-
-    return std::make_shared<UiMenuBar>(bar);
+    return nullptr;
 }
 
-class UiMenuBar
+QString widgetText(QWidget *widget)
 {
-public:
-    explicit UiMenuBar(QMenuBar* bar)
-        : menuBar(bar)
-    {
-    }
-
-    QMenuBar* get() const
-    {
-        return menuBar.data();
-    }
-
-    std::shared_ptr<UiMenu> addMenu(const std::string& title)
-    {
-        requireGuiThread();
-
-        if (!menuBar) {
-            return nullptr;
-        }
-
-        QMenu* menu = menuBar->addMenu(toQString(title));
-
-        auto wrapper = std::make_shared<UiMenu>(menu);
-        menus.push_back(wrapper);
-
-        return wrapper;
-    }
-
-private:
-    QPointer<QMenuBar> menuBar;
-    std::vector<std::shared_ptr<UiMenu>> menus;
-};
-
-class UiAction
-{
-public:
-    explicit UiAction(const sol::table& options)
-    {
-        requireGuiThread();
-
-        action = new QAction();
-
-        const std::string text = getStringOption(options, "text", "");
-        const std::string shortcut = getStringOption(options, "shortcut", "");
-        const std::string statusTip = getStringOption(options, "status_tip", "");
-
-        action->setText(toQString(text));
-
-        if (!shortcut.empty()) {
-            action->setShortcut(
-                QKeySequence(toQString(shortcut))
-                );
-        }
-
-        action->setStatusTip(toQString(statusTip));
-
-        QObject::connect(
-            action,
-            &QAction::triggered,
-            action,
-            [this](bool checked) {
-                if (!callback.valid()) {
-                    return;
-                }
-
-                sol::protected_function_result result = callback(checked);
-
-                if (!result.valid()) {
-                    sol::error error = result;
-                    qWarning().noquote()
-                        << "Lua action callback failed:"
-                        << QString::fromUtf8(error.what());
-                }
-            }
-            );
-    }
-
-    ~UiAction()
-    {
-        clearCallback();
-
-        if (action) {
-            delete action;
-        }
-    }
-
-    QAction* get() const
-    {
-        return action.data();
-    }
-
-    void setText(const std::string& text)
-    {
-        requireGuiThread();
-
-        if (action) {
-            action->setText(toQString(text));
-        }
-    }
-
-    void setShortcut(const std::string& shortcut)
-    {
-        requireGuiThread();
-
-        if (action) {
-            action->setShortcut(
-                QKeySequence(toQString(shortcut))
-                );
-        }
-    }
-
-    void setEnabled(bool enabled)
-    {
-        requireGuiThread();
-
-        if (action) {
-            action->setEnabled(enabled);
-        }
-    }
-
-    void setCheckable(bool checkable)
-    {
-        requireGuiThread();
-
-        if (action) {
-            action->setCheckable(checkable);
-        }
-    }
-
-    bool isChecked() const
-    {
-        return action && action->isChecked();
-    }
-
-    void setChecked(bool checked)
-    {
-        requireGuiThread();
-
-        if (action) {
-            action->setChecked(checked);
-        }
-    }
-
-    void onTriggered(sol::protected_function fn)
-    {
-        requireGuiThread();
-        callback = std::move(fn);
-    }
-
-    void clearCallback()
-    {
-        callback = sol::protected_function{};
-    }
-
-private:
-    QPointer<QAction> action;
-    sol::protected_function callback;
-};
-
-class UiMenu
-{
-public:
-    explicit UiMenu(const std::string& title)
-    {
-        requireGuiThread();
-        menu = new QMenu(toQString(title));
-    }
-
-    explicit UiMenu(QMenu* existingMenu)
-        : menu(existingMenu)
-    {
-    }
-
-    ~UiMenu()
-    {
-        if (menu) {
-            delete menu;
-        }
-    }
-
-    QMenu* get() const
-    {
-        return menu.data();
-    }
-
-    void addAction(const std::shared_ptr<UiAction>& action)
-    {
-        requireGuiThread();
-
-        if (!menu || !action || !action->get()) {
-            return;
-        }
-
-        menu->addAction(action->get());
-
-        // Keep the Lua-side wrapper alive while the menu uses it.
-        actions.push_back(action);
-    }
-
-    void show()
-    {
-        requireGuiThread();
-
-        if (menu) {
-            menu->exec(QCursor::pos());
-        }
-    }
-
-private:
-    QPointer<QMenu> menu;
-    std::vector<std::shared_ptr<UiAction>> actions;
-};
-
-// ------------------------------------------------------------
-// Wrapper tracking for shutdown
-// ------------------------------------------------------------
-
-std::vector<std::weak_ptr<UiWidget>> allWidgets;
-std::vector<std::weak_ptr<UiWindow>> allWindows;
-std::vector<std::weak_ptr<UiAction>> allActions;
-
-void shutdownUi()
-{
-    requireGuiThread();
-
-    // Disconnect callbacks and release their Lua references first.
-    for (auto& weakWidget : allWidgets) {
-        if (auto widget = weakWidget.lock())
-            widget->clearCallback();
-    }
-
-    // Close windows while Qt and the Lua state still exist.
-    for (auto& weakWindow : allWindows) {
-        if (auto window = weakWindow.lock())
-            window->close();
-    }
-
-    for (auto& weak : allActions) {
-        if (auto action = weak.lock()) {
-            action->clearCallback();
-        }
-    }
-
-    allWidgets.clear();
-    allWindows.clear();
-    allActions.clear();
+    if (auto *button = qobject_cast<QAbstractButton *>(widget))
+        return button->text();
+    if (auto *label = qobject_cast<QLabel *>(widget))
+        return label->text();
+    if (auto *lineEdit = qobject_cast<QLineEdit *>(widget))
+        return lineEdit->text();
+    if (auto *textEdit = qobject_cast<QTextEdit *>(widget))
+        return textEdit->toPlainText();
+    if (auto *combo = qobject_cast<QComboBox *>(widget))
+        return combo->currentText();
+    if (auto *group = qobject_cast<QGroupBox *>(widget))
+        return group->title();
+    return QString();
 }
 
-} // namespace
-
-void bindUi(sol::state& lua, QMainWindow* mainWindow)
+bool setWidgetText(QWidget *widget, const QString &text)
 {
-    sol::table host = lua["host"];
+    if (auto *button = qobject_cast<QAbstractButton *>(widget)) {
+        button->setText(text);
+        return true;
+    }
+    if (auto *label = qobject_cast<QLabel *>(widget)) {
+        label->setText(text);
+        return true;
+    }
+    if (auto *lineEdit = qobject_cast<QLineEdit *>(widget)) {
+        lineEdit->setText(text);
+        return true;
+    }
+    if (auto *textEdit = qobject_cast<QTextEdit *>(widget)) {
+        textEdit->setPlainText(text);
+        return true;
+    }
+    if (auto *group = qobject_cast<QGroupBox *>(widget)) {
+        group->setTitle(text);
+        return true;
+    }
+    return false;
+}
+
+sol::table widgetDescription(sol::state &lua, QWidget *widget, QWidget *root)
+{
+    sol::table result = lua.create_table();
+    result["id"] = toStdString(widgetId(widget, root));
+    result["object_name"] = toStdString(widget->objectName());
+    result["class_name"] = widget->metaObject()->className();
+    result["text"] = toStdString(widgetText(widget));
+    result["visible"] = widget->isVisible();
+    result["enabled"] = widget->isEnabled();
+    return result;
+}
+
+sol::table actionDescription(sol::state &lua, QAction *action)
+{
+    sol::table result = lua.create_table();
+    result["object_name"] = toStdString(action->objectName());
+    result["text"] = toStdString(action->text());
+    result["shortcut"] = toStdString(action->shortcut().toString(QKeySequence::PortableText));
+    result["enabled"] = action->isEnabled();
+    result["visible"] = action->isVisible();
+    return result;
+}
+}
+
+void bindUI(sol::state &lua, QMainWindow *mainWindow)
+{
+    QPointer<QMainWindow> window(mainWindow);
+    sol::table mipsie = lua["mipsie"];
     sol::table ui = lua.create_table();
 
-    // Register wrapper types before exposing their constructors.
-    lua.new_usertype<UiWidget>(
-        "UiWidget",
-        "set_text", &UiWidget::setText,
-        "text", &UiWidget::text,
-        "set_placeholder", &UiWidget::setPlaceholder,
-        "on_click", &UiWidget::onClick
-        );
-
-    lua.new_usertype<UiLayout>(
-        "UiLayout",
-        "add", &UiLayout::add
-        );
-
-    lua.new_usertype<UiWindow>(
-        "UiWindow",
-        "set_title", &UiWindow::setTitle,
-        "set_size", &UiWindow::setSize,
-        "set_layout", &UiWindow::setLayout,
-        "show", &UiWindow::show,
-        "show_maximized", &UiWindow::showMaximized,
-        "menu_bar", &UiWindow::menuBar,
-        "close", &UiWindow::close
-        );
-
-    lua.new_usertype<UiAction>(
-        "UiAction",
-        "set_text", &UiAction::setText,
-        "set_shortcut", &UiAction::setShortcut,
-        "set_enabled", &UiAction::setEnabled,
-        "set_checkable", &UiAction::setCheckable,
-        "is_checked", &UiAction::isChecked,
-        "set_checked", &UiAction::setChecked,
-        "on_triggered", &UiAction::onTriggered,
-        "clear_callback", &UiAction::clearCallback
-        );
-
-    lua.new_usertype<UiMenu>(
-        "UiMenu",
-        "add_action", &UiMenu::addAction,
-        "show", &UiMenu::show
-        );
-
-    lua.new_usertype<UiMenuBar>(
-        "UiMenuBar",
-        "add_menu", &UiMenuBar::addMenu
-        );
-
-    // Create a window.
-    ui.set_function("window", [](const sol::table& options) {
-        requireGuiThread();
-
-        auto result = std::make_shared<UiWindow>(options);
-        allWindows.push_back(result);
-
+    ui.set_function("widgets", [&lua, window] {
+        sol::table result = lua.create_table();
+        if (!window)
+            return result;
+        QList<QWidget *> widgets{window.data()};
+        collectWidgets(window, widgets);
+        int index = 1;
+        for (QWidget *widget : widgets)
+            result[index++] = widgetDescription(lua, widget, window);
         return result;
     });
 
-    QPointer<QMainWindow> window = mainWindow;
+    ui.set_function("find", [&lua, window](const std::string &id) -> sol::object {
+        if (!window)
+            return sol::make_object(lua, sol::nil);
+        const QString widgetKey = toQString(id);
+        QWidget *widget = findWidget(window, widgetKey);
+        if (!widget)
+            return sol::make_object(lua, sol::nil);
 
-    ui.set_function("show_main_window", [window]() {
-        if (window) {
-            window->show();
+        QPointer<QMainWindow> root(window);
+        sol::table result = lua.create_table();
+        result["id"] = toStdString(widgetId(widget, window));
+        result["object_name"] = toStdString(widget->objectName());
+        result["class_name"] = widget->metaObject()->className();
+        result.set_function("text", [root, widgetKey] {
+            return root ? toStdString(widgetText(findWidget(root, widgetKey))) : std::string();
+        });
+        result.set_function("set_text", [root, widgetKey](const std::string &text) {
+            QWidget *target = root ? findWidget(root, widgetKey) : nullptr;
+            return target && setWidgetText(target, toQString(text));
+        });
+        result.set_function("visible", [root, widgetKey] {
+            QWidget *target = root ? findWidget(root, widgetKey) : nullptr;
+            return target && target->isVisible();
+        });
+        result.set_function("set_visible", [root, widgetKey](bool visible) {
+            QWidget *target = root ? findWidget(root, widgetKey) : nullptr;
+            if (!target)
+                return false;
+            target->setVisible(visible);
+            return true;
+        });
+        result.set_function("enabled", [root, widgetKey] {
+            QWidget *target = root ? findWidget(root, widgetKey) : nullptr;
+            return target && target->isEnabled();
+        });
+        result.set_function("set_enabled", [root, widgetKey](bool enabled) {
+            QWidget *target = root ? findWidget(root, widgetKey) : nullptr;
+            if (!target)
+                return false;
+            target->setEnabled(enabled);
+            return true;
+        });
+        result.set_function("focus", [root, widgetKey] {
+            QWidget *target = root ? findWidget(root, widgetKey) : nullptr;
+            if (!target)
+                return false;
+            target->setFocus(Qt::OtherFocusReason);
+            return true;
+        });
+        result.set_function("click", [root, widgetKey] {
+            QWidget *target = root ? findWidget(root, widgetKey) : nullptr;
+            auto *button = qobject_cast<QAbstractButton *>(target);
+            if (!button)
+                return false;
+            button->click();
+            return true;
+        });
+        result.set_function("current_index", [root, widgetKey] {
+            QWidget *target = root ? findWidget(root, widgetKey) : nullptr;
+            if (auto *tabs = qobject_cast<QTabWidget *>(target))
+                return tabs->currentIndex();
+            if (auto *combo = qobject_cast<QComboBox *>(target))
+                return combo->currentIndex();
+            return -1;
+        });
+        result.set_function("set_current_index", [root, widgetKey](int index) {
+            QWidget *target = root ? findWidget(root, widgetKey) : nullptr;
+            if (auto *tabs = qobject_cast<QTabWidget *>(target)) {
+                if (index < 0 || index >= tabs->count())
+                    return false;
+                tabs->setCurrentIndex(index);
+                return true;
+            }
+            if (auto *combo = qobject_cast<QComboBox *>(target)) {
+                if (index < 0 || index >= combo->count())
+                    return false;
+                combo->setCurrentIndex(index);
+                return true;
+            }
+            return false;
+        });
+        return sol::make_object(lua, result);
+    });
+
+    ui.set_function("actions", [&lua, window] {
+        sol::table result = lua.create_table();
+        if (!window)
+            return result;
+        const QList<QAction *> actions = window->findChildren<QAction *>();
+        int index = 1;
+        for (QAction *action : actions)
+            result[index++] = actionDescription(lua, action);
+        return result;
+    });
+
+    ui.set_function("find_action", [&lua, window](const std::string &key) -> sol::object {
+        if (!window)
+            return sol::make_object(lua, sol::nil);
+        const QString actionKey = toQString(key);
+        const QList<QAction *> actions = window->findChildren<QAction *>();
+        QAction *found = nullptr;
+        for (QAction *action : actions) {
+            if (action->objectName() == actionKey || action->text() == actionKey) {
+                found = action;
+                break;
+            }
         }
+        if (!found)
+            return sol::make_object(lua, sol::nil);
+
+        sol::table result = lua.create_table();
+        result["object_name"] = toStdString(found->objectName());
+        result["text"] = toStdString(found->text());
+        QPointer<QAction> action(found);
+        result.set_function("trigger", [action] {
+            if (!action || !action->isEnabled() || !action->isVisible())
+                return false;
+            action->trigger();
+            return true;
+        });
+        result.set_function("enabled", [action] {
+            return action && action->isEnabled();
+        });
+        result.set_function("set_enabled", [action](bool enabled) {
+            if (!action)
+                return false;
+            action->setEnabled(enabled);
+            return true;
+        });
+        result.set_function("visible", [action] {
+            return action && action->isVisible();
+        });
+        result.set_function("set_visible", [action](bool visible) {
+            if (!action)
+                return false;
+            action->setVisible(visible);
+            return true;
+        });
+        result.set_function("shortcut", [action] {
+            return action
+                ? toStdString(action->shortcut().toString(QKeySequence::PortableText))
+                : std::string();
+        });
+        result.set_function("set_shortcut", [action](const std::string &shortcut) {
+            if (!action)
+                return false;
+            action->setShortcut(QKeySequence::fromString(
+                toQString(shortcut), QKeySequence::PortableText));
+            return true;
+        });
+        return sol::make_object(lua, result);
     });
 
-    ui.set_function("maximize_main_window", [window]() {
-        if (window) {
-            window->showMaximized();
+    ui.set_function("trigger_action", [window](const std::string &name) {
+        if (!window)
+            return false;
+        const QString actionName = toQString(name);
+        const QList<QAction *> actions = window->findChildren<QAction *>();
+        for (QAction *action : actions) {
+            if (action->objectName() == actionName || action->text() == actionName) {
+                if (!action->isEnabled() || !action->isVisible())
+                    return false;
+                action->trigger();
+                return true;
+            }
         }
+        return false;
     });
 
-    // Create layouts.
-    ui.set_function("vertical_layout", []() {
-        requireGuiThread();
+    mipsie["ui"] = ui;
 
-        return std::make_shared<UiLayout>(
-            new QVBoxLayout()
-            );
+    sol::table editorApi = lua.create_table();
+    editorApi.set_function("current_line", [&lua, window]() -> sol::object {
+        if (!window)
+            return sol::make_object(lua, sol::nil);
+        Editor *editor = window->findChild<Editor *>();
+        QTextEdit *textEditor = editor ? editor->currentEditor() : nullptr;
+        if (!textEditor)
+            return sol::make_object(lua, sol::nil);
+        return sol::make_object(lua, toStdString(textEditor->textCursor().block().text()));
     });
-
-    ui.set_function("horizontal_layout", []() {
-        requireGuiThread();
-
-        return std::make_shared<UiLayout>(
-            new QHBoxLayout()
-            );
-    });
-
-    // Create a label.
-    ui.set_function("label", [](sol::table options) {
-        requireGuiThread();
-
-        auto* label = new QLabel(
-            toQString(getStringOption(options, "text"))
-            );
-
-        auto result = std::make_shared<UiWidget>(label);
-        allWidgets.push_back(result);
-
-        return result;
-    });
-
-    // Create a button.
-    ui.set_function("button", [](sol::table options) {
-        requireGuiThread();
-
-        auto* button = new QPushButton(
-            toQString(
-                getStringOption(options, "text", "Button")
-                )
-            );
-
-        auto result = std::make_shared<UiWidget>(button);
-        allWidgets.push_back(result);
-
-        return result;
-    });
-
-    // Create a plain-text editor.
-    ui.set_function("text_editor", [](sol::table options) {
-        requireGuiThread();
-
-        auto* editor = new QPlainTextEdit();
-
-        editor->setPlaceholderText(
-            toQString(getStringOption(options, "placeholder"))
-            );
-
-        editor->setPlainText(
-            toQString(getStringOption(options, "text"))
-            );
-
-        auto result = std::make_shared<UiWidget>(editor);
-        allWidgets.push_back(result);
-
-        return result;
-    });
-
-    // Create an action
-    ui.set_function("action", [](const sol::table& options) {
-        requireGuiThread();
-
-        return std::make_shared<UiAction>(options);
-    });
-
-    // Create a menu
-    ui.set_function("menu", [](const sol::table& options) {
-        requireGuiThread();
-
-        const std::string title =
-            getStringOption(options, "title", "");
-
-        return std::make_shared<UiMenu>(title);
-    });
-
-    // Called from LuaRuntime::shutdown() before destroying Lua.
-    ui.set_function("shutdown", []() {
-        shutdownUi();
-    });
-
-    host["ui"] = ui;
+    mipsie["editor"] = editorApi;
 }

@@ -2827,5 +2827,1663 @@
                                      ],
                         "source":  "https://asm-editor.specy.app/documentation/mips/instruction/xori"
                     }
+,
+                                            {
+                            "longName":  "abs (double-precision)",
+                            "name":  "abs.d",
+                            "source":  "https://asm-editor.specy.app/documentation/mips/instruction/abs.d",
+                            "summary":  "Stores the absolute value of the source floating-point value.",
+                            "forms":  [
+                                          "abs.d $f0,$f1"
+                                      ],
+                            "operands":  [
+                                             {
+                                                 "operand":  "$freg",
+                                                 "description":  "A floating-point register."
+                                             },
+                                             {
+                                                 "operand":  "$freg",
+                                                 "description":  "A floating-point register."
+                                             }
+                                         ]
+                        },
+                        {
+                            "longName":  "abs (single-precision)",
+                            "name":  "abs.s",
+                            "source":  "https://asm-editor.specy.app/documentation/mips/instruction/abs.s",
+                            "summary":  "Stores the absolute value of the source floating-point value.",
+                            "forms":  [
+                                          "abs.s $f0,$f1"
+                                      ],
+                            "operands":  [
+                                             {
+                                                 "operand":  "$freg",
+                                                 "description":  "A floating-point register."
+                                             },
+                                             {
+                                                 "operand":  "$freg",
+                                                 "description":  "A floating-point register."
+                                             }
+                                         ]
+                        },
+                        {
+                            "longName":  "Add (double-precision)",
+                            "name":  "add.d",
+                            "source":  "https://asm-editor.specy.app/documentation/mips/instruction/add.d",
+                            "summary":  "Adds floating-point values using double-precision arithmetic and stores the result in the destination FP register.",
+                            "forms":  [
+                                          "add.d $f0,$f1,$f2"
+                                      ],
+                            "operands":  [
+                                             {
+                                                 "operand":  "$freg",
+                                                 "description":  "A floating-point register."
+                                             },
+                                             {
+                                                 "operand":  "$freg",
+                                                 "description":  "A floating-point register."
+                                             },
+                                             {
+                                                 "operand":  "$freg",
+                                                 "description":  "A floating-point register."
+                                             }
+                                         ]
+                        },
+                        {
+                            "longName":  "Floating-point add (single)",
+                            "name":  "add.s",
+                            "source":  "https://asm-editor.specy.app/documentation/mips/instruction/add.s",
+                            "summary":  "Sets $f0 = $f1 + $f3 using IEEE 754 single-precision (32-bit) arithmetic. Single-precision values have about 7 significant decimal digits. The result is stored in one FP register.",
+                            "forms":  [
+                                          "add.s $f0,$f1,$f3"
+                                      ],
+                            "operands":  [
+                                             {
+                                                 "operand":  "$freg",
+                                                 "description":  "A floating-point register."
+                                             },
+                                             {
+                                                 "operand":  "$freg",
+                                                 "description":  "A floating-point register."
+                                             },
+                                             {
+                                                 "operand":  "$freg",
+                                                 "description":  "A floating-point register."
+                                             }
+                                         ]
+                        },
+                        {
+                            "longName":  "Floating-point comparison (double-precision)",
+                            "name":  "c.eq.d",
+                            "source":  "https://asm-editor.specy.app/documentation/mips/instruction/c.eq.d",
+                            "summary":  "Compares the source floating-point values and writes the result to a coprocessor 1 condition flag. The optional first immediate selects a flag; use bc1t or bc1f to branch on it.",
+                            "forms":  [
+                                          "c.eq.d $f0,$f1",
+                                          "c.eq.d 1,$f0,$f1"
+                                      ],
+                            "operands":  [
+                                             {
+                                                 "operand":  "[$freg / imm]",
+                                                 "description":  "Optional condition flag immediate, followed by two floating-point registers."
+                                             },
+                                             {
+                                                 "operand":  "$freg",
+                                                 "description":  "A floating-point register."
+                                             },
+                                             {
+                                                 "operand":  "$freg",
+                                                 "description":  "A floating-point register."
+                                             }
+                                         ]
+                        },
+                        {
+                            "longName":  "Floating-point comparison (single-precision)",
+                            "name":  "c.eq.s",
+                            "source":  "https://asm-editor.specy.app/documentation/mips/instruction/c.eq.s",
+                            "summary":  "Compares the source floating-point values and writes the result to a coprocessor 1 condition flag. The optional first immediate selects a flag; use bc1t or bc1f to branch on it.",
+                            "forms":  [
+                                          "c.eq.s $f0,$f1",
+                                          "c.eq.s 1,$f0,$f1"
+                                      ],
+                            "operands":  [
+                                             {
+                                                 "operand":  "[$freg / imm]",
+                                                 "description":  "Optional condition flag immediate, followed by two floating-point registers."
+                                             },
+                                             {
+                                                 "operand":  "$freg",
+                                                 "description":  "A floating-point register."
+                                             },
+                                             {
+                                                 "operand":  "$freg",
+                                                 "description":  "A floating-point register."
+                                             }
+                                         ]
+                        },
+                        {
+                            "longName":  "Floating-point comparison (double-precision)",
+                            "name":  "c.f.d",
+                            "source":  "https://asm-editor.specy.app/documentation/mips/instruction/c.f.d",
+                            "summary":  "Compares the source floating-point values and writes the result to a coprocessor 1 condition flag. The optional first immediate selects a flag; use bc1t or bc1f to branch on it.",
+                            "forms":  [
+                                          "c.f.d $f0,$f1",
+                                          "c.f.d 1,$f0,$f1"
+                                      ],
+                            "operands":  [
+                                             {
+                                                 "operand":  "[$freg / imm]",
+                                                 "description":  "Optional condition flag immediate, followed by two floating-point registers."
+                                             },
+                                             {
+                                                 "operand":  "$freg",
+                                                 "description":  "A floating-point register."
+                                             },
+                                             {
+                                                 "operand":  "$freg",
+                                                 "description":  "A floating-point register."
+                                             }
+                                         ]
+                        },
+                        {
+                            "longName":  "Floating-point comparison (single-precision)",
+                            "name":  "c.f.s",
+                            "source":  "https://asm-editor.specy.app/documentation/mips/instruction/c.f.s",
+                            "summary":  "Compares the source floating-point values and writes the result to a coprocessor 1 condition flag. The optional first immediate selects a flag; use bc1t or bc1f to branch on it.",
+                            "forms":  [
+                                          "c.f.s $f0,$f1",
+                                          "c.f.s 1,$f0,$f1"
+                                      ],
+                            "operands":  [
+                                             {
+                                                 "operand":  "[$freg / imm]",
+                                                 "description":  "Optional condition flag immediate, followed by two floating-point registers."
+                                             },
+                                             {
+                                                 "operand":  "$freg",
+                                                 "description":  "A floating-point register."
+                                             },
+                                             {
+                                                 "operand":  "$freg",
+                                                 "description":  "A floating-point register."
+                                             }
+                                         ]
+                        },
+                        {
+                            "longName":  "Floating-point comparison (double-precision)",
+                            "name":  "c.le.d",
+                            "source":  "https://asm-editor.specy.app/documentation/mips/instruction/c.le.d",
+                            "summary":  "Compares the source floating-point values and writes the result to a coprocessor 1 condition flag. The optional first immediate selects a flag; use bc1t or bc1f to branch on it.",
+                            "forms":  [
+                                          "c.le.d $f0,$f1",
+                                          "c.le.d 1,$f0,$f1"
+                                      ],
+                            "operands":  [
+                                             {
+                                                 "operand":  "[$freg / imm]",
+                                                 "description":  "Optional condition flag immediate, followed by two floating-point registers."
+                                             },
+                                             {
+                                                 "operand":  "$freg",
+                                                 "description":  "A floating-point register."
+                                             },
+                                             {
+                                                 "operand":  "$freg",
+                                                 "description":  "A floating-point register."
+                                             }
+                                         ]
+                        },
+                        {
+                            "longName":  "Floating-point comparison (single-precision)",
+                            "name":  "c.le.s",
+                            "source":  "https://asm-editor.specy.app/documentation/mips/instruction/c.le.s",
+                            "summary":  "Compares the source floating-point values and writes the result to a coprocessor 1 condition flag. The optional first immediate selects a flag; use bc1t or bc1f to branch on it.",
+                            "forms":  [
+                                          "c.le.s $f0,$f1",
+                                          "c.le.s 1,$f0,$f1"
+                                      ],
+                            "operands":  [
+                                             {
+                                                 "operand":  "[$freg / imm]",
+                                                 "description":  "Optional condition flag immediate, followed by two floating-point registers."
+                                             },
+                                             {
+                                                 "operand":  "$freg",
+                                                 "description":  "A floating-point register."
+                                             },
+                                             {
+                                                 "operand":  "$freg",
+                                                 "description":  "A floating-point register."
+                                             }
+                                         ]
+                        },
+                        {
+                            "longName":  "Floating-point comparison (double-precision)",
+                            "name":  "c.lt.d",
+                            "source":  "https://asm-editor.specy.app/documentation/mips/instruction/c.lt.d",
+                            "summary":  "Compares the source floating-point values and writes the result to a coprocessor 1 condition flag. The optional first immediate selects a flag; use bc1t or bc1f to branch on it.",
+                            "forms":  [
+                                          "c.lt.d $f0,$f1",
+                                          "c.lt.d 1,$f0,$f1"
+                                      ],
+                            "operands":  [
+                                             {
+                                                 "operand":  "[$freg / imm]",
+                                                 "description":  "Optional condition flag immediate, followed by two floating-point registers."
+                                             },
+                                             {
+                                                 "operand":  "$freg",
+                                                 "description":  "A floating-point register."
+                                             },
+                                             {
+                                                 "operand":  "$freg",
+                                                 "description":  "A floating-point register."
+                                             }
+                                         ]
+                        },
+                        {
+                            "longName":  "Floating-point comparison (single-precision)",
+                            "name":  "c.lt.s",
+                            "source":  "https://asm-editor.specy.app/documentation/mips/instruction/c.lt.s",
+                            "summary":  "Compares the source floating-point values and writes the result to a coprocessor 1 condition flag. The optional first immediate selects a flag; use bc1t or bc1f to branch on it.",
+                            "forms":  [
+                                          "c.lt.s $f0,$f1",
+                                          "c.lt.s 1,$f0,$f1"
+                                      ],
+                            "operands":  [
+                                             {
+                                                 "operand":  "[$freg / imm]",
+                                                 "description":  "Optional condition flag immediate, followed by two floating-point registers."
+                                             },
+                                             {
+                                                 "operand":  "$freg",
+                                                 "description":  "A floating-point register."
+                                             },
+                                             {
+                                                 "operand":  "$freg",
+                                                 "description":  "A floating-point register."
+                                             }
+                                         ]
+                        },
+                        {
+                            "longName":  "Floating-point comparison (double-precision)",
+                            "name":  "c.nge.d",
+                            "source":  "https://asm-editor.specy.app/documentation/mips/instruction/c.nge.d",
+                            "summary":  "Compares the source floating-point values and writes the result to a coprocessor 1 condition flag. The optional first immediate selects a flag; use bc1t or bc1f to branch on it.",
+                            "forms":  [
+                                          "c.nge.d $f0,$f1",
+                                          "c.nge.d 1,$f0,$f1"
+                                      ],
+                            "operands":  [
+                                             {
+                                                 "operand":  "[$freg / imm]",
+                                                 "description":  "Optional condition flag immediate, followed by two floating-point registers."
+                                             },
+                                             {
+                                                 "operand":  "$freg",
+                                                 "description":  "A floating-point register."
+                                             },
+                                             {
+                                                 "operand":  "$freg",
+                                                 "description":  "A floating-point register."
+                                             }
+                                         ]
+                        },
+                        {
+                            "longName":  "Floating-point comparison (single-precision)",
+                            "name":  "c.nge.s",
+                            "source":  "https://asm-editor.specy.app/documentation/mips/instruction/c.nge.s",
+                            "summary":  "Compares the source floating-point values and writes the result to a coprocessor 1 condition flag. The optional first immediate selects a flag; use bc1t or bc1f to branch on it.",
+                            "forms":  [
+                                          "c.nge.s $f0,$f1",
+                                          "c.nge.s 1,$f0,$f1"
+                                      ],
+                            "operands":  [
+                                             {
+                                                 "operand":  "[$freg / imm]",
+                                                 "description":  "Optional condition flag immediate, followed by two floating-point registers."
+                                             },
+                                             {
+                                                 "operand":  "$freg",
+                                                 "description":  "A floating-point register."
+                                             },
+                                             {
+                                                 "operand":  "$freg",
+                                                 "description":  "A floating-point register."
+                                             }
+                                         ]
+                        },
+                        {
+                            "longName":  "Floating-point comparison (double-precision)",
+                            "name":  "c.ngl.d",
+                            "source":  "https://asm-editor.specy.app/documentation/mips/instruction/c.ngl.d",
+                            "summary":  "Compares the source floating-point values and writes the result to a coprocessor 1 condition flag. The optional first immediate selects a flag; use bc1t or bc1f to branch on it.",
+                            "forms":  [
+                                          "c.ngl.d $f0,$f1",
+                                          "c.ngl.d 1,$f0,$f1"
+                                      ],
+                            "operands":  [
+                                             {
+                                                 "operand":  "[$freg / imm]",
+                                                 "description":  "Optional condition flag immediate, followed by two floating-point registers."
+                                             },
+                                             {
+                                                 "operand":  "$freg",
+                                                 "description":  "A floating-point register."
+                                             },
+                                             {
+                                                 "operand":  "$freg",
+                                                 "description":  "A floating-point register."
+                                             }
+                                         ]
+                        },
+                        {
+                            "longName":  "Floating-point comparison (single-precision)",
+                            "name":  "c.ngl.s",
+                            "source":  "https://asm-editor.specy.app/documentation/mips/instruction/c.ngl.s",
+                            "summary":  "Compares the source floating-point values and writes the result to a coprocessor 1 condition flag. The optional first immediate selects a flag; use bc1t or bc1f to branch on it.",
+                            "forms":  [
+                                          "c.ngl.s $f0,$f1",
+                                          "c.ngl.s 1,$f0,$f1"
+                                      ],
+                            "operands":  [
+                                             {
+                                                 "operand":  "[$freg / imm]",
+                                                 "description":  "Optional condition flag immediate, followed by two floating-point registers."
+                                             },
+                                             {
+                                                 "operand":  "$freg",
+                                                 "description":  "A floating-point register."
+                                             },
+                                             {
+                                                 "operand":  "$freg",
+                                                 "description":  "A floating-point register."
+                                             }
+                                         ]
+                        },
+                        {
+                            "longName":  "Floating-point comparison (double-precision)",
+                            "name":  "c.ngle.d",
+                            "source":  "https://asm-editor.specy.app/documentation/mips/instruction/c.ngle.d",
+                            "summary":  "Compares the source floating-point values and writes the result to a coprocessor 1 condition flag. The optional first immediate selects a flag; use bc1t or bc1f to branch on it.",
+                            "forms":  [
+                                          "c.ngle.d $f0,$f1",
+                                          "c.ngle.d 1,$f0,$f1"
+                                      ],
+                            "operands":  [
+                                             {
+                                                 "operand":  "[$freg / imm]",
+                                                 "description":  "Optional condition flag immediate, followed by two floating-point registers."
+                                             },
+                                             {
+                                                 "operand":  "$freg",
+                                                 "description":  "A floating-point register."
+                                             },
+                                             {
+                                                 "operand":  "$freg",
+                                                 "description":  "A floating-point register."
+                                             }
+                                         ]
+                        },
+                        {
+                            "longName":  "Floating-point comparison (single-precision)",
+                            "name":  "c.ngle.s",
+                            "source":  "https://asm-editor.specy.app/documentation/mips/instruction/c.ngle.s",
+                            "summary":  "Compares the source floating-point values and writes the result to a coprocessor 1 condition flag. The optional first immediate selects a flag; use bc1t or bc1f to branch on it.",
+                            "forms":  [
+                                          "c.ngle.s $f0,$f1",
+                                          "c.ngle.s 1,$f0,$f1"
+                                      ],
+                            "operands":  [
+                                             {
+                                                 "operand":  "[$freg / imm]",
+                                                 "description":  "Optional condition flag immediate, followed by two floating-point registers."
+                                             },
+                                             {
+                                                 "operand":  "$freg",
+                                                 "description":  "A floating-point register."
+                                             },
+                                             {
+                                                 "operand":  "$freg",
+                                                 "description":  "A floating-point register."
+                                             }
+                                         ]
+                        },
+                        {
+                            "longName":  "Floating-point comparison (double-precision)",
+                            "name":  "c.ngt.d",
+                            "source":  "https://asm-editor.specy.app/documentation/mips/instruction/c.ngt.d",
+                            "summary":  "Compares the source floating-point values and writes the result to a coprocessor 1 condition flag. The optional first immediate selects a flag; use bc1t or bc1f to branch on it.",
+                            "forms":  [
+                                          "c.ngt.d $f0,$f1",
+                                          "c.ngt.d 1,$f0,$f1"
+                                      ],
+                            "operands":  [
+                                             {
+                                                 "operand":  "[$freg / imm]",
+                                                 "description":  "Optional condition flag immediate, followed by two floating-point registers."
+                                             },
+                                             {
+                                                 "operand":  "$freg",
+                                                 "description":  "A floating-point register."
+                                             },
+                                             {
+                                                 "operand":  "$freg",
+                                                 "description":  "A floating-point register."
+                                             }
+                                         ]
+                        },
+                        {
+                            "longName":  "Floating-point comparison (single-precision)",
+                            "name":  "c.ngt.s",
+                            "source":  "https://asm-editor.specy.app/documentation/mips/instruction/c.ngt.s",
+                            "summary":  "Compares the source floating-point values and writes the result to a coprocessor 1 condition flag. The optional first immediate selects a flag; use bc1t or bc1f to branch on it.",
+                            "forms":  [
+                                          "c.ngt.s $f0,$f1",
+                                          "c.ngt.s 1,$f0,$f1"
+                                      ],
+                            "operands":  [
+                                             {
+                                                 "operand":  "[$freg / imm]",
+                                                 "description":  "Optional condition flag immediate, followed by two floating-point registers."
+                                             },
+                                             {
+                                                 "operand":  "$freg",
+                                                 "description":  "A floating-point register."
+                                             },
+                                             {
+                                                 "operand":  "$freg",
+                                                 "description":  "A floating-point register."
+                                             }
+                                         ]
+                        },
+                        {
+                            "longName":  "Floating-point comparison (double-precision)",
+                            "name":  "c.ole.d",
+                            "source":  "https://asm-editor.specy.app/documentation/mips/instruction/c.ole.d",
+                            "summary":  "Compares the source floating-point values and writes the result to a coprocessor 1 condition flag. The optional first immediate selects a flag; use bc1t or bc1f to branch on it.",
+                            "forms":  [
+                                          "c.ole.d $f0,$f1",
+                                          "c.ole.d 1,$f0,$f1"
+                                      ],
+                            "operands":  [
+                                             {
+                                                 "operand":  "[$freg / imm]",
+                                                 "description":  "Optional condition flag immediate, followed by two floating-point registers."
+                                             },
+                                             {
+                                                 "operand":  "$freg",
+                                                 "description":  "A floating-point register."
+                                             },
+                                             {
+                                                 "operand":  "$freg",
+                                                 "description":  "A floating-point register."
+                                             }
+                                         ]
+                        },
+                        {
+                            "longName":  "Floating-point comparison (single-precision)",
+                            "name":  "c.ole.s",
+                            "source":  "https://asm-editor.specy.app/documentation/mips/instruction/c.ole.s",
+                            "summary":  "Compares the source floating-point values and writes the result to a coprocessor 1 condition flag. The optional first immediate selects a flag; use bc1t or bc1f to branch on it.",
+                            "forms":  [
+                                          "c.ole.s $f0,$f1",
+                                          "c.ole.s 1,$f0,$f1"
+                                      ],
+                            "operands":  [
+                                             {
+                                                 "operand":  "[$freg / imm]",
+                                                 "description":  "Optional condition flag immediate, followed by two floating-point registers."
+                                             },
+                                             {
+                                                 "operand":  "$freg",
+                                                 "description":  "A floating-point register."
+                                             },
+                                             {
+                                                 "operand":  "$freg",
+                                                 "description":  "A floating-point register."
+                                             }
+                                         ]
+                        },
+                        {
+                            "longName":  "Floating-point comparison (double-precision)",
+                            "name":  "c.olt.d",
+                            "source":  "https://asm-editor.specy.app/documentation/mips/instruction/c.olt.d",
+                            "summary":  "Compares the source floating-point values and writes the result to a coprocessor 1 condition flag. The optional first immediate selects a flag; use bc1t or bc1f to branch on it.",
+                            "forms":  [
+                                          "c.olt.d $f0,$f1",
+                                          "c.olt.d 1,$f0,$f1"
+                                      ],
+                            "operands":  [
+                                             {
+                                                 "operand":  "[$freg / imm]",
+                                                 "description":  "Optional condition flag immediate, followed by two floating-point registers."
+                                             },
+                                             {
+                                                 "operand":  "$freg",
+                                                 "description":  "A floating-point register."
+                                             },
+                                             {
+                                                 "operand":  "$freg",
+                                                 "description":  "A floating-point register."
+                                             }
+                                         ]
+                        },
+                        {
+                            "longName":  "Floating-point comparison (single-precision)",
+                            "name":  "c.olt.s",
+                            "source":  "https://asm-editor.specy.app/documentation/mips/instruction/c.olt.s",
+                            "summary":  "Compares the source floating-point values and writes the result to a coprocessor 1 condition flag. The optional first immediate selects a flag; use bc1t or bc1f to branch on it.",
+                            "forms":  [
+                                          "c.olt.s $f0,$f1",
+                                          "c.olt.s 1,$f0,$f1"
+                                      ],
+                            "operands":  [
+                                             {
+                                                 "operand":  "[$freg / imm]",
+                                                 "description":  "Optional condition flag immediate, followed by two floating-point registers."
+                                             },
+                                             {
+                                                 "operand":  "$freg",
+                                                 "description":  "A floating-point register."
+                                             },
+                                             {
+                                                 "operand":  "$freg",
+                                                 "description":  "A floating-point register."
+                                             }
+                                         ]
+                        },
+                        {
+                            "longName":  "Floating-point comparison (double-precision)",
+                            "name":  "c.seq.d",
+                            "source":  "https://asm-editor.specy.app/documentation/mips/instruction/c.seq.d",
+                            "summary":  "Compares the source floating-point values and writes the result to a coprocessor 1 condition flag. The optional first immediate selects a flag; use bc1t or bc1f to branch on it.",
+                            "forms":  [
+                                          "c.seq.d $f0,$f1",
+                                          "c.seq.d 1,$f0,$f1"
+                                      ],
+                            "operands":  [
+                                             {
+                                                 "operand":  "[$freg / imm]",
+                                                 "description":  "Optional condition flag immediate, followed by two floating-point registers."
+                                             },
+                                             {
+                                                 "operand":  "$freg",
+                                                 "description":  "A floating-point register."
+                                             },
+                                             {
+                                                 "operand":  "$freg",
+                                                 "description":  "A floating-point register."
+                                             }
+                                         ]
+                        },
+                        {
+                            "longName":  "Floating-point comparison (single-precision)",
+                            "name":  "c.seq.s",
+                            "source":  "https://asm-editor.specy.app/documentation/mips/instruction/c.seq.s",
+                            "summary":  "Compares the source floating-point values and writes the result to a coprocessor 1 condition flag. The optional first immediate selects a flag; use bc1t or bc1f to branch on it.",
+                            "forms":  [
+                                          "c.seq.s $f0,$f1",
+                                          "c.seq.s 1,$f0,$f1"
+                                      ],
+                            "operands":  [
+                                             {
+                                                 "operand":  "[$freg / imm]",
+                                                 "description":  "Optional condition flag immediate, followed by two floating-point registers."
+                                             },
+                                             {
+                                                 "operand":  "$freg",
+                                                 "description":  "A floating-point register."
+                                             },
+                                             {
+                                                 "operand":  "$freg",
+                                                 "description":  "A floating-point register."
+                                             }
+                                         ]
+                        },
+                        {
+                            "longName":  "Floating-point comparison (double-precision)",
+                            "name":  "c.sf.d",
+                            "source":  "https://asm-editor.specy.app/documentation/mips/instruction/c.sf.d",
+                            "summary":  "Compares the source floating-point values and writes the result to a coprocessor 1 condition flag. The optional first immediate selects a flag; use bc1t or bc1f to branch on it.",
+                            "forms":  [
+                                          "c.sf.d $f0,$f1",
+                                          "c.sf.d 1,$f0,$f1"
+                                      ],
+                            "operands":  [
+                                             {
+                                                 "operand":  "[$freg / imm]",
+                                                 "description":  "Optional condition flag immediate, followed by two floating-point registers."
+                                             },
+                                             {
+                                                 "operand":  "$freg",
+                                                 "description":  "A floating-point register."
+                                             },
+                                             {
+                                                 "operand":  "$freg",
+                                                 "description":  "A floating-point register."
+                                             }
+                                         ]
+                        },
+                        {
+                            "longName":  "Floating-point comparison (single-precision)",
+                            "name":  "c.sf.s",
+                            "source":  "https://asm-editor.specy.app/documentation/mips/instruction/c.sf.s",
+                            "summary":  "Compares the source floating-point values and writes the result to a coprocessor 1 condition flag. The optional first immediate selects a flag; use bc1t or bc1f to branch on it.",
+                            "forms":  [
+                                          "c.sf.s $f0,$f1",
+                                          "c.sf.s 1,$f0,$f1"
+                                      ],
+                            "operands":  [
+                                             {
+                                                 "operand":  "[$freg / imm]",
+                                                 "description":  "Optional condition flag immediate, followed by two floating-point registers."
+                                             },
+                                             {
+                                                 "operand":  "$freg",
+                                                 "description":  "A floating-point register."
+                                             },
+                                             {
+                                                 "operand":  "$freg",
+                                                 "description":  "A floating-point register."
+                                             }
+                                         ]
+                        },
+                        {
+                            "longName":  "Floating-point comparison (double-precision)",
+                            "name":  "c.ueq.d",
+                            "source":  "https://asm-editor.specy.app/documentation/mips/instruction/c.ueq.d",
+                            "summary":  "Compares the source floating-point values and writes the result to a coprocessor 1 condition flag. The optional first immediate selects a flag; use bc1t or bc1f to branch on it.",
+                            "forms":  [
+                                          "c.ueq.d $f0,$f1",
+                                          "c.ueq.d 1,$f0,$f1"
+                                      ],
+                            "operands":  [
+                                             {
+                                                 "operand":  "[$freg / imm]",
+                                                 "description":  "Optional condition flag immediate, followed by two floating-point registers."
+                                             },
+                                             {
+                                                 "operand":  "$freg",
+                                                 "description":  "A floating-point register."
+                                             },
+                                             {
+                                                 "operand":  "$freg",
+                                                 "description":  "A floating-point register."
+                                             }
+                                         ]
+                        },
+                        {
+                            "longName":  "Floating-point comparison (single-precision)",
+                            "name":  "c.ueq.s",
+                            "source":  "https://asm-editor.specy.app/documentation/mips/instruction/c.ueq.s",
+                            "summary":  "Compares the source floating-point values and writes the result to a coprocessor 1 condition flag. The optional first immediate selects a flag; use bc1t or bc1f to branch on it.",
+                            "forms":  [
+                                          "c.ueq.s $f0,$f1",
+                                          "c.ueq.s 1,$f0,$f1"
+                                      ],
+                            "operands":  [
+                                             {
+                                                 "operand":  "[$freg / imm]",
+                                                 "description":  "Optional condition flag immediate, followed by two floating-point registers."
+                                             },
+                                             {
+                                                 "operand":  "$freg",
+                                                 "description":  "A floating-point register."
+                                             },
+                                             {
+                                                 "operand":  "$freg",
+                                                 "description":  "A floating-point register."
+                                             }
+                                         ]
+                        },
+                        {
+                            "longName":  "Floating-point comparison (double-precision)",
+                            "name":  "c.ule.d",
+                            "source":  "https://asm-editor.specy.app/documentation/mips/instruction/c.ule.d",
+                            "summary":  "Compares the source floating-point values and writes the result to a coprocessor 1 condition flag. The optional first immediate selects a flag; use bc1t or bc1f to branch on it.",
+                            "forms":  [
+                                          "c.ule.d $f0,$f1",
+                                          "c.ule.d 1,$f0,$f1"
+                                      ],
+                            "operands":  [
+                                             {
+                                                 "operand":  "[$freg / imm]",
+                                                 "description":  "Optional condition flag immediate, followed by two floating-point registers."
+                                             },
+                                             {
+                                                 "operand":  "$freg",
+                                                 "description":  "A floating-point register."
+                                             },
+                                             {
+                                                 "operand":  "$freg",
+                                                 "description":  "A floating-point register."
+                                             }
+                                         ]
+                        },
+                        {
+                            "longName":  "Floating-point comparison (single-precision)",
+                            "name":  "c.ule.s",
+                            "source":  "https://asm-editor.specy.app/documentation/mips/instruction/c.ule.s",
+                            "summary":  "Compares the source floating-point values and writes the result to a coprocessor 1 condition flag. The optional first immediate selects a flag; use bc1t or bc1f to branch on it.",
+                            "forms":  [
+                                          "c.ule.s $f0,$f1",
+                                          "c.ule.s 1,$f0,$f1"
+                                      ],
+                            "operands":  [
+                                             {
+                                                 "operand":  "[$freg / imm]",
+                                                 "description":  "Optional condition flag immediate, followed by two floating-point registers."
+                                             },
+                                             {
+                                                 "operand":  "$freg",
+                                                 "description":  "A floating-point register."
+                                             },
+                                             {
+                                                 "operand":  "$freg",
+                                                 "description":  "A floating-point register."
+                                             }
+                                         ]
+                        },
+                        {
+                            "longName":  "Floating-point comparison (double-precision)",
+                            "name":  "c.ult.d",
+                            "source":  "https://asm-editor.specy.app/documentation/mips/instruction/c.ult.d",
+                            "summary":  "Compares the source floating-point values and writes the result to a coprocessor 1 condition flag. The optional first immediate selects a flag; use bc1t or bc1f to branch on it.",
+                            "forms":  [
+                                          "c.ult.d $f0,$f1",
+                                          "c.ult.d 1,$f0,$f1"
+                                      ],
+                            "operands":  [
+                                             {
+                                                 "operand":  "[$freg / imm]",
+                                                 "description":  "Optional condition flag immediate, followed by two floating-point registers."
+                                             },
+                                             {
+                                                 "operand":  "$freg",
+                                                 "description":  "A floating-point register."
+                                             },
+                                             {
+                                                 "operand":  "$freg",
+                                                 "description":  "A floating-point register."
+                                             }
+                                         ]
+                        },
+                        {
+                            "longName":  "Floating-point comparison (single-precision)",
+                            "name":  "c.ult.s",
+                            "source":  "https://asm-editor.specy.app/documentation/mips/instruction/c.ult.s",
+                            "summary":  "Compares the source floating-point values and writes the result to a coprocessor 1 condition flag. The optional first immediate selects a flag; use bc1t or bc1f to branch on it.",
+                            "forms":  [
+                                          "c.ult.s $f0,$f1",
+                                          "c.ult.s 1,$f0,$f1"
+                                      ],
+                            "operands":  [
+                                             {
+                                                 "operand":  "[$freg / imm]",
+                                                 "description":  "Optional condition flag immediate, followed by two floating-point registers."
+                                             },
+                                             {
+                                                 "operand":  "$freg",
+                                                 "description":  "A floating-point register."
+                                             },
+                                             {
+                                                 "operand":  "$freg",
+                                                 "description":  "A floating-point register."
+                                             }
+                                         ]
+                        },
+                        {
+                            "longName":  "Floating-point comparison (double-precision)",
+                            "name":  "c.un.d",
+                            "source":  "https://asm-editor.specy.app/documentation/mips/instruction/c.un.d",
+                            "summary":  "Compares the source floating-point values and writes the result to a coprocessor 1 condition flag. The optional first immediate selects a flag; use bc1t or bc1f to branch on it.",
+                            "forms":  [
+                                          "c.un.d $f0,$f1",
+                                          "c.un.d 1,$f0,$f1"
+                                      ],
+                            "operands":  [
+                                             {
+                                                 "operand":  "[$freg / imm]",
+                                                 "description":  "Optional condition flag immediate, followed by two floating-point registers."
+                                             },
+                                             {
+                                                 "operand":  "$freg",
+                                                 "description":  "A floating-point register."
+                                             },
+                                             {
+                                                 "operand":  "$freg",
+                                                 "description":  "A floating-point register."
+                                             }
+                                         ]
+                        },
+                        {
+                            "longName":  "Floating-point comparison (single-precision)",
+                            "name":  "c.un.s",
+                            "source":  "https://asm-editor.specy.app/documentation/mips/instruction/c.un.s",
+                            "summary":  "Compares the source floating-point values and writes the result to a coprocessor 1 condition flag. The optional first immediate selects a flag; use bc1t or bc1f to branch on it.",
+                            "forms":  [
+                                          "c.un.s $f0,$f1",
+                                          "c.un.s 1,$f0,$f1"
+                                      ],
+                            "operands":  [
+                                             {
+                                                 "operand":  "[$freg / imm]",
+                                                 "description":  "Optional condition flag immediate, followed by two floating-point registers."
+                                             },
+                                             {
+                                                 "operand":  "$freg",
+                                                 "description":  "A floating-point register."
+                                             },
+                                             {
+                                                 "operand":  "$freg",
+                                                 "description":  "A floating-point register."
+                                             }
+                                         ]
+                        },
+                        {
+                            "longName":  "Ceil double-precision to word",
+                            "name":  "ceil.w.d",
+                            "source":  "https://asm-editor.specy.app/documentation/mips/instruction/ceil.w.d",
+                            "summary":  "Converts the source double-precision value to a 32-bit word, rounding ceil, and stores the result in the destination FP register.",
+                            "forms":  [
+                                          "ceil.w.d $f0,$f1"
+                                      ],
+                            "operands":  [
+                                             {
+                                                 "operand":  "$freg",
+                                                 "description":  "A floating-point register."
+                                             },
+                                             {
+                                                 "operand":  "$freg",
+                                                 "description":  "A floating-point register."
+                                             }
+                                         ]
+                        },
+                        {
+                            "longName":  "Ceil single-precision to word",
+                            "name":  "ceil.w.s",
+                            "source":  "https://asm-editor.specy.app/documentation/mips/instruction/ceil.w.s",
+                            "summary":  "Converts the source single-precision value to a 32-bit word, rounding ceil, and stores the result in the destination FP register.",
+                            "forms":  [
+                                          "ceil.w.s $f0,$f1"
+                                      ],
+                            "operands":  [
+                                             {
+                                                 "operand":  "$freg",
+                                                 "description":  "A floating-point register."
+                                             },
+                                             {
+                                                 "operand":  "$freg",
+                                                 "description":  "A floating-point register."
+                                             }
+                                         ]
+                        },
+                        {
+                            "longName":  "Convert s to d",
+                            "name":  "cvt.d.s",
+                            "source":  "https://asm-editor.specy.app/documentation/mips/instruction/cvt.d.s",
+                            "summary":  "Converts the value in the source FP register from s format to d format and stores it in the destination FP register.",
+                            "forms":  [
+                                          "cvt.d.s $f0,$f1"
+                                      ],
+                            "operands":  [
+                                             {
+                                                 "operand":  "$freg",
+                                                 "description":  "A floating-point register."
+                                             },
+                                             {
+                                                 "operand":  "$freg",
+                                                 "description":  "A floating-point register."
+                                             }
+                                         ]
+                        },
+                        {
+                            "longName":  "Convert w to d",
+                            "name":  "cvt.d.w",
+                            "source":  "https://asm-editor.specy.app/documentation/mips/instruction/cvt.d.w",
+                            "summary":  "Converts the value in the source FP register from w format to d format and stores it in the destination FP register.",
+                            "forms":  [
+                                          "cvt.d.w $f0,$f1"
+                                      ],
+                            "operands":  [
+                                             {
+                                                 "operand":  "$freg",
+                                                 "description":  "A floating-point register."
+                                             },
+                                             {
+                                                 "operand":  "$freg",
+                                                 "description":  "A floating-point register."
+                                             }
+                                         ]
+                        },
+                        {
+                            "longName":  "Convert d to s",
+                            "name":  "cvt.s.d",
+                            "source":  "https://asm-editor.specy.app/documentation/mips/instruction/cvt.s.d",
+                            "summary":  "Converts the value in the source FP register from d format to s format and stores it in the destination FP register.",
+                            "forms":  [
+                                          "cvt.s.d $f0,$f1"
+                                      ],
+                            "operands":  [
+                                             {
+                                                 "operand":  "$freg",
+                                                 "description":  "A floating-point register."
+                                             },
+                                             {
+                                                 "operand":  "$freg",
+                                                 "description":  "A floating-point register."
+                                             }
+                                         ]
+                        },
+                        {
+                            "longName":  "Convert integer word to single-precision",
+                            "name":  "cvt.s.w",
+                            "source":  "https://asm-editor.specy.app/documentation/mips/instruction/cvt.s.w",
+                            "summary":  "Treats the 32-bit integer stored in $f1 as a signed integer and converts it to a single-precision float stored in $f0.",
+                            "forms":  [
+                                          "cvt.s.w $f0,$f1"
+                                      ],
+                            "operands":  [
+                                             {
+                                                 "operand":  "$freg",
+                                                 "description":  "A floating-point register."
+                                             },
+                                             {
+                                                 "operand":  "$freg",
+                                                 "description":  "A floating-point register."
+                                             }
+                                         ]
+                        },
+                        {
+                            "longName":  "Convert d to w",
+                            "name":  "cvt.w.d",
+                            "source":  "https://asm-editor.specy.app/documentation/mips/instruction/cvt.w.d",
+                            "summary":  "Converts the value in the source FP register from d format to w format and stores it in the destination FP register.",
+                            "forms":  [
+                                          "cvt.w.d $f0,$f1"
+                                      ],
+                            "operands":  [
+                                             {
+                                                 "operand":  "$freg",
+                                                 "description":  "A floating-point register."
+                                             },
+                                             {
+                                                 "operand":  "$freg",
+                                                 "description":  "A floating-point register."
+                                             }
+                                         ]
+                        },
+                        {
+                            "longName":  "Convert s to w",
+                            "name":  "cvt.w.s",
+                            "source":  "https://asm-editor.specy.app/documentation/mips/instruction/cvt.w.s",
+                            "summary":  "Converts the value in the source FP register from s format to w format and stores it in the destination FP register.",
+                            "forms":  [
+                                          "cvt.w.s $f0,$f1"
+                                      ],
+                            "operands":  [
+                                             {
+                                                 "operand":  "$freg",
+                                                 "description":  "A floating-point register."
+                                             },
+                                             {
+                                                 "operand":  "$freg",
+                                                 "description":  "A floating-point register."
+                                             }
+                                         ]
+                        },
+                        {
+                            "longName":  "Div (double-precision)",
+                            "name":  "div.d",
+                            "source":  "https://asm-editor.specy.app/documentation/mips/instruction/div.d",
+                            "summary":  "Divides the first value by the second floating-point values using double-precision arithmetic and stores the result in the destination FP register.",
+                            "forms":  [
+                                          "div.d $f0,$f1,$f2"
+                                      ],
+                            "operands":  [
+                                             {
+                                                 "operand":  "$freg",
+                                                 "description":  "A floating-point register."
+                                             },
+                                             {
+                                                 "operand":  "$freg",
+                                                 "description":  "A floating-point register."
+                                             },
+                                             {
+                                                 "operand":  "$freg",
+                                                 "description":  "A floating-point register."
+                                             }
+                                         ]
+                        },
+                        {
+                            "longName":  "Div (single-precision)",
+                            "name":  "div.s",
+                            "source":  "https://asm-editor.specy.app/documentation/mips/instruction/div.s",
+                            "summary":  "Divides the first value by the second floating-point values using single-precision arithmetic and stores the result in the destination FP register.",
+                            "forms":  [
+                                          "div.s $f0,$f1,$f2"
+                                      ],
+                            "operands":  [
+                                             {
+                                                 "operand":  "$freg",
+                                                 "description":  "A floating-point register."
+                                             },
+                                             {
+                                                 "operand":  "$freg",
+                                                 "description":  "A floating-point register."
+                                             },
+                                             {
+                                                 "operand":  "$freg",
+                                                 "description":  "A floating-point register."
+                                             }
+                                         ]
+                        },
+                        {
+                            "longName":  "Floor double-precision to word",
+                            "name":  "floor.w.d",
+                            "source":  "https://asm-editor.specy.app/documentation/mips/instruction/floor.w.d",
+                            "summary":  "Converts the source double-precision value to a 32-bit word, rounding floor, and stores the result in the destination FP register.",
+                            "forms":  [
+                                          "floor.w.d $f0,$f1"
+                                      ],
+                            "operands":  [
+                                             {
+                                                 "operand":  "$freg",
+                                                 "description":  "A floating-point register."
+                                             },
+                                             {
+                                                 "operand":  "$freg",
+                                                 "description":  "A floating-point register."
+                                             }
+                                         ]
+                        },
+                        {
+                            "longName":  "Floor single-precision to word",
+                            "name":  "floor.w.s",
+                            "source":  "https://asm-editor.specy.app/documentation/mips/instruction/floor.w.s",
+                            "summary":  "Converts the source single-precision value to a 32-bit word, rounding floor, and stores the result in the destination FP register.",
+                            "forms":  [
+                                          "floor.w.s $f0,$f1"
+                                      ],
+                            "operands":  [
+                                             {
+                                                 "operand":  "$freg",
+                                                 "description":  "A floating-point register."
+                                             },
+                                             {
+                                                 "operand":  "$freg",
+                                                 "description":  "A floating-point register."
+                                             }
+                                         ]
+                        },
+                        {
+                            "longName":  "Load double-precision",
+                            "name":  "l.d",
+                            "source":  "https://asm-editor.specy.app/documentation/mips/instruction/l.d",
+                            "summary":  "Loads a double-precision value from memory into an FP register.",
+                            "forms":  [
+                                          "l.d $f0,0($t0)"
+                                      ],
+                            "operands":  [
+                                             {
+                                                 "operand":  "$freg",
+                                                 "description":  "A floating-point register."
+                                             },
+                                             {
+                                                 "operand":  "offset($reg)",
+                                                 "description":  "Memory address using an offset and base general-purpose register."
+                                             }
+                                         ]
+                        },
+                        {
+                            "longName":  "Load single-precision",
+                            "name":  "l.s",
+                            "source":  "https://asm-editor.specy.app/documentation/mips/instruction/l.s",
+                            "summary":  "Loads a single-precision value from memory into an FP register.",
+                            "forms":  [
+                                          "l.s $f0,0($t0)"
+                                      ],
+                            "operands":  [
+                                             {
+                                                 "operand":  "$freg",
+                                                 "description":  "A floating-point register."
+                                             },
+                                             {
+                                                 "operand":  "offset($reg)",
+                                                 "description":  "Memory address using an offset and base general-purpose register."
+                                             }
+                                         ]
+                        },
+                        {
+                            "longName":  "Move doubleword from coprocessor 1",
+                            "name":  "mfc1.d",
+                            "source":  "https://asm-editor.specy.app/documentation/mips/instruction/mfc1.d",
+                            "summary":  "Copies a doubleword from an FP register pair to a pair of general-purpose registers.",
+                            "forms":  [
+                                          "mfc1.d $t0,$f0"
+                                      ],
+                            "operands":  [
+                                             {
+                                                 "operand":  "$reg",
+                                                 "description":  "A general-purpose register."
+                                             },
+                                             {
+                                                 "operand":  "$freg",
+                                                 "description":  "A floating-point register."
+                                             }
+                                         ]
+                        },
+                        {
+                            "longName":  "Conditional move (double-precision)",
+                            "name":  "mov.d",
+                            "source":  "https://asm-editor.specy.app/documentation/mips/instruction/mov.d",
+                            "summary":  "Copies the source floating-point value to the destination FP register when the specified condition is true.",
+                            "forms":  [
+                                          "mov.d $f0,$f1,$t0"
+                                      ],
+                            "operands":  [
+                                             {
+                                                 "operand":  "$freg",
+                                                 "description":  "A floating-point register."
+                                             },
+                                             {
+                                                 "operand":  "$freg",
+                                                 "description":  "A floating-point register."
+                                             },
+                                             {
+                                                 "operand":  "$reg",
+                                                 "description":  "A general-purpose register."
+                                             }
+                                         ]
+                        },
+                        {
+                            "longName":  "Conditional move (single-precision)",
+                            "name":  "mov.s",
+                            "source":  "https://asm-editor.specy.app/documentation/mips/instruction/mov.s",
+                            "summary":  "Copies the source floating-point value to the destination FP register when the specified condition is true.",
+                            "forms":  [
+                                          "mov.s $f0,$f1,$t0"
+                                      ],
+                            "operands":  [
+                                             {
+                                                 "operand":  "$freg",
+                                                 "description":  "A floating-point register."
+                                             },
+                                             {
+                                                 "operand":  "$freg",
+                                                 "description":  "A floating-point register."
+                                             },
+                                             {
+                                                 "operand":  "$reg",
+                                                 "description":  "A general-purpose register."
+                                             }
+                                         ]
+                        },
+                        {
+                            "longName":  "Conditional move (double-precision)",
+                            "name":  "movf.d",
+                            "source":  "https://asm-editor.specy.app/documentation/mips/instruction/movf.d",
+                            "summary":  "Copies the source floating-point value to the destination FP register when the specified condition is true.",
+                            "forms":  [
+                                          "movf.d $f0,$f1,$t0"
+                                      ],
+                            "operands":  [
+                                             {
+                                                 "operand":  "$freg",
+                                                 "description":  "A floating-point register."
+                                             },
+                                             {
+                                                 "operand":  "$freg",
+                                                 "description":  "A floating-point register."
+                                             },
+                                             {
+                                                 "operand":  "$reg",
+                                                 "description":  "A general-purpose register."
+                                             }
+                                         ]
+                        },
+                        {
+                            "longName":  "Conditional move (single-precision)",
+                            "name":  "movf.s",
+                            "source":  "https://asm-editor.specy.app/documentation/mips/instruction/movf.s",
+                            "summary":  "Copies the source floating-point value to the destination FP register when the specified condition is true.",
+                            "forms":  [
+                                          "movf.s $f0,$f1,$t0"
+                                      ],
+                            "operands":  [
+                                             {
+                                                 "operand":  "$freg",
+                                                 "description":  "A floating-point register."
+                                             },
+                                             {
+                                                 "operand":  "$freg",
+                                                 "description":  "A floating-point register."
+                                             },
+                                             {
+                                                 "operand":  "$reg",
+                                                 "description":  "A general-purpose register."
+                                             }
+                                         ]
+                        },
+                        {
+                            "longName":  "Conditional move (double-precision)",
+                            "name":  "movn.d",
+                            "source":  "https://asm-editor.specy.app/documentation/mips/instruction/movn.d",
+                            "summary":  "Copies the source floating-point value to the destination FP register when the specified condition is true.",
+                            "forms":  [
+                                          "movn.d $f0,$f1,$t0"
+                                      ],
+                            "operands":  [
+                                             {
+                                                 "operand":  "$freg",
+                                                 "description":  "A floating-point register."
+                                             },
+                                             {
+                                                 "operand":  "$freg",
+                                                 "description":  "A floating-point register."
+                                             },
+                                             {
+                                                 "operand":  "$reg",
+                                                 "description":  "A general-purpose register."
+                                             }
+                                         ]
+                        },
+                        {
+                            "longName":  "Conditional move (single-precision)",
+                            "name":  "movn.s",
+                            "source":  "https://asm-editor.specy.app/documentation/mips/instruction/movn.s",
+                            "summary":  "Copies the source floating-point value to the destination FP register when the specified condition is true.",
+                            "forms":  [
+                                          "movn.s $f0,$f1,$t0"
+                                      ],
+                            "operands":  [
+                                             {
+                                                 "operand":  "$freg",
+                                                 "description":  "A floating-point register."
+                                             },
+                                             {
+                                                 "operand":  "$freg",
+                                                 "description":  "A floating-point register."
+                                             },
+                                             {
+                                                 "operand":  "$reg",
+                                                 "description":  "A general-purpose register."
+                                             }
+                                         ]
+                        },
+                        {
+                            "longName":  "Conditional move (double-precision)",
+                            "name":  "movt.d",
+                            "source":  "https://asm-editor.specy.app/documentation/mips/instruction/movt.d",
+                            "summary":  "Copies the source floating-point value to the destination FP register when the specified condition is true.",
+                            "forms":  [
+                                          "movt.d $f0,$f1,$t0"
+                                      ],
+                            "operands":  [
+                                             {
+                                                 "operand":  "$freg",
+                                                 "description":  "A floating-point register."
+                                             },
+                                             {
+                                                 "operand":  "$freg",
+                                                 "description":  "A floating-point register."
+                                             },
+                                             {
+                                                 "operand":  "$reg",
+                                                 "description":  "A general-purpose register."
+                                             }
+                                         ]
+                        },
+                        {
+                            "longName":  "Conditional move (single-precision)",
+                            "name":  "movt.s",
+                            "source":  "https://asm-editor.specy.app/documentation/mips/instruction/movt.s",
+                            "summary":  "Copies the source floating-point value to the destination FP register when the specified condition is true.",
+                            "forms":  [
+                                          "movt.s $f0,$f1,$t0"
+                                      ],
+                            "operands":  [
+                                             {
+                                                 "operand":  "$freg",
+                                                 "description":  "A floating-point register."
+                                             },
+                                             {
+                                                 "operand":  "$freg",
+                                                 "description":  "A floating-point register."
+                                             },
+                                             {
+                                                 "operand":  "$reg",
+                                                 "description":  "A general-purpose register."
+                                             }
+                                         ]
+                        },
+                        {
+                            "longName":  "Conditional move (double-precision)",
+                            "name":  "movz.d",
+                            "source":  "https://asm-editor.specy.app/documentation/mips/instruction/movz.d",
+                            "summary":  "Copies the source floating-point value to the destination FP register when the specified condition is true.",
+                            "forms":  [
+                                          "movz.d $f0,$f1,$t0"
+                                      ],
+                            "operands":  [
+                                             {
+                                                 "operand":  "$freg",
+                                                 "description":  "A floating-point register."
+                                             },
+                                             {
+                                                 "operand":  "$freg",
+                                                 "description":  "A floating-point register."
+                                             },
+                                             {
+                                                 "operand":  "$reg",
+                                                 "description":  "A general-purpose register."
+                                             }
+                                         ]
+                        },
+                        {
+                            "longName":  "Conditional move (single-precision)",
+                            "name":  "movz.s",
+                            "source":  "https://asm-editor.specy.app/documentation/mips/instruction/movz.s",
+                            "summary":  "Copies the source floating-point value to the destination FP register when the specified condition is true.",
+                            "forms":  [
+                                          "movz.s $f0,$f1,$t0"
+                                      ],
+                            "operands":  [
+                                             {
+                                                 "operand":  "$freg",
+                                                 "description":  "A floating-point register."
+                                             },
+                                             {
+                                                 "operand":  "$freg",
+                                                 "description":  "A floating-point register."
+                                             },
+                                             {
+                                                 "operand":  "$reg",
+                                                 "description":  "A general-purpose register."
+                                             }
+                                         ]
+                        },
+                        {
+                            "longName":  "Mul (double-precision)",
+                            "name":  "mul.d",
+                            "source":  "https://asm-editor.specy.app/documentation/mips/instruction/mul.d",
+                            "summary":  "Multiplies floating-point values using double-precision arithmetic and stores the result in the destination FP register.",
+                            "forms":  [
+                                          "mul.d $f0,$f1,$f2"
+                                      ],
+                            "operands":  [
+                                             {
+                                                 "operand":  "$freg",
+                                                 "description":  "A floating-point register."
+                                             },
+                                             {
+                                                 "operand":  "$freg",
+                                                 "description":  "A floating-point register."
+                                             },
+                                             {
+                                                 "operand":  "$freg",
+                                                 "description":  "A floating-point register."
+                                             }
+                                         ]
+                        },
+                        {
+                            "longName":  "Mul (single-precision)",
+                            "name":  "mul.s",
+                            "source":  "https://asm-editor.specy.app/documentation/mips/instruction/mul.s",
+                            "summary":  "Multiplies floating-point values using single-precision arithmetic and stores the result in the destination FP register.",
+                            "forms":  [
+                                          "mul.s $f0,$f1,$f2"
+                                      ],
+                            "operands":  [
+                                             {
+                                                 "operand":  "$freg",
+                                                 "description":  "A floating-point register."
+                                             },
+                                             {
+                                                 "operand":  "$freg",
+                                                 "description":  "A floating-point register."
+                                             },
+                                             {
+                                                 "operand":  "$freg",
+                                                 "description":  "A floating-point register."
+                                             }
+                                         ]
+                        },
+                        {
+                            "longName":  "neg (double-precision)",
+                            "name":  "neg.d",
+                            "source":  "https://asm-editor.specy.app/documentation/mips/instruction/neg.d",
+                            "summary":  "Stores the negated source floating-point value.",
+                            "forms":  [
+                                          "neg.d $f0,$f1"
+                                      ],
+                            "operands":  [
+                                             {
+                                                 "operand":  "$freg",
+                                                 "description":  "A floating-point register."
+                                             },
+                                             {
+                                                 "operand":  "$freg",
+                                                 "description":  "A floating-point register."
+                                             }
+                                         ]
+                        },
+                        {
+                            "longName":  "neg (single-precision)",
+                            "name":  "neg.s",
+                            "source":  "https://asm-editor.specy.app/documentation/mips/instruction/neg.s",
+                            "summary":  "Stores the negated source floating-point value.",
+                            "forms":  [
+                                          "neg.s $f0,$f1"
+                                      ],
+                            "operands":  [
+                                             {
+                                                 "operand":  "$freg",
+                                                 "description":  "A floating-point register."
+                                             },
+                                             {
+                                                 "operand":  "$freg",
+                                                 "description":  "A floating-point register."
+                                             }
+                                         ]
+                        },
+                        {
+                            "longName":  "Round double-precision to word",
+                            "name":  "round.w.d",
+                            "source":  "https://asm-editor.specy.app/documentation/mips/instruction/round.w.d",
+                            "summary":  "Converts the source double-precision value to a 32-bit word, rounding round, and stores the result in the destination FP register.",
+                            "forms":  [
+                                          "round.w.d $f0,$f1"
+                                      ],
+                            "operands":  [
+                                             {
+                                                 "operand":  "$freg",
+                                                 "description":  "A floating-point register."
+                                             },
+                                             {
+                                                 "operand":  "$freg",
+                                                 "description":  "A floating-point register."
+                                             }
+                                         ]
+                        },
+                        {
+                            "longName":  "Round single-precision to word",
+                            "name":  "round.w.s",
+                            "source":  "https://asm-editor.specy.app/documentation/mips/instruction/round.w.s",
+                            "summary":  "Converts the source single-precision value to a 32-bit word, rounding round, and stores the result in the destination FP register.",
+                            "forms":  [
+                                          "round.w.s $f0,$f1"
+                                      ],
+                            "operands":  [
+                                             {
+                                                 "operand":  "$freg",
+                                                 "description":  "A floating-point register."
+                                             },
+                                             {
+                                                 "operand":  "$freg",
+                                                 "description":  "A floating-point register."
+                                             }
+                                         ]
+                        },
+                        {
+                            "longName":  "Store double-precision",
+                            "name":  "s.d",
+                            "source":  "https://asm-editor.specy.app/documentation/mips/instruction/s.d",
+                            "summary":  "Stores a double-precision value from an FP register to memory.",
+                            "forms":  [
+                                          "s.d $f0,0($t0)"
+                                      ],
+                            "operands":  [
+                                             {
+                                                 "operand":  "$freg",
+                                                 "description":  "A floating-point register."
+                                             },
+                                             {
+                                                 "operand":  "offset($reg)",
+                                                 "description":  "Memory address using an offset and base general-purpose register."
+                                             }
+                                         ]
+                        },
+                        {
+                            "longName":  "Store single-precision",
+                            "name":  "s.s",
+                            "source":  "https://asm-editor.specy.app/documentation/mips/instruction/s.s",
+                            "summary":  "Stores a single-precision value from an FP register to memory.",
+                            "forms":  [
+                                          "s.s $f0,0($t0)"
+                                      ],
+                            "operands":  [
+                                             {
+                                                 "operand":  "$freg",
+                                                 "description":  "A floating-point register."
+                                             },
+                                             {
+                                                 "operand":  "offset($reg)",
+                                                 "description":  "Memory address using an offset and base general-purpose register."
+                                             }
+                                         ]
+                        },
+                        {
+                            "longName":  "sqrt (double-precision)",
+                            "name":  "sqrt.d",
+                            "source":  "https://asm-editor.specy.app/documentation/mips/instruction/sqrt.d",
+                            "summary":  "Stores the square root of the source floating-point value.",
+                            "forms":  [
+                                          "sqrt.d $f0,$f1"
+                                      ],
+                            "operands":  [
+                                             {
+                                                 "operand":  "$freg",
+                                                 "description":  "A floating-point register."
+                                             },
+                                             {
+                                                 "operand":  "$freg",
+                                                 "description":  "A floating-point register."
+                                             }
+                                         ]
+                        },
+                        {
+                            "longName":  "sqrt (single-precision)",
+                            "name":  "sqrt.s",
+                            "source":  "https://asm-editor.specy.app/documentation/mips/instruction/sqrt.s",
+                            "summary":  "Stores the square root of the source floating-point value.",
+                            "forms":  [
+                                          "sqrt.s $f0,$f1"
+                                      ],
+                            "operands":  [
+                                             {
+                                                 "operand":  "$freg",
+                                                 "description":  "A floating-point register."
+                                             },
+                                             {
+                                                 "operand":  "$freg",
+                                                 "description":  "A floating-point register."
+                                             }
+                                         ]
+                        },
+                        {
+                            "longName":  "Sub (double-precision)",
+                            "name":  "sub.d",
+                            "source":  "https://asm-editor.specy.app/documentation/mips/instruction/sub.d",
+                            "summary":  "Subtracts the second value from the first floating-point values using double-precision arithmetic and stores the result in the destination FP register.",
+                            "forms":  [
+                                          "sub.d $f0,$f1,$f2"
+                                      ],
+                            "operands":  [
+                                             {
+                                                 "operand":  "$freg",
+                                                 "description":  "A floating-point register."
+                                             },
+                                             {
+                                                 "operand":  "$freg",
+                                                 "description":  "A floating-point register."
+                                             },
+                                             {
+                                                 "operand":  "$freg",
+                                                 "description":  "A floating-point register."
+                                             }
+                                         ]
+                        },
+                        {
+                            "longName":  "Sub (single-precision)",
+                            "name":  "sub.s",
+                            "source":  "https://asm-editor.specy.app/documentation/mips/instruction/sub.s",
+                            "summary":  "Subtracts the second value from the first floating-point values using single-precision arithmetic and stores the result in the destination FP register.",
+                            "forms":  [
+                                          "sub.s $f0,$f1,$f2"
+                                      ],
+                            "operands":  [
+                                             {
+                                                 "operand":  "$freg",
+                                                 "description":  "A floating-point register."
+                                             },
+                                             {
+                                                 "operand":  "$freg",
+                                                 "description":  "A floating-point register."
+                                             },
+                                             {
+                                                 "operand":  "$freg",
+                                                 "description":  "A floating-point register."
+                                             }
+                                         ]
+                        },
+                        {
+                            "longName":  "Trunc double-precision to word",
+                            "name":  "trunc.w.d",
+                            "source":  "https://asm-editor.specy.app/documentation/mips/instruction/trunc.w.d",
+                            "summary":  "Converts the source double-precision value to a 32-bit word, rounding trunc, and stores the result in the destination FP register.",
+                            "forms":  [
+                                          "trunc.w.d $f0,$f1"
+                                      ],
+                            "operands":  [
+                                             {
+                                                 "operand":  "$freg",
+                                                 "description":  "A floating-point register."
+                                             },
+                                             {
+                                                 "operand":  "$freg",
+                                                 "description":  "A floating-point register."
+                                             }
+                                         ]
+                        },
+                        {
+                            "longName":  "Trunc single-precision to word",
+                            "name":  "trunc.w.s",
+                            "source":  "https://asm-editor.specy.app/documentation/mips/instruction/trunc.w.s",
+                            "summary":  "Converts the source single-precision value to a 32-bit word, rounding trunc, and stores the result in the destination FP register.",
+                            "forms":  [
+                                          "trunc.w.s $f0,$f1"
+                                      ],
+                            "operands":  [
+                                             {
+                                                 "operand":  "$freg",
+                                                 "description":  "A floating-point register."
+                                             },
+                                             {
+                                                 "operand":  "$freg",
+                                                 "description":  "A floating-point register."
+                                             }
+                                         ]
+                        }
                 ]
 }

@@ -8,7 +8,7 @@
 
 void bindLogging(sol::state& lua, const std::function<void(const QString &)> &output)
 {
-    sol::table host = lua["host"];
+    sol::table mipsie = lua["mipsie"];
 
     // Create a table for the logging API.
     sol::table log = lua.create_table();
@@ -25,6 +25,6 @@ void bindLogging(sol::state& lua, const std::function<void(const QString &)> &ou
         output(QStringLiteral("[ERROR] %1").arg(QString::fromStdString(message)));
     };
 
-    // Assign the TABLE, not a function, to host.log.
-    host["log"] = log;
+    // Assign the TABLE, not a function, to mipsie.log.
+    mipsie["log"] = log;
 }
