@@ -55,7 +55,7 @@ The Lua API aims to make the IDE more customizable.
   [ASM file contents]
   .close
   ```
-  and runs armips, then rn64crc.
+  and runs armips, then updates the checksum.
   - Assemble, Update Checksum, Focus PJ64 <br>
   Same as above, except focuses on an existing PJ64 process if it exists.
 * Backup
@@ -74,7 +74,31 @@ The Lua API aims to make the IDE more customizable.
   Opens information on the Lua API.
   - Source Code <br>
   Opens information on the source code.
+  - Check For Updates <br>
+  Checks if there are any new releases on GitHub.
+  - Open App Data <br>
+  Opens %LOCALAPPDATA%\mipsie\mipsie. This is where most of the config is stored.
+
+---
 ## File Tree
-  Generic file tree, the root directory being the project directory. You can navigate    it using your keyboard or mouse. Use the search function to quickly find files.
+  Generic file tree, the root directory being the project directory. You can navigate 
+  it using your keyboard or mouse. Use the search function to quickly find files.
 ## Editor
-  
+  The *Editor* contains autocomplete and label searching. Otherwise, it's your average text editor.
+## Snippets
+  Instruction snippets that update based on your *Edtior* cursor position. 
+  Taken from [here](https://asm-editor.specy.app).
+## Function View, RAM Address View, Struct View, Mario Actions View, EEPROM View
+  Searchable tables for the aforementioned fields. You can double click on an entry to copy its main value.
+## Assembler
+  Contains information about the assembling process. For errors on specific lines, you can double click on them to bring yourself to the mentioned file and line.
+## Lua Console
+  Contains output from init.lua and allows you to run functions from the file.
+## Command Prompt
+   Generic Command Prompt, meant to be used mainly for version control.
+   
+---
+## Macros
+  Macros allow you to assign a keyboard shortcut to insert some text. By default includes the function wrapper, 0x8034 loading and 0x80361160 loading.
+
+# Have Fun!
