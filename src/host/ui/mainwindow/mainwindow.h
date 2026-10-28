@@ -50,6 +50,8 @@ public:
     bool hasEditTarget() const;
     void openCommandLinePath(const QString &path);
     void focusEditor();
+    QString currentRomFilePath() const;
+    QString currentProjectDirectory() const;
 
 signals:
     void luaFunctionRequested(const QString &functionName, const QString &arguments);

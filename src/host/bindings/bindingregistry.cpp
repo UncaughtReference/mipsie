@@ -15,7 +15,7 @@ void BindingRegistry::registerAll(sol::state &lua, QMainWindow *mainWindow,
 
     bindLogging(lua, output);
     bindApplication(lua);
-    bindFilesystem(lua);
+    bindFilesystem(lua, mainWindow);
     bindUI(lua, mainWindow);
     bindHttp(lua, networkManager, output);
     bindKeymap(lua, mainWindow, output);

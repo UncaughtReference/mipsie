@@ -562,6 +562,16 @@ void MainWindow::focusEditor()
     }
 }
 
+QString MainWindow::currentRomFilePath() const
+{
+    return projectRomFilePath.isEmpty() ? standaloneRomFilePath : projectRomFilePath;
+}
+
+QString MainWindow::currentProjectDirectory() const
+{
+    return projectRootPath;
+}
+
 void MainWindow::performEditAction(EditAction action)
 {
     QWidget *target = lastEditTarget.data();

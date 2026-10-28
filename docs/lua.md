@@ -83,6 +83,8 @@ directory containing the mipsie executable in packaged builds.
 | `mipsie.fs.list_dir(path)` | Returns a 1-based Lua array of file and directory names, sorted by name. Omits `.` and `..`. Throws if the directory does not exist. |
 | `mipsie.fs.app_dir()` | Directory containing the mipsie executable. |
 | `mipsie.fs.project_dir()` | In development builds, the process working directory; in packaged builds, the executable directory. This currently does not track a separately opened project. |
+| `mipsie.fs.current_project_dir()` | Absolute path of the currently opened project folder, or an empty string when no project is open. |
+| `mipsie.fs.rom_path()` | Configured project ROM path when present; otherwise the selected standalone ROM path. Returns an empty string if neither is configured. |
 | `mipsie.fs.base_dir()` | Directory used to resolve relative paths, as described above. |
 | `mipsie.fs.current_dir()` | The process' current working directory. |
 | `mipsie.fs.join(first, second)` | Joins two path components using Qt path rules and returns the resulting path. |
@@ -97,6 +99,9 @@ end
 for index, name in ipairs(mipsie.fs.list_dir(mipsie.fs.base_dir())) do
     print(index, name)
 end
+
+print("Project:", mipsie.fs.current_project_dir())
+print("ROM:", mipsie.fs.rom_path())
 ```
 
 ## HTTP: `mipsie.http`
@@ -192,7 +197,7 @@ returns `nil` when there is no match, or a widget handle with `id`,
 | `set_text(text)` | Sets text on buttons, labels, line edits, and text edits, or a title on a group box. Returns a boolean indicating whether the widget exists and supports setting text. It does not change a combo box's selected item. |
 | `visible()` / `enabled()` | Gets the current state. Returns `false` if the widget has gone away. |
 | `set_visible(value)` / `set_enabled(value)` | Sets the state and returns `true` if the widget still exists, otherwise `false`. |
-| `focus()` | Gives the widget focus and returns whether it still exists. |
+| `focus()` | Gives the widget focus and returns whether it still exists. For an `Editor`, it focuses the current text buffer rather than the non-focusable Editor container. |
 | `click()` | Calls `click()` for a button and returns `true`; returns `false` if the widget is missing or is not a button. A disabled button may not activate. |
 | `current_index()` | Gets the selected index of a tab widget or combo box; returns `-1` for other widget types. Indices are zero-based. |
 | `set_current_index(index)` | Selects a zero-based index on a tab widget or combo box. Returns `false` for other widget types or an invalid index. |

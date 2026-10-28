@@ -15,6 +15,7 @@
 #include <QTextEdit>
 #include <QWidget>
 #include <QStringList>
+#include <QInputDialog>
 
 #include <string>
 
@@ -163,6 +164,34 @@ void bindUI(sol::state &lua, QMainWindow *mainWindow)
     sol::table mipsie = lua["mipsie"];
     sol::table ui = lua.create_table();
 
+    ui.set_function("create_popup", [&lua, window](const sol::table &requestedStrings) {
+        sol::table result = lua.create_table();
+
+        for (qsizetype i = 1; i <= requestedStrings.size(); ++i) {
+            const std::string prompt = requestedStrings[i].get<std::string>();
+            const QString promptText = QString::fromUtf8(
+                prompt.data(), static_cast<qsizetype>(prompt.size()));
+
+            bool ok = false;
+            const QString input = QInputDialog::getText(
+                window,
+                QObject::tr("Lua String Request"),
+                promptText,
+                QLineEdit::Normal,
+                QString(),
+                &ok);
+
+            if (!ok)
+                break; // Return answers collected so far
+
+            const QByteArray utf8 = input.toUtf8();
+            result[i] = std::string(utf8.constData(),
+                                    static_cast<std::size_t>(utf8.size()));
+        }
+
+        return result;
+    });
+
     ui.set_function("widgets", [&lua, window] {
         sol::table result = lua.create_table();
         if (!window)
@@ -221,6 +250,15 @@ void bindUI(sol::state &lua, QMainWindow *mainWindow)
             QWidget *target = root ? findWidget(root, widgetKey) : nullptr;
             if (!target)
                 return false;
+
+            if (auto *editor = qobject_cast<Editor *>(target)) {
+                QTextEdit *textEditor = editor->currentEditor();
+                if (!textEditor)
+                    return false;
+                textEditor->setFocus(Qt::OtherFocusReason);
+                return true;
+            }
+
             target->setFocus(Qt::OtherFocusReason);
             return true;
         });
@@ -355,6 +393,32 @@ void bindUI(sol::state &lua, QMainWindow *mainWindow)
         if (!textEditor)
             return sol::make_object(lua, sol::nil);
         return sol::make_object(lua, toStdString(textEditor->textCursor().block().text()));
+    });
+    editorApi.set_function("insert_text", [&lua, window](const std::string &text) -> sol::object {
+        if (!window)
+            return sol::make_object(lua, sol::nil);
+        Editor *editor = window->findChild<Editor *>();
+        QTextEdit *textEditor = editor ? editor->currentEditor() : nullptr;
+        if (!textEditor)
+            return sol::make_object(lua, sol::nil);
+        textEditor->textCursor().insertText(QString::fromStdString(text));
+        return sol::make_object(lua, toStdString(textEditor->textCursor().block().text()));
+    });
+    editorApi.set_function("current_file_path", [&lua, window]() -> sol::object {
+        if (!window)
+            return sol::make_object(lua, sol::nil);
+        Editor *editor = window->findChild<Editor *>();
+        if (!editor)
+            return sol::make_object(lua, sol::nil);
+        return sol::make_object(lua, editor->currentFilePath().toStdString());
+    });
+    editorApi.set_function("current_file_title", [&lua, window]() -> sol::object {
+        if (!window)
+            return sol::make_object(lua, sol::nil);
+        Editor *editor = window->findChild<Editor *>();
+        if (!editor)
+            return sol::make_object(lua, sol::nil);
+        return sol::make_object(lua, editor->currentFileTitle().toStdString());
     });
     mipsie["editor"] = editorApi;
 }

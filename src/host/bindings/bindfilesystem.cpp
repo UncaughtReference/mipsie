@@ -1,12 +1,14 @@
 #include "bindfilesystem.h"
 
 #include "pathresolver.h"
+#include "../ui/mainwindow/mainwindow.h"
 
 #include <sol/sol.hpp>
 
 #include <QDir>
 #include <QFile>
 #include <QFileInfo>
+#include <QPointer>
 #include <QTextStream>
 
 #include <stdexcept>
@@ -33,10 +35,11 @@ std::string toStdString(const QString& value)
 }
 }
 
-void bindFilesystem(sol::state& lua)
+void bindFilesystem(sol::state &lua, QMainWindow *mainWindow)
 {
     sol::table mipsie = lua["mipsie"];
     sol::table fs = lua.create_table();
+    const QPointer<MainWindow> guardedWindow(qobject_cast<MainWindow *>(mainWindow));
 
     // Check whether a file or directory exists.
     fs.set_function("exists", [](const std::string& path) {
@@ -125,6 +128,14 @@ void bindFilesystem(sol::state& lua)
 
     fs.set_function("project_dir", []() {
         return toStdString(PathResolver::projectDirectory());
+    });
+
+    fs.set_function("rom_path", [guardedWindow]() {
+        return toStdString(guardedWindow ? guardedWindow->currentRomFilePath() : QString());
+    });
+
+    fs.set_function("current_project_dir", [guardedWindow]() {
+        return toStdString(guardedWindow ? guardedWindow->currentProjectDirectory() : QString());
     });
 
     fs.set_function("base_dir", []() {

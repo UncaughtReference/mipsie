@@ -66,7 +66,7 @@ Inline `PathResolver` helpers used by filesystem bindings:
 
 ### `src/host/bindings/bindfilesystem.h` and `bindfilesystem.cpp`
 
-`bindFilesystem(lua)` installs `mipsie.fs`:
+`bindFilesystem(lua, mainWindow)` installs `mipsie.fs`:
 
 - `toQString(value)` decodes a UTF-8 Lua string into a QString.
 - `resolvePath(path)` applies the shared `PathResolver` policy.
@@ -76,6 +76,8 @@ Inline `PathResolver` helpers used by filesystem bindings:
 - The `write_text(path, contents)` closure writes bytes to a resolved file, replacing its contents; its parent directory must already exist. Open/write failures are raised as Lua errors.
 - The `list_dir(path)` closure returns a 1-based Lua array of names for entries in a directory, excluding `.` and `..`, sorted by name. A missing directory raises an error.
 - `app_dir()`, `project_dir()`, `base_dir()`, and `current_dir()` closures expose the matching `PathResolver` directories.
+- `rom_path()` returns MainWindow's configured project ROM, falling back to the standalone ROM, or an empty string when none is configured.
+- `current_project_dir()` returns MainWindow's open project root or an empty string when there is no open project.
 - `join(first, second)` joins the two components with Qt's `QDir::filePath` rules.
 
 ### `src/host/bindings/bindhttp.h` and `bindhttp.cpp`
@@ -109,7 +111,7 @@ Internal helpers:
 Lua functions registered by `bindUI`:
 
 - `mipsie.ui.widgets()` returns descriptions for the main window and recursive child widgets.
-- `mipsie.ui.find(id)` returns `nil` or a widget handle. The handle's `text`, `set_text`, `visible`, `set_visible`, `enabled`, `set_enabled`, `focus`, `click`, `current_index`, and `set_current_index` closures re-find the target each time they run.
+- `mipsie.ui.find(id)` returns `nil` or a widget handle. The handle's `text`, `set_text`, `visible`, `set_visible`, `enabled`, `set_enabled`, `focus`, `click`, `current_index`, and `set_current_index` closures re-find the target each time they run. `focus()` focuses an Editor's active QTextEdit buffer instead of its non-focusable container.
 - `mipsie.ui.actions()` returns descriptions for the main window's QAction children.
 - `mipsie.ui.find_action(key)` returns `nil` or the first action matching object name or exact displayed text. The handle exposes `trigger`, `enabled`, `set_enabled`, `visible`, `set_visible`, `shortcut`, and `set_shortcut` closures.
 - `mipsie.ui.trigger_action(name)` finds and triggers the first matching enabled, visible action; it returns a boolean.
@@ -186,6 +188,8 @@ Anonymous-namespace helpers:
 - `hasEditTarget()` reports whether the last focused text or line editor is available for Edit menu commands.
 - `eventFilter(watched, event)` handles Ctrl+1 through Ctrl+9 pane-focus shortcuts before forwarding other events to QMainWindow.
 - `focusEditor()` focuses the active editor's current text buffer.
+- `currentRomFilePath()` returns the configured project ROM path, falling back to the standalone ROM path.
+- `currentProjectDirectory()` returns the open project's base directory, or an empty string when no project is open.
 - `performEditAction(action)` dispatches Undo, Redo, Cut, Copy, Paste, or Select All to the last focused QTextEdit/QLineEdit.
 - `toggleCommentOutSelection()` delegates comment toggling to the active Editor only when a text editor is the current edit target.
 - `applyGeneralAppearance()` applies the app font, theme palette, accent color, and pane repaint.

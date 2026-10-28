@@ -7,6 +7,8 @@ namespace sol {
 class state;
 }
 
-void bindFilesystem(sol::state& lua);
+class QMainWindow;
+
+void bindFilesystem(sol::state &lua, QMainWindow *mainWindow);
 
 #endif // BINDFILESYSTEM_H
