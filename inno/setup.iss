@@ -7,7 +7,7 @@
 ; (To generate a new GUID, click Tools | Generate GUID inside the IDE.)
 AppId={{0D38EF84-BDE7-4C5C-A77E-F5D1677711CC}
 AppName=mipsie
-AppVersion=0.1.0
+AppVersion=1.0.0
 ;AppVerName={cm:NameAndVersion,mipsie,0.0.0}
 AppPublisher=UncaughtReference
 AppPublisherURL=https://uncaughtreference.github.io/mipsie
@@ -25,7 +25,7 @@ ArchitecturesInstallIn64BitMode=x64compatible
 DisableProgramGroupPage=yes
 ; Uncomment the following line to run in non administrative install mode (install for current user only).
 ;PrivilegesRequired=lowest
-OutputBaseFilename=mipsie-0.1.0-setup
+OutputBaseFilename=mipsie-1.0.0-setup
 SetupIconFile=D:\mipsie\resources\logo.ico
 SolidCompression=yes
 WizardStyle=modern dark polar

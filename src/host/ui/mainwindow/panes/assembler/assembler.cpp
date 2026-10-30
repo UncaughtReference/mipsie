@@ -4,7 +4,9 @@
 
 #include <QApplication>
 #include <QAbstractItemView>
+#include <QAction>
 #include <QColor>
+#include <QClipboard>
 #include <QDir>
 #include <QFile>
 #include <QFileInfo>
@@ -12,6 +14,7 @@
 #include <QListView>
 #include <QMessageBox>
 #include <QModelIndex>
+#include <QMenu>
 #include <QProcess>
 #include <QRegularExpression>
 #include <QStandardItem>
@@ -24,12 +27,42 @@
 #ifndef NOMINMAX
 #define NOMINMAX
 #endif
+#ifdef Q_OS_WIN
 #include <windows.h>
 #include <tlhelp32.h>
+#endif
 
 namespace
 {
 constexpr int SourceLineRole = Qt::UserRole + 1;
+
+QString armipsExecutablePath()
+{
+#ifdef Q_OS_LINUX
+    const QString relativePath = QStringLiteral("tools/armips_linux/armips");
+    const QStringList searchRoots = {
+        QCoreApplication::applicationDirPath(),
+        QDir::currentPath()
+    };
+
+    for (const QString &root : searchRoots) {
+        QDir directory(root);
+        while (directory.exists()) {
+            const QString candidate = directory.filePath(relativePath);
+            if (QFileInfo(candidate).isFile())
+                return QFileInfo(candidate).absoluteFilePath();
+
+            const QString parentPath = QDir::cleanPath(directory.absoluteFilePath(QStringLiteral("..")));
+            if (parentPath == directory.absolutePath())
+                break;
+            directory.setPath(parentPath);
+        }
+    }
+    return {};
+#else
+    return QDir::current().filePath(QStringLiteral("tools/armips.exe"));
+#endif
+}
 }
 
 Assembler::Assembler(QWidget *parent)
@@ -42,14 +75,40 @@ Assembler::Assembler(QWidget *parent)
     ArmipsOutputView->setObjectName(QStringLiteral("ArmipsOutputView"));
     ArmipsOutputView->setEditTriggers(QAbstractItemView::NoEditTriggers);
     ArmipsOutputView->setModel(outputModel);
+    ArmipsOutputView->setContextMenuPolicy(Qt::CustomContextMenu);
 
     auto *layout = new QVBoxLayout(this);
-    layout->setContentsMargins(0, 0, 0, 0);
+    layout->setContentsMargins(4, 4, 4, 4);
     layout->addWidget(romLabel, 0);
     layout->addWidget(ArmipsOutputView, 1);
 
     connect(ArmipsOutputView, &QListView::doubleClicked,
             this, &Assembler::navigateToOutputLine);
+    connect(ArmipsOutputView, &QListView::customContextMenuRequested,
+            this, [this](const QPoint &position) {
+        const QModelIndex index = ArmipsOutputView->indexAt(position);
+        if (!index.isValid())
+            return;
+
+        ArmipsOutputView->setCurrentIndex(index);
+        QMenu contextMenu(ArmipsOutputView);
+
+        QAction *navigateToErrorAction = nullptr;
+        bool validLine = false;
+        const int line = index.data(SourceLineRole).toInt(&validLine);
+        if (validLine && !(line < 1))
+            navigateToErrorAction = contextMenu.addAction(tr("Navigate to error line"));
+
+        QAction *copyAction = contextMenu.addAction(tr("Copy output"));
+
+        QAction *selected = contextMenu.exec(
+            ArmipsOutputView->viewport()->mapToGlobal(position));
+
+        if (selected == copyAction)
+            QApplication::clipboard()->setText(index.data(Qt::DisplayRole).toString());
+        else if (selected == navigateToErrorAction)
+            navigateToOutputLine(index);
+    });
     connect(process, &QProcess::readyReadStandardOutput, this, [this] {
         appendProcessOutput(false);
     });
@@ -100,7 +159,12 @@ void Assembler::assemble(bool openProject64OnSuccess)
     if (stage != ProcessStage::Idle)
         return;
 
+#ifdef Q_OS_WIN
     this->openProject64OnSuccess = openProject64OnSuccess;
+#else
+    Q_UNUSED(openProject64OnSuccess);
+    this->openProject64OnSuccess = false;
+#endif
 
     outputModel->clear();
     sourceEditor.clear();
@@ -129,12 +193,12 @@ void Assembler::assemble(bool openProject64OnSuccess)
     activeRomFilePath = configuredRomFilePath;
     originalSourcePath = editor->currentFilePath();
     originalSourceLabel = originalSourcePath.isEmpty()
-        ? editor->currentFileTitle()
-        : originalSourcePath;
+                              ? editor->currentFileTitle()
+                              : originalSourcePath;
     const QString originalFilePath = editor->currentFilePath();
     const QString rootDirectory = originalFilePath.isEmpty()
-        ? QDir::currentPath()
-        : QFileInfo(originalFilePath).absolutePath();
+                                      ? QDir::currentPath()
+                                      : QFileInfo(originalFilePath).absolutePath();
     if (!createTemporaryAsmFile) {
         if (originalFilePath.isEmpty() || !QFileInfo(originalFilePath).isFile()) {
             appendOutputLine(tr("Save the current ASM file before assembling without a temporary file."), true);
@@ -192,7 +256,14 @@ void Assembler::startArmips(const QString &assemblyText, const QString &rootDire
     stage = ProcessStage::Armips;
     appendOutputLine(tr("Running armips..."));
     process->setWorkingDirectory(QDir::currentPath());
-    process->setProgram(QDir::current().filePath(QStringLiteral("tools/armips.exe")));
+    const QString armipsPath = armipsExecutablePath();
+    if (armipsPath.isEmpty()) {
+        appendOutputLine(tr("Could not find tools/armips_linux/armips beside the Mipsie executable or in a parent folder."), true);
+        removeTemporaryAsm();
+        stage = ProcessStage::Idle;
+        return;
+    }
+    process->setProgram(armipsPath);
     QStringList arguments{asmFilePath};
     if (useArmipsRootOption)
         arguments << QStringLiteral("-root") << rootDirectory;
@@ -201,17 +272,84 @@ void Assembler::startArmips(const QString &assemblyText, const QString &rootDire
     process->start();
 }
 
-void Assembler::startChecksumUpdate()
+bool Assembler::updateChecksum()
 {
-    standardOutputBuffer.clear();
-    standardErrorBuffer.clear();
-    stage = ProcessStage::Checksum;
-    appendOutputLine(tr("Running rn64crc..."));
-    process->setWorkingDirectory(QDir::currentPath());
-    process->setProgram(QDir::current().filePath(QStringLiteral("tools/rn64crc.exe")));
-    process->setArguments({QDir::toNativeSeparators(activeRomFilePath),
-                           QStringLiteral("-u")});
-    process->start();
+    QFile romFile(activeRomFilePath);
+    if (!romFile.open(QIODevice::ReadWrite)) {
+        appendOutputLine(tr("Could not open ROM to update its checksum: %1")
+                             .arg(romFile.errorString()), true);
+        return false;
+    }
+
+    const QByteArray romData = romFile.readAll();
+    constexpr quint32 checksumStart = 0x1000;
+    constexpr quint32 checksumEnd = 0x101000;
+    if (romFile.error() != QFileDevice::NoError
+        || static_cast<quint64>(romData.size()) < checksumEnd) {
+        appendOutputLine(tr("ROM is too small or could not be read for checksum calculation."), true);
+        return false;
+    }
+
+    constexpr quint32 seed = 0xF8CA4DDC;
+    quint32 t1 = seed;
+    quint32 t2 = seed;
+    quint32 t3 = seed;
+    quint32 t4 = seed;
+    quint32 t5 = seed;
+    quint32 t6 = seed;
+
+    const auto readWord = [&romData](quint32 offset) {
+        const quint32 b0 = static_cast<quint8>(static_cast<unsigned char>(romData.at(offset)));
+        const quint32 b1 = static_cast<quint8>(static_cast<unsigned char>(romData.at(offset + 1)));
+        const quint32 b2 = static_cast<quint8>(static_cast<unsigned char>(romData.at(offset + 2)));
+        const quint32 b3 = static_cast<quint8>(static_cast<unsigned char>(romData.at(offset + 3)));
+        return (b0 << 24) | (b1 << 16) | (b2 << 8) | b3;
+    };
+
+    for (quint32 offset = checksumStart; offset < checksumEnd; offset += 4) {
+        const quint32 d = readWord(offset);
+        if (t6 + d < t6)
+            ++t4;
+
+        t6 += d;
+        t3 ^= d;
+
+        const quint32 shift = d & 0x1F;
+        const quint32 rotated = shift == 0
+            ? d
+            : (d << shift) | (d >> (32 - shift));
+
+        t5 += rotated;
+        if (t2 > d)
+            t2 ^= rotated;
+        else
+            t2 ^= t6 ^ d;
+
+        t1 += t5 ^ d;
+    }
+
+    const quint32 crc1 = t6 ^ t4 ^ t3;
+    const quint32 crc2 = t5 ^ t2 ^ t1;
+    const char checksum[8] = {
+        static_cast<char>((crc1 >> 24) & 0xFF),
+        static_cast<char>((crc1 >> 16) & 0xFF),
+        static_cast<char>((crc1 >> 8) & 0xFF),
+        static_cast<char>(crc1 & 0xFF),
+        static_cast<char>((crc2 >> 24) & 0xFF),
+        static_cast<char>((crc2 >> 16) & 0xFF),
+        static_cast<char>((crc2 >> 8) & 0xFF),
+        static_cast<char>(crc2 & 0xFF)
+    };
+
+    if (!romFile.seek(0x10)
+        || romFile.write(checksum, sizeof(checksum)) != sizeof(checksum)
+        || !romFile.flush()) {
+        appendOutputLine(tr("Could not write the updated ROM checksum: %1")
+                             .arg(romFile.errorString()), true);
+        return false;
+    }
+
+    return true;
 }
 
 void Assembler::appendProcessOutput(bool standardError)
@@ -320,6 +458,15 @@ void Assembler::navigateToOutputLine(const QModelIndex &index)
 
     Editor *editor = sourceEditor.data();
     QTextEdit *buffer = sourceBuffer.data();
+    if (!editor)
+        editor = window()->findChild<Editor *>();
+
+    if (editor && !originalSourcePath.isEmpty()
+        && editor->openFile(originalSourcePath)) {
+        editor->goToLine(line);
+        return;
+    }
+
     if (editor && buffer && editor->goToLine(line, buffer))
         return;
 
@@ -345,9 +492,7 @@ void Assembler::finishProcess(int exitCode, bool crashed)
     appendProcessOutput(true);
     flushProcessOutput();
     const ProcessStage completedStage = stage;
-    const QString toolName = completedStage == ProcessStage::Armips
-        ? QStringLiteral("armips")
-        : QStringLiteral("rn64crc");
+    const QString toolName = QStringLiteral("armips");
     const bool succeeded = exitCode == 0 && !crashed;
 
     QString status = crashed
@@ -366,7 +511,22 @@ void Assembler::finishProcess(int exitCode, bool crashed)
     if (completedStage == ProcessStage::Armips) {
         removeTemporaryAsm();
         if (succeeded) {
-            startChecksumUpdate();
+            appendOutputLine(tr("Updating ROM checksum..."));
+            const bool checksumUpdated = updateChecksum();
+            if (checksumUpdated) {
+                auto *item = new QStandardItem(tr("ROM checksum updated."));
+                item->setForeground(QColor(QStringLiteral("#69d17d")));
+                item->setIcon(style()->standardIcon(QStyle::SP_DialogApplyButton));
+                outputModel->appendRow(item);
+                ArmipsOutputView->scrollToBottom();
+            } else {
+                appendOutputLine(tr("Assembly succeeded, but the ROM checksum could not be updated."), true);
+            }
+
+            stage = ProcessStage::Idle;
+            if (checksumUpdated && openProject64OnSuccess)
+                focusProject64();
+            openProject64OnSuccess = false;
         } else {
             appendOutputLine(tr("Checksum update skipped because armips failed."));
             stage = ProcessStage::Idle;
@@ -393,6 +553,7 @@ void Assembler::handleFailedToStart()
 
 bool Assembler::focusProject64()
 {
+#ifdef Q_OS_WIN
     struct WindowSearch
     {
         DWORD processId = 0;
@@ -447,6 +608,9 @@ bool Assembler::focusProject64()
     FlashWindow(search.window, TRUE);
     appendOutputLine(tr("Windows did not allow Project64 to take focus."), true);
     return false;
+#else
+    return false;
+#endif
 }
 
 void Assembler::removeTemporaryAsm()

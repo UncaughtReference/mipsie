@@ -18,6 +18,10 @@
 #include <QStyle>
 #include <QStyledItemDelegate>
 #include <QVBoxLayout>
+#include <QMenu>
+#include <QAction>
+#include <QDesktopServices>
+#include <QUrl>
 
 namespace
 {
@@ -121,6 +125,10 @@ private:
 };
 }
 
+QString getFunctionUrl(QString functionName) {
+    return "https://github.com/search?q=repo%3An64decomp%2Fsm64+" + functionName + "&type=code";
+}
+
 FunctionView::FunctionView(QWidget *parent)
     : QWidget(parent),
       searchBar(new QLineEdit(this)),
@@ -151,6 +159,7 @@ FunctionView::FunctionView(QWidget *parent)
     functionList->setEditTriggers(QAbstractItemView::NoEditTriggers);
     functionList->setSelectionBehavior(QAbstractItemView::SelectRows);
     functionList->setUniformItemSizes(true);
+    functionList->setContextMenuPolicy(Qt::CustomContextMenu);
 
     auto *header = new QWidget(this);
     auto *headerLayout = new QHBoxLayout(header);
@@ -187,5 +196,33 @@ FunctionView::FunctionView(QWidget *parent)
             [this](const QModelIndex &index) {
         const QString address = index.data(AddressRole).toString();
         QApplication::clipboard()->setText(QStringLiteral("jal 0x%1").arg(address));
+    });
+    connect(functionList, &QListView::customContextMenuRequested,
+            this, [this](const QPoint &position) {
+        const QModelIndex index = functionList->indexAt(position);
+        if (!index.isValid())
+            return;
+
+        functionList->setCurrentIndex(index);
+
+        QMenu contextMenu(functionList);
+
+        QAction* copyPrototype = contextMenu.addAction("Copy prototype");
+        QAction* copyJal = contextMenu.addAction("Copy JAL");
+        QAction* decompSearch = contextMenu.addAction("Search in decomp");
+
+        QAction* selection = contextMenu.exec(functionList->viewport()->mapToGlobal(position));
+
+        if (selection == decompSearch) {
+            QString decompLink = getFunctionUrl(index.data(Qt::DisplayRole).toString());
+            const QUrl url(decompLink);
+            if (url.isValid() && (url.scheme() == "http" || url.scheme() == "https"))
+                QDesktopServices::openUrl(url);
+        } else if (selection == copyPrototype) {
+            QApplication::clipboard()->setText(index.data(PrototypeRole).toString());
+        } else if (selection == copyJal) {
+            const QString address = index.data(AddressRole).toString();
+            QApplication::clipboard()->setText(QStringLiteral("jal 0x%1").arg(address));
+        }
     });
 }

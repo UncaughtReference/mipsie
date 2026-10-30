@@ -52,7 +52,7 @@ const QString &directivePattern()
 const QString &instructionPattern()
 {
     static const QString words = QStringLiteral(
-        "add|addu|addi|addiu|sub|subu|dadd|daddu|daddi|daddiu|"
+        "add|addu|addi|addiu|sub|subu|subi|subiu|dadd|daddu|daddi|daddiu|"
         "mult|multu|div|divu|dmult|dmultu|ddiv|ddivu|"
         "and|andi|or|ori|xor|xori|nor|"
         "sll|sllv|srl|srlv|sra|srav|dsll|dsll32|dsllv|dsrl|dsrl32|dsrlv|dsra|dsra32|dsrav|"
@@ -100,21 +100,61 @@ const QString &registerPattern()
 MipsHighlighter::MipsHighlighter(QTextDocument *document)
     : QSyntaxHighlighter(document)
 {
-    setTheme(qApp ? qApp->property("mipsieTheme").toString() : QString());
+    setTheme(qApp ? qApp->property("mipsieTheme").toString() : QString(),
+             qApp ? qApp->property("mipsieSyntaxColors").toJsonObject() : QJsonObject());
 }
 
 void MipsHighlighter::setTheme(const QString &theme)
 {
+    setTheme(theme, qApp ? qApp->property("mipsieSyntaxColors").toJsonObject()
+                         : QJsonObject());
+}
+
+QStringList MipsHighlighter::colorKeys()
+{
+    return {QStringLiteral("directive"), QStringLiteral("instruction"),
+            QStringLiteral("register"), QStringLiteral("number"),
+            QStringLiteral("string"), QStringLiteral("label"),
+            QStringLiteral("symbol"), QStringLiteral("comment")};
+}
+
+QColor MipsHighlighter::defaultColor(const QString &key, const QString &theme)
+{
     const bool light = theme == QStringLiteral("Light");
-    const QTextCharFormat directiveFormat = makeFormat(QColor(light ? "#0000ff" : "#569cd6"), true);
-    const QTextCharFormat instructionFormat = makeFormat(QColor(light ? "#795e26" : "#dcdcaa"), true);
-    const QTextCharFormat registerFormat = makeFormat(QColor(light ? "#001080" : "#9cdcfe"));
-    const QTextCharFormat numberFormat = makeFormat(QColor(light ? "#098658" : "#b5cea8"));
-    const QTextCharFormat stringFormat = makeFormat(QColor(light ? "#a31515" : "#ce9178"));
-    const QTextCharFormat labelFormat = makeFormat(QColor(light ? "#267f99" : "#4ec9b0"));
-    const QTextCharFormat symbolFormat = makeFormat(QColor(light ? "#af00db" : "#c586c0"));
+    if (key == QStringLiteral("directive"))
+        return QColor(light ? "#0000ff" : "#569cd6");
+    if (key == QStringLiteral("instruction"))
+        return QColor(light ? "#7a3eaa" : "#cb8cff");
+    if (key == QStringLiteral("register"))
+        return QColor(light ? "#b83232" : "#ff8585");
+    if (key == QStringLiteral("number"))
+        return QColor(light ? "#a64b1a" : "#ffb28b");
+    if (key == QStringLiteral("string"))
+        return QColor(light ? "#a31515" : "#ce9178");
+    if (key == QStringLiteral("label"))
+        return QColor(light ? "#267f99" : "#4ec9b0");
+    if (key == QStringLiteral("symbol"))
+        return QColor(light ? "#af00db" : "#c586c0");
+    if (key == QStringLiteral("comment"))
+        return QColor(light ? "#008000" : "#6a9955");
+    return {};
+}
+
+void MipsHighlighter::setTheme(const QString &theme, const QJsonObject &colorOverrides)
+{
+    const auto colorFor = [&colorOverrides, &theme](const QString &key) {
+        const QColor overrideColor(colorOverrides.value(key).toString());
+        return overrideColor.isValid() ? overrideColor : defaultColor(key, theme);
+    };
+    const QTextCharFormat directiveFormat = makeFormat(colorFor(QStringLiteral("directive")), true);
+    const QTextCharFormat instructionFormat = makeFormat(colorFor(QStringLiteral("instruction")), true);
+    const QTextCharFormat registerFormat = makeFormat(colorFor(QStringLiteral("register")));
+    const QTextCharFormat numberFormat = makeFormat(colorFor(QStringLiteral("number")));
+    const QTextCharFormat stringFormat = makeFormat(colorFor(QStringLiteral("string")));
+    const QTextCharFormat labelFormat = makeFormat(colorFor(QStringLiteral("label")));
+    const QTextCharFormat symbolFormat = makeFormat(colorFor(QStringLiteral("symbol")));
     const QTextCharFormat commentFormat = makeFormat(
-        QColor(light ? "#008000" : "#6a9955"), false, true);
+        colorFor(QStringLiteral("comment")), false, true);
 
     rules.clear();
 

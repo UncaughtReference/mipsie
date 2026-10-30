@@ -2,6 +2,8 @@
 #define MIPSHIGHLIGHTER_H
 
 #include <QRegularExpression>
+#include <QColor>
+#include <QJsonObject>
 #include <QSyntaxHighlighter>
 #include <QTextCharFormat>
 #include <QVector>
@@ -27,6 +29,9 @@ class MipsHighlighter : public QSyntaxHighlighter
 public:
     explicit MipsHighlighter(QTextDocument *document);
     void setTheme(const QString &theme);
+    void setTheme(const QString &theme, const QJsonObject &colorOverrides);
+    static QStringList colorKeys();
+    static QColor defaultColor(const QString &key, const QString &theme);
     static QVector<MipsCompletionItem> completionItems();
     static QStringList completionKeywords();
 

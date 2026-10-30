@@ -30,8 +30,7 @@ private:
     enum class ProcessStage
     {
         Idle,
-        Armips,
-        Checksum
+        Armips
     };
 
     QListView *ArmipsOutputView;
@@ -55,7 +54,7 @@ private:
     QLabel* romLabel;
 
     void startArmips(const QString &assemblyText, const QString &rootDirectory);
-    void startChecksumUpdate();
+    bool updateChecksum();
     void appendProcessOutput(bool standardError);
     void flushProcessOutput();
     void appendOutputLine(const QString &line, bool isError = false);

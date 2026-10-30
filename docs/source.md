@@ -131,8 +131,9 @@ binding APIs and behavior are described with their implementations above.
 
 ### `src/host/runtime/luaruntime.h` and `luaruntime.cpp`
 
-`LuaRuntime` owns the Lua state, a network manager used by HTTP bindings, and
-runtime lifecycle state. It must be initialized and used on its owner thread.
+`LuaRuntime` owns the Lua state, a parentless network manager used by HTTP
+bindings, and runtime lifecycle state. It must be initialized and used on its
+owner thread.
 
 - `LuaRuntime(parent)` records the creating thread and constructs private runtime state.
 - `~LuaRuntime()` calls `shutdown()`.
@@ -140,7 +141,7 @@ runtime lifecycle state. It must be initialized and used on its owner thread.
 - `executeFile(path)` safely executes a Lua source file; it returns `false` if the runtime is unavailable or the script fails, emitting `scriptError` with the path and error text.
 - `executeString(source, chunkName)` safely executes a Lua chunk with the same error reporting. The default chunk name is `=runtime`.
 - `isInitialized()` reports whether setup completed and shutdown has not reset it.
-- `shutdown()` emits `shuttingDown`, disconnects and aborts outstanding HTTP replies, deletes the network manager and Lua keymap actions while Lua callbacks are still valid, and marks the runtime uninitialized. Repeated shutdown calls are ignored.
+- `shutdown()` emits `shuttingDown`, disconnects and aborts outstanding HTTP replies, explicitly deletes the network manager, deletes Lua keymap actions while Lua callbacks are still valid, disconnects Qt signal connections to and from the runtime, and marks it uninitialized. Repeated shutdown calls are ignored.
 - Signals: `scriptError(source, message)`, `scriptOutput(line)`, `initialized()`, and `shuttingDown()` report script results and lifecycle events.
 
 ### `src/host/runtime/luaerror.h` and `luaerror.cpp`
@@ -176,6 +177,7 @@ Anonymous-namespace helpers:
 - `loadGeneralSettings()` overlays saved settings and migrates legacy tab-shortcut spellings.
 - `writeJsonObjectAtomically(path, object, errorMessage)` writes a JSON object with QSaveFile; it reports an error and returns `false` on failure.
 - `writeJsonArrayAtomically(path, array, errorMessage)` does the same for arrays.
+- `projectRomPathFromConfig(config)` prefers `romFilePathLinux` on Linux and falls back to `romFilePath` for older project files.
 - `configFilePathForRom(romFilePath)` derives the `.config` path beside a ROM.
 - `backupRomFileName(stamp, romSuffix)` forms a timestamped backup name and preserves the ROM suffix.
 - `uniqueBackupStem(directoryPath, romSuffix)` finds a timestamped name not already used in the backup directory.
@@ -249,7 +251,8 @@ C++ rather than defined in this form.
 `SettingsDialog(projectFolder, romFilePath, projectSettings, generalSettings,
 macros, parent)` builds General, Macros, and Current Project tabs. Its key-sequence
 editors correspond to the keybind JSON names; macro rows contain a shortcut and
-multiline text; project settings expose the ROM path. The General tab includes
+multiline text; project settings edit `romFilePath` on Windows and
+`romFilePathLinux` on Linux while preserving the other platform's value. The General tab includes
 checkboxes for temporary ASM generation and the armips `-root` option, plus a
 line edit for additional armips arguments.
 
@@ -315,9 +318,9 @@ Internal functions/classes:
 
 ### `src/host/ui/mainwindow/panes/assembler/assembler.h` and `assembler.cpp`
 
-`Assembler` runs the external armips assembler and ROM checksum tool using
-QProcess, displays output, maps errors to source lines, and optionally focuses
-Project64 after success.
+`Assembler` runs the external armips assembler using QProcess, updates the ROM
+checksum in-process, displays output, maps errors to source lines, and optionally
+focuses Project64 after success.
 
 - `Assembler(parent)` builds the output view, ROM label, process, and signal connections.
 - `setRomFilePath(filePath)` updates the configured ROM path and label.
@@ -326,14 +329,14 @@ Project64 after success.
 - `setAdditionalArmipsArguments(arguments)` stores extra command-line arguments for armips; `startArmips()` tokenizes them with `QProcess::splitCommand` and appends them to the process arguments.
 - `isBusy()` reports whether an external process stage is active.
 - `assemble(openProject64OnSuccess)` captures the current source buffer/path, validates state, saves modified source before direct assembly, and starts the assembly stage.
-- `startArmips(assemblyText, rootDirectory)` either writes the wrapped temporary source or uses the original ASM path, then launches armips with the source, optional `-root` path, and configured extra arguments.
-- `startChecksumUpdate()` launches the checksum tool for the active ROM.
+- `startArmips(assemblyText, rootDirectory)` either writes the wrapped temporary source or uses the original ASM path, then launches armips with the source, optional `-root` path, and configured extra arguments. Linux builds find `tools/armips_linux/armips` by searching upward from the app and current directories; Windows builds use `tools/armips.exe` from the current directory.
+- `updateChecksum()` calculates the N64 checksum over bytes `0x1000` through `0x100FFF` and writes the two checksum words at offset `0x10`, on any platform.
 - `appendProcessOutput(standardError)` reads available process bytes into the appropriate output buffer.
 - `flushProcessOutput()` converts complete buffered lines into output rows.
 - `appendOutputLine(line, isError)` adds a formatted line and source-navigation metadata to the model.
 - `sourceLineForOutput(line)` parses assembler diagnostics and maps temporary/absolute source locations to editor lines.
 - `navigateToOutputLine(index)` opens/focuses the source location associated with a clicked output row.
-- `finishProcess(exitCode, crashed)` flushes output, advances from assembly to checksum or reports completion/failure, and performs optional Project64 focus.
+- `finishProcess(exitCode, crashed)` flushes armips output, updates the ROM checksum after successful assembly, reports completion/failure, and performs optional Project64 focus.
 - `handleFailedToStart()` reports process-launch failure and resets state.
 - `focusProject64()` locates and activates the Project64 window on Windows.
 - `removeTemporaryAsm()` deletes the generated temporary source file.
@@ -590,7 +593,7 @@ above, the referenced section explains their classes and functions in detail.
 ### Pane implementations and reference data
 
 - `src/host/ui/mainwindow/panes/assembler/assembler.h` — Assembler class API and process state.
-- `src/host/ui/mainwindow/panes/assembler/assembler.cpp` — armips/checksum process management and output navigation.
+- `src/host/ui/mainwindow/panes/assembler/assembler.cpp` — armips process management, in-process ROM checksum updates, and output navigation.
 - `src/host/ui/mainwindow/panes/cmdconsole/cmdconsole.h` — embedded command console API and process members.
 - `src/host/ui/mainwindow/panes/cmdconsole/cmdconsole.cpp` — Windows command-shell startup, input, output, and restart handling.
 - `src/host/ui/mainwindow/panes/editor/editor.h` — Editor tab, editing, navigation, save, and signal API.

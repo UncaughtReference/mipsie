@@ -596,6 +596,17 @@ QString Editor::currentFileTitle() const
     return index >= 0 ? tabs->tabText(index) : QString();
 }
 
+QStringList Editor::openFilePaths() const
+{
+    QStringList paths;
+    for (int index = 0; index < tabs->count(); ++index) {
+        const QString path = tabs->tabBar()->tabData(index).toString();
+        if (!path.isEmpty())
+            paths.append(path);
+    }
+    return paths;
+}
+
 bool Editor::goToLine(int line, QTextEdit *buffer)
 {
     if (line < 1)
@@ -961,9 +972,10 @@ void Editor::applyTextEditorPreferences(QTextEdit *textEditor)
     }
     const bool lightTheme = editorTheme == QStringLiteral("Light");
     QPalette palette = textEditor->palette();
-    palette.setColor(QPalette::Text, lightTheme ? QColor(Qt::black) : QColor(Qt::white));
+    const QColor textColor = lightTheme ? QColor(QStringLiteral("#202124")) : QColor(Qt::white);
+    palette.setColor(QPalette::Text, textColor);
     textEditor->setPalette(palette);
     textEditor->setStyleSheet(lightTheme
-        ? QStringLiteral("background-color: #ffffff;")
-        : QStringLiteral("background-color: #1a1a1a;"));
+        ? QStringLiteral("background-color: #ffffff; color: #202124;")
+        : QStringLiteral("background-color: #1a1a1a; color: #ffffff;"));
 }

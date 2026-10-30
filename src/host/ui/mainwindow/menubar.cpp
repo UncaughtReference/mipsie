@@ -2,17 +2,126 @@
 #include "ui_mainwindow.h"
 
 #include <QAction>
+#include <QApplication>
+#include <QClipboard>
 #include <QDialog>
+#include <QCoreApplication>
 #include <QFile>
+#include <QInputDialog>
+#include <QLineEdit>
 #include <QMessageBox>
 #include <QList>
 #include <QMenu>
 #include <QKeySequence>
 #include <QObject>
+#include <QProcess>
 #include <QTextBrowser>
 #include <QVBoxLayout>
 
+#include <limits>
+
 namespace {
+
+struct AddressMapping
+{
+    quint32 romStart;
+    quint32 romEnd;
+    quint32 ramStart;
+    quint32 ramEnd;
+};
+
+// Fixed ROM-to-RAM mappings listed in the SM64 ROM memory map.
+constexpr AddressMapping sm64AddressMappings[] = {
+    {0x001000, 0x0E6258, 0x80246000, 0x8032B258},
+    {0x0F5580, 0x102D08, 0x80378800, 0x80385F88},
+    {0x21F4C0, 0x2577B8, 0x8016F000, 0x801A72F8}
+};
+
+QString formatAddress(quint32 address, int digits)
+{
+    return QStringLiteral("0x%1")
+        .arg(QString::number(address, 16).toUpper().rightJustified(digits, QLatin1Char('0')));
+}
+
+void convertAddress(MainWindow *parent, bool ramToRom)
+{
+    bool accepted = false;
+    const QString addressText = QInputDialog::getText(
+        parent,
+        ramToRom ? QObject::tr("RAM Address to ROM Address")
+                 : QObject::tr("ROM Address to RAM Address"),
+        ramToRom ? QObject::tr("RAM address (hexadecimal):")
+                 : QObject::tr("ROM address (hexadecimal):"),
+        QLineEdit::Normal, QString(), &accepted).trimmed();
+    if (!accepted || addressText.isEmpty())
+        return;
+
+    QString digits = addressText;
+    if (digits.startsWith(QStringLiteral("0x"), Qt::CaseInsensitive))
+        digits.remove(0, 2);
+    bool parsed = false;
+    const qulonglong parsedAddress = digits.toULongLong(&parsed, 16);
+    if (!parsed || parsedAddress > std::numeric_limits<quint32>::max()) {
+        QMessageBox::warning(parent, QObject::tr("Invalid Address"),
+                             QObject::tr("Enter a valid 32-bit hexadecimal address."));
+        return;
+    }
+
+    const quint32 address = static_cast<quint32>(parsedAddress);
+    constexpr quint32 extendedRamStart = 0x80400000;
+    constexpr quint32 extendedRomStart = 0x01200000;
+    constexpr quint32 extendedAddressOffset = 0x7F200000;
+
+    if (ramToRom && address >= extendedRamStart) {
+        const quint32 converted = address - extendedAddressOffset;
+
+        QApplication::clipboard()->setText(formatAddress(converted, 6));
+
+        QMessageBox::information(
+            parent, QObject::tr("Address Conversion"),
+            QObject::tr("Address copied to clipboard!")
+            );
+        return;
+    }
+    if (!ramToRom && address >= extendedRomStart) {
+        if (address > std::numeric_limits<quint32>::max() - extendedAddressOffset) {
+            QMessageBox::warning(parent, QObject::tr("Address Out of Range"),
+                                 QObject::tr("The converted RAM address exceeds 32 bits."));
+            return;
+        }
+        const quint32 converted = address + extendedAddressOffset;
+
+        QApplication::clipboard()->setText(formatAddress(converted, 8));
+
+        QMessageBox::information(
+            parent, QObject::tr("Address Conversion"),
+            QObject::tr("Address copied to clipboard!")
+            );
+        return;
+    }
+
+    for (const AddressMapping &mapping : sm64AddressMappings) {
+        const quint32 sourceStart = ramToRom ? mapping.ramStart : mapping.romStart;
+        const quint32 sourceEnd = ramToRom ? mapping.ramEnd : mapping.romEnd;
+        const quint32 targetStart = ramToRom ? mapping.romStart : mapping.ramStart;
+        if (address >= sourceStart && address < sourceEnd) {
+            const quint32 converted = targetStart + (address - sourceStart);
+            const QString result = formatAddress(converted, ramToRom ? 6 : 8);
+            QApplication::clipboard()->setText(result);
+
+            QMessageBox::information(
+                parent, QObject::tr("Address Conversion"),
+                QObject::tr("Address copied to clipboard!")
+                );
+            return;
+        }
+    }
+
+    QMessageBox::information(
+        parent, QObject::tr("Address Not Mapped"),
+        QObject::tr("This address is not in a fixed ROM/RAM mapping in the SM64 memory map. "
+                    "Compressed and other data regions may be loaded to dynamic or segmented RAM addresses."));
+}
 
 void openMarkdownWindow(MainWindow *parent, const QString &title,
                         const QString &resourcePath) {
@@ -48,6 +157,16 @@ void MenuBar::initialize() {
     MainWindow *mainWindow = window;
     QMenu* fileMenu = new QMenu(QObject::tr("File"), ui->menubar);
     fileMenu->setObjectName(QStringLiteral("fileMenu"));
+
+    QAction *newWindow = new QAction(QObject::tr("New Window"), fileMenu);
+    newWindow->setObjectName(QStringLiteral("newWindowAction"));
+    fileMenu->addAction(newWindow);
+    QObject::connect(newWindow, &QAction::triggered, window, [mainWindow] {
+        if (!QProcess::startDetached(QCoreApplication::applicationFilePath(), {})) {
+            QMessageBox::warning(mainWindow, QObject::tr("Could Not Open Window"),
+                                 QObject::tr("Could not start another mipsie window."));
+        }
+    });
 
     QAction* openFile = new QAction(QObject::tr("Open File"), fileMenu);
     openFile->setObjectName(QStringLiteral("openFileAction"));
@@ -147,9 +266,26 @@ void MenuBar::initialize() {
     assembleAndOpenProject64Action->setShortcut(
         QKeySequence(Qt::CTRL | Qt::SHIFT | Qt::Key_P));
     assembleAndOpenProject64Action->setShortcutContext(Qt::WindowShortcut);
+#ifdef Q_OS_LINUX
+    assembleAndOpenProject64Action->setVisible(false);
+    assembleAndOpenProject64Action->setShortcut(QKeySequence());
+#endif
     QObject::connect(assembleAndOpenProject64Action, &QAction::triggered,
                      window, &MainWindow::assembleUpdateChecksumAndOpenProject64);
     ui->menubar->addMenu(assembleMenu);
+
+    QMenu *toolsMenu = new QMenu(QObject::tr("Tools"), ui->menubar);
+    QAction *ramToRomAction = toolsMenu->addAction(
+        QObject::tr("RAM Address to ROM Address..."));
+    ramToRomAction->setObjectName(QStringLiteral("ramAddressToRomAddressAction"));
+    QObject::connect(ramToRomAction, &QAction::triggered, window,
+                     [mainWindow] { convertAddress(mainWindow, true); });
+    QAction *romToRamAction = toolsMenu->addAction(
+        QObject::tr("ROM Address to RAM Address..."));
+    romToRamAction->setObjectName(QStringLiteral("romAddressToRamAddressAction"));
+    QObject::connect(romToRamAction, &QAction::triggered, window,
+                     [mainWindow] { convertAddress(mainWindow, false); });
+    ui->menubar->addMenu(toolsMenu);
 
     QMenu* backupMenu = new QMenu(QObject::tr("Backup"), ui->menubar);
     QAction *backupRomAction = backupMenu->addAction(QObject::tr("Backup ROM"));

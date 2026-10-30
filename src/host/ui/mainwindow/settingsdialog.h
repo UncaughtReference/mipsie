@@ -7,6 +7,7 @@
 #include <QJsonObject>
 #include <QList>
 #include <QMap>
+#include <QSet>
 #include <QString>
 
 class QComboBox;
@@ -55,11 +56,16 @@ private:
     QSpinBox *tabWidthSpinBox = nullptr;
     QCheckBox *createTemporaryAsmCheckBox = nullptr;
     QCheckBox *useArmipsRootOptionCheckBox = nullptr;
+    QCheckBox *promptToRecoverSessionCheckBox = nullptr;
     QComboBox *themeComboBox = nullptr;
     QPushButton *accentColorButton = nullptr;
     QLineEdit *romPathEdit = nullptr;
+    QLineEdit *backupDirectoryEdit = nullptr;
     QLineEdit *additionalArmipsArgumentsEdit = nullptr;
     QMap<QString, QKeySequenceEdit *> keySequenceEdits;
+    QMap<QString, QColor> syntaxColors;
+    QMap<QString, QPushButton *> syntaxColorButtons;
+    QSet<QString> customSyntaxColorKeys;
     QList<MacroEditorRow> macroEditorRows;
     QVBoxLayout *macroListLayout = nullptr;
     QWidget *macroListContainer = nullptr;
@@ -67,8 +73,11 @@ private:
     QColor accentColor;
 
     void chooseAccentColor();
+    void chooseSyntaxColor(const QString &key);
     void browseRomFile();
+    void browseBackupDirectory();
     void updateAccentColorButton();
+    void updateSyntaxColorButton(const QString &key);
     void acceptSettings();
     void addMacroEditor(const QString &shortcut, const QString &text);
 };

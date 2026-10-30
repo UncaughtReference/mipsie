@@ -49,6 +49,7 @@ public:
     void toggleCommentOutSelection();
     bool hasEditTarget() const;
     void openCommandLinePath(const QString &path);
+    void offerSessionRecovery();
     void focusEditor();
     QString currentRomFilePath() const;
     QString currentProjectDirectory() const;
@@ -86,6 +87,7 @@ private:
     QStringList luaOutputHistory;
     QString projectRootPath;
     QString projectRomFilePath;
+    QString projectBackupDirectoryPath;
     QString standaloneRomFilePath;
     QJsonObject generalSettings;
     QJsonArray macros;
@@ -109,5 +111,6 @@ private:
     void registerEditor(Editor *editor);
     void updateSnippetViews(const QString &instruction);
     void createPaneContent(Pane *pane, PaneKind kind);
+    bool saveSession();
 };
 #endif // MAINWINDOW_H

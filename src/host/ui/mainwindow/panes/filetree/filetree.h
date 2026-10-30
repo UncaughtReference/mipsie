@@ -8,6 +8,7 @@ class QFileSystemModel;
 class QEvent;
 class QLineEdit;
 class QModelIndex;
+class QPoint;
 class FileTreeProxyModel;
 
 class FileTree : public QWidget
@@ -33,9 +34,16 @@ private:
     QTreeView *fileTree;
     QFileSystemModel *model;
     FileTreeProxyModel *proxyModel;
+    QString rootPath;
 
     void onItemClicked(const QModelIndex &index);
     void onItemActivated(const QModelIndex &index);
+    void showContextMenu(const QPoint &position);
+    void createFolder(const QString &parentPath);
+    void createFile(const QString &parentPath);
+    void renameItem(const QString &path);
+    void removeItem(const QString &path);
+    void moveItem(const QString &path);
 };
 
 #endif // FILETREE_H

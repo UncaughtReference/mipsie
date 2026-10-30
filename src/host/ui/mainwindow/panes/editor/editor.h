@@ -8,6 +8,7 @@
 #include <QJsonArray>
 #include <QList>
 #include <QPointer>
+#include <QStringList>
 #include <QSplitter>
 #include <QStandardItemModel>
 #include "mipshighlighter.h"
@@ -43,6 +44,7 @@ public:
     QTextEdit *currentEditor() const;
     QString currentFilePath() const;
     QString currentFileTitle() const;
+    QStringList openFilePaths() const;
     void toggleCommentOut();
     bool goToLine(int line, QTextEdit *buffer = nullptr);
     QString currentInstruction() const;

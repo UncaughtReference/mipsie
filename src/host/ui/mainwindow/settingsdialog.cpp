@@ -1,4 +1,5 @@
 #include "settingsdialog.h"
+#include "panes/editor/mipshighlighter.h"
 
 #include <QCheckBox>
 #include <QColorDialog>
@@ -62,6 +63,19 @@ const ShortcutDefinition shortcutDefinitions[] = {
     {"selectAllAction", QT_TR_NOOP("Select All")},
     {"commentOutAction", QT_TR_NOOP("Comment Out")}
 };
+
+QString syntaxColorLabel(const QString &key)
+{
+    if (key == QStringLiteral("directive")) return QObject::tr("Directives");
+    if (key == QStringLiteral("instruction")) return QObject::tr("Instructions");
+    if (key == QStringLiteral("register")) return QObject::tr("Registers");
+    if (key == QStringLiteral("number")) return QObject::tr("Numbers");
+    if (key == QStringLiteral("string")) return QObject::tr("Strings");
+    if (key == QStringLiteral("label")) return QObject::tr("Labels");
+    if (key == QStringLiteral("symbol")) return QObject::tr("Symbols");
+    if (key == QStringLiteral("comment")) return QObject::tr("Comments");
+    return key;
+}
 }
 
 SettingsDialog::SettingsDialog(const QString &projectFolder,
@@ -129,6 +143,12 @@ SettingsDialog::SettingsDialog(const QString &projectFolder,
         QStringLiteral("useArmipsRootOption")).toBool(true));
     generalForm->addRow(useArmipsRootOptionCheckBox);
 
+    promptToRecoverSessionCheckBox = new QCheckBox(
+        tr("Prompt to recover the previous session at startup"), generalPage);
+    promptToRecoverSessionCheckBox->setChecked(generalSettings.value(
+        QStringLiteral("promptToRecoverSession")).toBool(true));
+    generalForm->addRow(promptToRecoverSessionCheckBox);
+
     additionalArmipsArgumentsEdit = new QLineEdit(generalPage);
     additionalArmipsArgumentsEdit->setPlaceholderText(tr("For example: -sym \"symbols.sym\""));
     additionalArmipsArgumentsEdit->setText(generalSettings.value(
@@ -157,6 +177,29 @@ SettingsDialog::SettingsDialog(const QString &projectFolder,
             this, &SettingsDialog::chooseAccentColor);
     generalForm->addRow(tr("Accent color:"), accentColorButton);
     generalLayout->addLayout(generalForm);
+
+    auto *syntaxColorGroup = new QGroupBox(tr("Syntax Highlighting Colors"), generalPage);
+    auto *syntaxColorForm = new QFormLayout(syntaxColorGroup);
+    const QJsonObject savedSyntaxColors = generalSettings.value(
+        QStringLiteral("syntaxColors")).toObject();
+    const QString syntaxTheme = themeComboBox->currentData().toString();
+    for (const QString &key : MipsHighlighter::colorKeys()) {
+        QColor color(savedSyntaxColors.value(key).toString());
+        if (color.isValid()) {
+            customSyntaxColorKeys.insert(key);
+        } else {
+            color = MipsHighlighter::defaultColor(key, syntaxTheme);
+        }
+        syntaxColors.insert(key, color);
+
+        auto *colorButton = new QPushButton(syntaxColorGroup);
+        syntaxColorButtons.insert(key, colorButton);
+        updateSyntaxColorButton(key);
+        connect(colorButton, &QPushButton::clicked, this,
+                [this, key] { chooseSyntaxColor(key); });
+        syntaxColorForm->addRow(syntaxColorLabel(key) + QLatin1Char(':'), colorButton);
+    }
+    generalLayout->addWidget(syntaxColorGroup);
 
     auto *shortcutGroup = new QGroupBox(tr("Keyboard Shortcuts"), generalPage);
     auto *shortcutForm = new QFormLayout(shortcutGroup);
@@ -224,7 +267,28 @@ SettingsDialog::SettingsDialog(const QString &projectFolder,
         romRowLayout->addWidget(browseRomButton);
         connect(browseRomButton, &QPushButton::clicked,
                 this, &SettingsDialog::browseRomFile);
+#ifdef Q_OS_LINUX
+        projectForm->addRow(tr("ROM file (Linux):"), romRow);
+#else
         projectForm->addRow(tr("ROM file:"), romRow);
+#endif
+
+        backupDirectoryEdit = new QLineEdit(projectPage);
+        backupDirectoryEdit->setText(projectSettings.value(
+            QStringLiteral("backupDirectory")).toString(QStringLiteral("backups")));
+        backupDirectoryEdit->setPlaceholderText(QStringLiteral("backups"));
+        backupDirectoryEdit->setToolTip(
+            tr("Relative paths are resolved from the ROM file's directory. The default is "
+               "a backups folder beside the ROM."));
+        auto *backupDirectoryRow = new QWidget(projectPage);
+        auto *backupDirectoryRowLayout = new QHBoxLayout(backupDirectoryRow);
+        backupDirectoryRowLayout->setContentsMargins(0, 0, 0, 0);
+        auto *browseBackupDirectoryButton = new QPushButton(tr("Browse..."), backupDirectoryRow);
+        backupDirectoryRowLayout->addWidget(backupDirectoryEdit, 1);
+        backupDirectoryRowLayout->addWidget(browseBackupDirectoryButton);
+        connect(browseBackupDirectoryButton, &QPushButton::clicked,
+                this, &SettingsDialog::browseBackupDirectory);
+        projectForm->addRow(tr("Backup directory:"), backupDirectoryRow);
         projectLayout->addLayout(projectForm);
         projectLayout->addStretch(1);
     }
@@ -250,10 +314,16 @@ QJsonObject SettingsDialog::generalSettings() const
                     createTemporaryAsmCheckBox->isChecked());
     settings.insert(QStringLiteral("useArmipsRootOption"),
                     useArmipsRootOptionCheckBox->isChecked());
+    settings.insert(QStringLiteral("promptToRecoverSession"),
+                    promptToRecoverSessionCheckBox->isChecked());
     settings.insert(QStringLiteral("additionalArmipsArguments"),
                     additionalArmipsArgumentsEdit->text().trimmed());
     settings.insert(QStringLiteral("theme"), themeComboBox->currentData().toString());
     settings.insert(QStringLiteral("accentColor"), accentColor.name(QColor::HexRgb));
+    QJsonObject savedSyntaxColors;
+    for (const QString &key : customSyntaxColorKeys)
+        savedSyntaxColors.insert(key, syntaxColors.value(key).name(QColor::HexRgb));
+    settings.insert(QStringLiteral("syntaxColors"), savedSyntaxColors);
 
     QJsonObject keybinds = settings.value(QStringLiteral("keybinds")).toObject();
     for (auto it = keySequenceEdits.cbegin(); it != keySequenceEdits.cend(); ++it) {
@@ -274,7 +344,16 @@ QJsonObject SettingsDialog::projectSettings() const
         QDir::isAbsolutePath(enteredPath)
             ? enteredPath
             : QDir(projectFolder).absoluteFilePath(enteredPath)).absoluteFilePath();
+#ifdef Q_OS_LINUX
+    settings.insert(QStringLiteral("romFilePathLinux"), QDir::fromNativeSeparators(absolutePath));
+#else
     settings.insert(QStringLiteral("romFilePath"), QDir::fromNativeSeparators(absolutePath));
+#endif
+    const QString backupDirectory = backupDirectoryEdit->text().trimmed();
+    settings.insert(QStringLiteral("backupDirectory"),
+                    QDir::fromNativeSeparators(backupDirectory.isEmpty()
+                                                   ? QStringLiteral("backups")
+                                                   : backupDirectory));
     return settings;
 }
 
@@ -335,6 +414,19 @@ void SettingsDialog::chooseAccentColor()
     updateAccentColorButton();
 }
 
+void SettingsDialog::chooseSyntaxColor(const QString &key)
+{
+    if (!syntaxColors.contains(key))
+        return;
+    const QColor selectedColor = QColorDialog::getColor(
+        syntaxColors.value(key), this, tr("Choose %1 Color").arg(syntaxColorLabel(key)));
+    if (!selectedColor.isValid())
+        return;
+    syntaxColors.insert(key, selectedColor);
+    customSyntaxColorKeys.insert(key);
+    updateSyntaxColorButton(key);
+}
+
 void SettingsDialog::browseRomFile()
 {
     const QString currentPath = romPathEdit->text().trimmed();
@@ -354,11 +446,46 @@ void SettingsDialog::browseRomFile()
         romPathEdit->setText(QDir::toNativeSeparators(selectedPath));
 }
 
+void SettingsDialog::browseBackupDirectory()
+{
+    if (!backupDirectoryEdit)
+        return;
+
+    const QString romPath = romPathEdit->text().trimmed();
+    const QString resolvedRomPath = QDir::isAbsolutePath(romPath)
+        ? romPath
+        : QDir(projectFolder).absoluteFilePath(romPath);
+    const QString currentBackupPath = backupDirectoryEdit->text().trimmed();
+    const QString initialDirectory = currentBackupPath.isEmpty()
+        ? QFileInfo(resolvedRomPath).dir().filePath(QStringLiteral("backups"))
+        : QDir::isAbsolutePath(currentBackupPath)
+              ? currentBackupPath
+              : QFileInfo(resolvedRomPath).dir().absoluteFilePath(currentBackupPath);
+    const QString selectedDirectory = QFileDialog::getExistingDirectory(
+        this, tr("Select Backup Directory"), initialDirectory);
+    if (!selectedDirectory.isEmpty())
+        backupDirectoryEdit->setText(QDir::toNativeSeparators(selectedDirectory));
+}
+
 void SettingsDialog::updateAccentColorButton()
 {
     accentColorButton->setText(accentColor.name(QColor::HexRgb).toUpper());
     accentColorButton->setStyleSheet(
         QStringLiteral("QPushButton { background-color: %1; }").arg(accentColor.name()));
+}
+
+void SettingsDialog::updateSyntaxColorButton(const QString &key)
+{
+    QPushButton *button = syntaxColorButtons.value(key, nullptr);
+    const QColor color = syntaxColors.value(key);
+    if (!button || !color.isValid())
+        return;
+
+    button->setText(color.name(QColor::HexRgb).toUpper());
+    const QColor textColor = color.lightness() > 128 ? QColor(Qt::black) : QColor(Qt::white);
+    button->setStyleSheet(QStringLiteral(
+        "QPushButton { background-color: %1; color: %2; }")
+        .arg(color.name(), textColor.name()));
 }
 
 void SettingsDialog::acceptSettings()

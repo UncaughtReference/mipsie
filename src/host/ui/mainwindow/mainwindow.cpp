@@ -1,3 +1,5 @@
+// TODO: CLEAN THIS FILE UP JESUS FUCKING CHRIST
+
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
@@ -52,6 +54,7 @@
 #include <QNetworkRequest>
 #include <QPalette>
 #include <QPushButton>
+#include <QProcess>
 #include <QSaveFile>
 #include <QSettings>
 #include <QStandardItem>
@@ -70,6 +73,30 @@ constexpr int BackupRomPathRole = Qt::UserRole + 1;
 constexpr int BackupConfigPathRole = Qt::UserRole + 2;
 const QString backupTimestampFormat = QStringLiteral("yyyy-MM-dd_HH-mm-ss-zzz");
 constexpr int RecentProjectPathRole = Qt::UserRole + 1;
+
+QString projectRomPathFromConfig(const QJsonObject &config)
+{
+#ifdef Q_OS_LINUX
+    const QString linuxPath = config.value(QStringLiteral("romFilePathLinux")).toString().trimmed();
+    if (!linuxPath.isEmpty())
+        return linuxPath;
+#endif
+    return config.value(QStringLiteral("romFilePath")).toString().trimmed();
+}
+
+QString projectBackupDirectoryFromConfig(const QJsonObject &config,
+                                         const QString &romFilePath)
+{
+    QString configuredPath = config.value(QStringLiteral("backupDirectory")).toString().trimmed();
+    if (configuredPath.isEmpty())
+        configuredPath = QStringLiteral("backups");
+
+    const QFileInfo romInfo(romFilePath);
+    const QString resolvedPath = QDir::isAbsolutePath(configuredPath)
+        ? configuredPath
+        : romInfo.dir().absoluteFilePath(configuredPath);
+    return QDir::cleanPath(QFileInfo(resolvedPath).absoluteFilePath());
+}
 
 // Returns the recent projects json
 QString recentProjectsFilePath()
@@ -93,6 +120,11 @@ QString generalSettingsFilePath()
 QString macrosFilePath()
 {
     return QFileInfo(recentProjectsFilePath()).dir().filePath(QStringLiteral("macros.json"));
+}
+
+QString sessionFilePath()
+{
+    return QFileInfo(recentProjectsFilePath()).dir().filePath(QStringLiteral("session.json"));
 }
 
 QJsonArray defaultMacros()
@@ -179,9 +211,11 @@ QJsonObject defaultGeneralSettings()
     settings.insert(QStringLiteral("tabWidth"), 4);
     settings.insert(QStringLiteral("createTemporaryAsmFile"), true);
     settings.insert(QStringLiteral("useArmipsRootOption"), true);
+    settings.insert(QStringLiteral("promptToRecoverSession"), true);
     settings.insert(QStringLiteral("additionalArmipsArguments"), QString());
     settings.insert(QStringLiteral("theme"), QStringLiteral("System"));
     settings.insert(QStringLiteral("accentColor"), QStringLiteral("#ff4da6"));
+    settings.insert(QStringLiteral("syntaxColors"), QJsonObject());
     settings.insert(QStringLiteral("keybinds"), keybinds);
     return settings;
 }
@@ -206,8 +240,10 @@ QJsonObject loadGeneralSettings()
                                 QStringLiteral("editorFontSize"),
                                 QStringLiteral("tabWidth"), QStringLiteral("theme"),
                                 QStringLiteral("accentColor"),
+                                QStringLiteral("syntaxColors"),
                                 QStringLiteral("createTemporaryAsmFile"),
                                 QStringLiteral("useArmipsRootOption"),
+                                QStringLiteral("promptToRecoverSession"),
                                 QStringLiteral("additionalArmipsArguments")}) {
         if (saved.contains(key))
             settings.insert(key, saved.value(key));
@@ -533,6 +569,21 @@ bool MainWindow::hasEditTarget() const
 
 bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 {
+    if (event->type() == QEvent::Show) {
+        if (auto *menu = qobject_cast<QMenu *>(watched)) {
+            const QColor accentColor = qApp->property("mipsieAccentColor").value<QColor>();
+            if (accentColor.isValid()) {
+                const QColor highlightedTextColor = accentColor.lightness() > 128
+                    ? QColor(Qt::black)
+                    : QColor(Qt::white);
+                menu->setFont(qApp->font());
+                menu->setStyleSheet(QStringLiteral(
+                    "QMenu::item:selected { background-color: %1; color: %2; }")
+                    .arg(accentColor.name(), highlightedTextColor.name()));
+            }
+        }
+    }
+
     if (event->type() == QEvent::KeyPress && splitter) {
         auto *keyEvent = static_cast<QKeyEvent *>(event);
         const Qt::KeyboardModifiers modifiers = keyEvent->modifiers()
@@ -629,6 +680,8 @@ void MainWindow::applyGeneralAppearance()
     qApp->setFont(applicationFont);
     qApp->setProperty("mipsieTheme", theme);
     qApp->setProperty("mipsieAccentColor", accentColor);
+    qApp->setProperty("mipsieSyntaxColors",
+                      generalSettings.value(QStringLiteral("syntaxColors")).toObject());
 
     QPalette palette = qApp->style()->standardPalette();
     if (theme == QStringLiteral("Dark")) {
@@ -651,9 +704,17 @@ void MainWindow::applyGeneralAppearance()
         palette.setColor(QPalette::Button, QColor(QStringLiteral("#eeeeee")));
         palette.setColor(QPalette::ButtonText, QColor(QStringLiteral("#202124")));
     }
+    const QColor placeholderTextColor = palette.color(QPalette::Base).lightness() < 128
+        ? QColor(QStringLiteral("#b3b3b3"))
+        : QColor(QStringLiteral("#757575"));
+    palette.setColor(QPalette::Active, QPalette::PlaceholderText, placeholderTextColor);
+    palette.setColor(QPalette::Inactive, QPalette::PlaceholderText, placeholderTextColor);
+    palette.setColor(QPalette::Disabled, QPalette::PlaceholderText, placeholderTextColor);
     palette.setColor(QPalette::Highlight, accentColor);
-    palette.setColor(QPalette::HighlightedText,
-                     accentColor.lightness() > 128 ? QColor(Qt::black) : QColor(Qt::white));
+    const QColor highlightedTextColor = accentColor.lightness() > 128
+        ? QColor(Qt::black)
+        : QColor(Qt::white);
+    palette.setColor(QPalette::HighlightedText, highlightedTextColor);
     palette.setColor(QPalette::Link, accentColor);
     qApp->setPalette(palette);
 
@@ -1061,6 +1122,81 @@ void MainWindow::openCommandLinePath(const QString &path)
         editor->openFile(absolutePath);
 }
 
+void MainWindow::offerSessionRecovery()
+{
+    if (!generalSettings.value(QStringLiteral("promptToRecoverSession")).toBool(true))
+        return;
+
+    QFile sessionFile(sessionFilePath());
+    if (!sessionFile.exists())
+        return;
+    if (!sessionFile.open(QIODevice::ReadOnly))
+        return;
+
+    QJsonParseError parseError;
+    const QJsonDocument document = QJsonDocument::fromJson(sessionFile.readAll(), &parseError);
+    if (parseError.error != QJsonParseError::NoError || !document.isObject())
+        return;
+
+    const QJsonObject session = document.object();
+    const QString projectPath = session.value(QStringLiteral("projectPath")).toString().trimmed();
+    const QString standalonePath = session.value(QStringLiteral("standaloneRomPath"))
+                                       .toString().trimmed();
+    QStringList openFilePaths;
+    for (const QJsonValue &value : session.value(QStringLiteral("openFiles")).toArray()) {
+        if (value.isString()) {
+            const QString path = value.toString().trimmed();
+            if (!path.isEmpty())
+                openFilePaths.append(path);
+        }
+    }
+
+    if (projectPath.isEmpty() && standalonePath.isEmpty() && openFilePaths.isEmpty())
+        return;
+
+    const int openFileCount = openFilePaths.size();
+    QString details = tr("Recover the previous project, ROM, and open files?");
+    details += QStringLiteral("\n\n");
+    if (!projectPath.isEmpty())
+        details += tr("Project: %1\n").arg(QDir::toNativeSeparators(projectPath));
+    if (!standalonePath.isEmpty())
+        details += tr("Standalone ROM: %1\n")
+                       .arg(QDir::toNativeSeparators(standalonePath));
+    details += tr("Open files: %1").arg(openFileCount);
+    if (QMessageBox::question(this, tr("Recover Previous Session"), details,
+                              QMessageBox::Yes | QMessageBox::No,
+                              QMessageBox::Yes) != QMessageBox::Yes)
+        return;
+
+    if (!projectPath.isEmpty() && QFileInfo(projectPath).isDir())
+        openProjectFolderPath(projectPath);
+
+    if (!standalonePath.isEmpty() && QFileInfo(standalonePath).isFile()) {
+        standaloneRomFilePath = QDir::toNativeSeparators(
+            QFileInfo(standalonePath).absoluteFilePath());
+        if (projectRomFilePath.isEmpty() && splitter) {
+            const auto assemblers = splitter->findChildren<Assembler *>();
+            for (Assembler *assembler : assemblers)
+                assembler->setRomFilePath(standaloneRomFilePath);
+        }
+    }
+
+    QStringList missingFiles;
+    for (const QString &path : openFilePaths) {
+        if (!QFileInfo(path).isFile()) {
+            missingFiles.append(path);
+            continue;
+        }
+        if (Editor *editor = findActiveEditor())
+            editor->openFile(path);
+    }
+    if (!missingFiles.isEmpty()) {
+        QMessageBox::information(this, tr("Session Recovery"),
+                                 tr("Some session files could not be found:\n%1")
+                                     .arg(missingFiles.join(QLatin1Char('\n'))));
+    }
+}
+
 void MainWindow::openProject()
 {
     if (shuttingDown)
@@ -1198,6 +1334,7 @@ void MainWindow::openProjectFolderPath(const QString &selectedFolder)
     const QString folderPath = QDir(selectedFolder).absolutePath();
     const QString configPath = QDir(folderPath).filePath(QStringLiteral("mipsie.json"));
     QString romFilePath;
+    QJsonObject projectConfig;
     if (QFileInfo::exists(configPath)) {
         if (!QFileInfo(configPath).isFile()) {
             QMessageBox::warning(this, tr("Invalid Project"),
@@ -1222,14 +1359,14 @@ void MainWindow::openProjectFolderPath(const QString &selectedFolder)
             return;
         }
 
-        const QJsonValue romPathValue = document.object().value(QStringLiteral("romFilePath"));
-        if (!romPathValue.isString() || romPathValue.toString().trimmed().isEmpty()) {
+        projectConfig = document.object();
+        const QString configuredPath = projectRomPathFromConfig(projectConfig);
+        if (configuredPath.isEmpty()) {
             QMessageBox::warning(this, tr("Invalid Project"),
-                                 tr("mipsie.json must contain a non-empty romFilePath."));
+                                 tr("mipsie.json must contain a ROM path for this platform."));
             return;
         }
 
-        const QString configuredPath = romPathValue.toString().trimmed();
         const QString resolvedPath = QDir::isAbsolutePath(configuredPath)
             ? configuredPath
             : QDir(folderPath).absoluteFilePath(configuredPath);
@@ -1310,8 +1447,13 @@ void MainWindow::openProjectFolderPath(const QString &selectedFolder)
                 return;
 
             const QString storedRomPath = QDir::fromNativeSeparators(romFilePath);
-            QJsonObject projectConfig;
             projectConfig.insert(QStringLiteral("romFilePath"), storedRomPath);
+            projectConfig.insert(QStringLiteral("backupDirectory"), QStringLiteral("backups"));
+#ifdef Q_OS_LINUX
+            projectConfig.insert(QStringLiteral("romFilePathLinux"), storedRomPath);
+#else
+            projectConfig.insert(QStringLiteral("romFilePathLinux"), QString());
+#endif
             const QByteArray json = QJsonDocument(projectConfig).toJson(QJsonDocument::Indented);
             QSaveFile configFile(configPath);
             if (!configFile.open(QIODevice::WriteOnly)
@@ -1327,6 +1469,8 @@ void MainWindow::openProjectFolderPath(const QString &selectedFolder)
 
     projectRootPath = folderPath;
     projectRomFilePath = romFilePath;
+    projectBackupDirectoryPath = projectBackupDirectoryFromConfig(projectConfig,
+                                                                  projectRomFilePath);
     if (splitter) {
         const auto commandPrompts = splitter->findChildren<CmdConsole *>();
         for (CmdConsole *commandPrompt : commandPrompts)
@@ -1430,12 +1574,13 @@ void MainWindow::openSettings()
         return;
     }
 
-    const QString configuredRomPath = updatedProjectSettings
-        .value(QStringLiteral("romFilePath")).toString();
+    const QString configuredRomPath = projectRomPathFromConfig(updatedProjectSettings);
     const QString resolvedRomPath = QDir::isAbsolutePath(configuredRomPath)
         ? configuredRomPath
         : QDir(projectRootPath).absoluteFilePath(configuredRomPath);
     projectRomFilePath = QDir::toNativeSeparators(QFileInfo(resolvedRomPath).absoluteFilePath());
+    projectBackupDirectoryPath = projectBackupDirectoryFromConfig(updatedProjectSettings,
+                                                                  projectRomFilePath);
     if (splitter) {
         const auto assemblers = splitter->findChildren<Assembler *>();
         for (Assembler *assembler : assemblers)
@@ -1447,6 +1592,11 @@ void MainWindow::assembleAndUpdateChecksum()
 {
     if (shuttingDown || !splitter)
         return;
+
+    if (Editor *editor = findActiveEditor()) {
+        if (editor->currentEditor() && !editor->saveCurrentFile())
+            return;
+    }
 
     Assembler *assembler = splitter->findChild<Assembler *>();
     if (!assembler) {
@@ -1465,6 +1615,11 @@ void MainWindow::assembleUpdateChecksumAndOpenProject64()
 {
     if (shuttingDown || !splitter)
         return;
+
+    if (Editor *editor = findActiveEditor()) {
+        if (editor->currentEditor() && !editor->saveCurrentFile())
+            return;
+    }
 
     Assembler *assembler = splitter->findChild<Assembler *>();
     if (!assembler) {
@@ -1486,7 +1641,7 @@ void MainWindow::checkForUpdates()
 
 void MainWindow::showAboutDialog()
 {
-    const QString aboutText = tr("mipsie %1\n\nMade by UncaughtReference\nTesters: placeholder\nSources: hack64.net, asm-editor.specy.app")
+    const QString aboutText = tr("mipsie %1\n\nMade by UncaughtReference\nTesters: ThatAussieGhost, lanayxy\nSources: hack64.net, asm-editor.specy.app")
                                  .arg(QCoreApplication::applicationVersion());
     QMessageBox::information(this, tr("About mipsie"), aboutText);
 }
@@ -1500,7 +1655,15 @@ void MainWindow::openAppDataFolder()
                                  .arg(QDir::toNativeSeparators(appDataPath)));
         return;
     }
-    if (!QDesktopServices::openUrl(QUrl::fromLocalFile(appDataPath))) {
+    bool opened = QDesktopServices::openUrl(QUrl::fromLocalFile(appDataPath));
+#ifdef Q_OS_LINUX
+    if (!opened) {
+        const QString xdgOpenPath = QStandardPaths::findExecutable(QStringLiteral("xdg-open"));
+        if (!xdgOpenPath.isEmpty())
+            opened = QProcess::startDetached(xdgOpenPath, {appDataPath});
+    }
+#endif
+    if (!opened) {
         QMessageBox::warning(this, tr("Open App Data"),
                              tr("Could not open the app data folder:\n%1")
                                  .arg(QDir::toNativeSeparators(appDataPath)));
@@ -1681,10 +1844,13 @@ void MainWindow::backupRom()
         return;
     }
 
-    const QString backupDirectoryPath = romInfo.dir().filePath(QStringLiteral("backups"));
+    QString backupDirectoryPath = romInfo.dir().filePath(QStringLiteral("backups"));
+    if (romPath.compare(projectRomFilePath, Qt::CaseInsensitive) == 0
+        && !projectBackupDirectoryPath.isEmpty())
+        backupDirectoryPath = projectBackupDirectoryPath;
     if (!QDir().mkpath(backupDirectoryPath)) {
         QMessageBox::warning(this, tr("Backup Failed"),
-                             tr("Could not create the backups directory:\n%1")
+                             tr("Could not create the backup directory:\n%1")
                                  .arg(backupDirectoryPath));
         return;
     }
@@ -1743,7 +1909,9 @@ void MainWindow::restoreRomVersion()
         return;
     }
 
-    const QString backupDirectoryPath = romInfo.dir().filePath(QStringLiteral("backups"));
+    const QString backupDirectoryPath = projectBackupDirectoryPath.isEmpty()
+        ? romInfo.dir().filePath(QStringLiteral("backups"))
+        : projectBackupDirectoryPath;
     const QDir backupDirectory(backupDirectoryPath);
     QDialog restoreDialog(this);
     restoreDialog.setWindowTitle(tr("Restore ROM Version"));
@@ -1922,6 +2090,52 @@ void MainWindow::closeEvent(QCloseEvent *event)
 
     shuttingDown = true;
     QMainWindow::closeEvent(event);
-    if (!event->isAccepted())
+    if (!event->isAccepted()) {
         shuttingDown = false;
+        return;
+    }
+
+    if (!saveSession()) {
+        QMessageBox::warning(this, tr("Session Not Saved"),
+                             tr("Could not save the current session."));
+    }
+}
+
+bool MainWindow::saveSession()
+{
+    QJsonObject session;
+    session.insert(QStringLiteral("projectPath"),
+                   QDir::fromNativeSeparators(projectRootPath));
+    session.insert(QStringLiteral("standaloneRomPath"),
+                   QDir::fromNativeSeparators(standaloneRomFilePath));
+
+    QJsonArray openFiles;
+    QStringList savedPaths;
+    const auto editors = splitter ? splitter->findChildren<Editor *>() : QList<Editor *>();
+    for (Editor *editor : editors) {
+        for (const QString &path : editor->openFilePaths()) {
+            bool alreadyAdded = false;
+            for (const QString &savedPath : savedPaths) {
+                if (savedPath.compare(path, Qt::CaseInsensitive) == 0) {
+                    alreadyAdded = true;
+                    break;
+                }
+            }
+            if (alreadyAdded)
+                continue;
+            savedPaths.append(path);
+            openFiles.append(QDir::fromNativeSeparators(path));
+        }
+    }
+    session.insert(QStringLiteral("openFiles"), openFiles);
+
+    const QString path = sessionFilePath();
+    if (!QDir().mkpath(QFileInfo(path).absolutePath()))
+        return false;
+
+    QSaveFile file(path);
+    if (!file.open(QIODevice::WriteOnly))
+        return false;
+    const QByteArray json = QJsonDocument(session).toJson(QJsonDocument::Indented);
+    return file.write(json) == json.size() && file.commit();
 }

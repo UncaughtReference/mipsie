@@ -160,7 +160,7 @@ sol::table actionDescription(sol::state &lua, QAction *action)
 
 void bindUI(sol::state &lua, QMainWindow *mainWindow)
 {
-    QPointer<QMainWindow> window(mainWindow);
+    QMainWindow *window = mainWindow;
     sol::table mipsie = lua["mipsie"];
     sol::table ui = lua.create_table();
 
@@ -196,7 +196,7 @@ void bindUI(sol::state &lua, QMainWindow *mainWindow)
         sol::table result = lua.create_table();
         if (!window)
             return result;
-        QList<QWidget *> widgets{window.data()};
+        QList<QWidget *> widgets{window};
         collectWidgets(window, widgets);
         int index = 1;
         for (QWidget *widget : widgets)

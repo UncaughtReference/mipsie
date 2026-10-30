@@ -55,8 +55,12 @@ bool LuaRuntime::initialize(QMainWindow* mainWindow)
 
         // Register all generic host APIs.
         const auto output = [this](const QString &line) { emit scriptOutput(line); };
-        d->networkManager = new QNetworkAccessManager(this);
+
+        // Keep the manager out of QObject's child list: shutdown owns its
+        // lifetime explicitly so it can be stopped before the Lua state closes.
+        d->networkManager = new QNetworkAccessManager;
         d->mainWindow = mainWindow;
+
         BindingRegistry::registerAll(d->lua, mainWindow, d->networkManager, output);
 
         d->lua["mipsie"]["_output"] = [output](const std::string &line) {
@@ -72,13 +76,6 @@ bool LuaRuntime::initialize(QMainWindow* mainWindow)
                 emit(table.concat(values, "\t"))
             end
         )");
-
-        sol::table mipsie = d->lua["mipsie"];
-        sol::table fs = mipsie["fs"];
-
-        qDebug() << "mipsie.fs exists:" << mipsie["fs"].valid();
-        qDebug() << "mipsie.fs.current_dir exists:"
-                 << fs["current_dir"].valid();
 
         d->initialized = true;
         emit initialized();
@@ -181,5 +178,7 @@ void LuaRuntime::shutdown() {
         d->mainWindow.clear();
     }
 
+    QObject::disconnect(this, nullptr, nullptr, nullptr);
+    QObject::disconnect(nullptr, nullptr, this, nullptr);
     d->initialized = false;
 }

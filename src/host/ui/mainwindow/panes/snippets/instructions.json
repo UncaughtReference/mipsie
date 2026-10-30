@@ -2354,6 +2354,57 @@
                         "source":  "https://asm-editor.specy.app/documentation/mips/instruction/sub"
                     },
                     {
+                        "name":  "subi",
+                        "longName":  "Subtract immediate with overflow trap",
+                        "summary":  "Subtracts an immediate from $t2 and puts the difference in $t1, trapping if the signed result overflows.",
+                        "forms":  [
+                                      "subi $t1, $t2, imm16",
+                                      "subi $t1, $t2, imm32"
+                                  ],
+                        "operands":  [
+                                         {
+                                             "operand":  "$t1",
+                                             "description":  "Any general-purpose register, $0 to $31, using its numeric or named spelling, such as $8 or $t0 ($zero is $0; $ra is $31)."
+                                         },
+                                         {
+                                             "operand":  "$t2",
+                                             "description":  "A general-purpose register. It may be the same register as $t1."
+                                         },
+                                         {
+                                             "operand":  "imm16",
+                                             "description":  "A signed 16-bit immediate, -32768 to 32767."
+                                         },
+                                         {
+                                             "operand":  "imm32",
+                                             "description":  "A 32-bit immediate, -2147483648 to 4294967295. Pseudoinstruction expansion may overwrite $at, losing its previous value."
+                                         }
+                                     ],
+                        "source":  "https://asm-editor.specy.app/documentation/mips/instruction/subi"
+                    },
+                    {
+                        "name":  "subiu",
+                        "longName":  "Subtract immediate unsigned (no overflow trap)",
+                        "summary":  "Subtracts a 32-bit immediate from $t2 and puts the difference in $t1, wrapping on overflow instead of trapping.",
+                        "forms":  [
+                                      "subiu $t1, $t2, imm32"
+                                  ],
+                        "operands":  [
+                                         {
+                                             "operand":  "$t1",
+                                             "description":  "Any general-purpose register, $0 to $31, using its numeric or named spelling, such as $8 or $t0 ($zero is $0; $ra is $31)."
+                                         },
+                                         {
+                                             "operand":  "$t2",
+                                             "description":  "A general-purpose register. It may be the same register as $t1."
+                                         },
+                                         {
+                                             "operand":  "imm32",
+                                             "description":  "A 32-bit immediate, -2147483648 to 4294967295. Pseudoinstruction expansion may overwrite $at, losing its previous value."
+                                         }
+                                     ],
+                        "source":  "https://asm-editor.specy.app/documentation/mips/instruction/subiu"
+                    },
+                    {
                         "name":  "subu",
                         "longName":  "Subtract unsigned (no overflow trap)",
                         "summary":  "Subtracts $t3, or an immediate, from $t2 into $t1 and wraps on overflow instead of trapping.",

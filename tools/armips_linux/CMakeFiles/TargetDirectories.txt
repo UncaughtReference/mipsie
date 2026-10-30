@@ -1,0 +1,17 @@
+/mnt/d/armips/armips/build/CMakeFiles/armips.dir
+/mnt/d/armips/armips/build/CMakeFiles/armips-bin.dir
+/mnt/d/armips/armips/build/CMakeFiles/armipstests.dir
+/mnt/d/armips/armips/build/CMakeFiles/test.dir
+/mnt/d/armips/armips/build/CMakeFiles/edit_cache.dir
+/mnt/d/armips/armips/build/CMakeFiles/rebuild_cache.dir
+/mnt/d/armips/armips/build/CMakeFiles/list_install_components.dir
+/mnt/d/armips/armips/build/CMakeFiles/install.dir
+/mnt/d/armips/armips/build/CMakeFiles/install/local.dir
+/mnt/d/armips/armips/build/CMakeFiles/install/strip.dir
+/mnt/d/armips/armips/build/ext/filesystem/CMakeFiles/test.dir
+/mnt/d/armips/armips/build/ext/filesystem/CMakeFiles/edit_cache.dir
+/mnt/d/armips/armips/build/ext/filesystem/CMakeFiles/rebuild_cache.dir
+/mnt/d/armips/armips/build/ext/filesystem/CMakeFiles/list_install_components.dir
+/mnt/d/armips/armips/build/ext/filesystem/CMakeFiles/install.dir
+/mnt/d/armips/armips/build/ext/filesystem/CMakeFiles/install/local.dir
+/mnt/d/armips/armips/build/ext/filesystem/CMakeFiles/install/strip.dir

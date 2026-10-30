@@ -90,8 +90,8 @@ CONFIG(debug, debug|release) {
 
 include(third_party/lua/lua.pri)
 
-RC_FILE = src/iconBS.rc
-LIBS += -ladvapi32
+win32::RC_FILE = src/iconBS.rc
+win32::LIBS += -ladvapi32
 
 DISTFILES += \
     docs/llmUse.md \

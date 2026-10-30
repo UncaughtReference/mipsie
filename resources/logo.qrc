@@ -3,5 +3,6 @@
         <file>logo.png</file>
         <file>fonts/JetBrainsMonoNerdFont-Regular.ttf</file>
         <file alias="fonts/JetBrainsMonoNerdFont-OFL.txt">fonts/OFL.txt</file>
+        <file>splash.png</file>
     </qresource>
 </RCC>
